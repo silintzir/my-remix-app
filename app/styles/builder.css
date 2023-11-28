@@ -1,0 +1,108 @@
+.builder-container {
+  /* rakCm */
+  @apply w-full mx-auto my-0 xl:mx-0;
+  @apply xl:w-1/2 xl:max-w-[960px];
+  @apply flex justify-center min-h-screen;
+}
+
+.left-panel {
+  /* dk0Fmh */
+  @apply w-full max-w-full flex-1;
+}
+
+.right-panel {
+  /* jAoSdh */
+  @apply hidden xl:flex w-1/2 3xl:w-[calc(100%-960px)];
+  @apply fixed top-0 bottom-0 right-0;
+  @apply items-center justify-center flex-col;
+  @apply bg-[#525659] text-white select-none z-0;
+}
+.preview-container {
+  @apply flex justify-center items-center;
+  @apply absolute top-[72px] right-[74px] bottom-[40px] left-[74px];
+}
+.aligner {
+  @apply inline-block relative;
+
+  .top-bar {
+    @apply absolute left-0 w-full flex items-center justify-between top-[-60px];
+
+    .left {
+      @apply flex flex-row;
+    }
+
+    .right {
+      @apply flex;
+    }
+  }
+
+  .bottom-bar {
+    @apply absolute left-0 right-0 flex flex-row h-10 items-center justify-center bottom-[-40px];
+
+    .left {
+      @apply absolute left-0;
+    }
+    .center {
+      @apply flex justify-center items-center;
+    }
+  }
+
+  .paper {
+    @apply relative rounded bg-white overflow-hidden aspect-[1/1.41];
+  }
+}
+
+.overlay-container {
+  @apply absolute inset-0 z-30 rounded flex items-center justify-center cursor-pointer;
+  .overlay {
+    @apply flex items-center justify-center;
+    transform: scale(1);
+    transition: transform 0.1s ease 0s;
+  }
+}
+
+.editor-panel {
+  /* iuyAab */
+  @apply max-w-[860px] h-full bg-muted m-auto;
+}
+
+.header {
+  @apply fixed top-4 right-4 ml-0 z-50;
+}
+
+.form-container {
+}
+
+.form {
+  @apply p-12;
+}
+
+.form-header {
+  @apply text-2xl leading-7 font-medium text-center relative mb-0.5 py-0 px-8;
+}
+
+.form-title {
+  @apply inline-block relative max-w-full align-top;
+}
+
+.form-language {
+  @apply flex justify-center mb-0;
+}
+
+.score-recom {
+  @apply block select-none pb-4 sticky top-0 bg-white z-10 pt-5 px-6 rounded-md;
+}
+
+.score-recom::before {
+  right: 100%;
+}
+
+.score-recom::before,
+.score-recom::after {
+  content: "";
+  @apply absolute top-0 w-12 h-full bg-white;
+}
+
+.auto-save-button {
+  @apply xl:hidden fixed bottom-6 right-6;
+}

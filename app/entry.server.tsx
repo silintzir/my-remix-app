@@ -12,14 +12,18 @@ import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 
+import i18n from "i18next";
+import { I18nextProvider } from "react-i18next";
+import { detectLanguage, initI18Next } from "@/lib/i18n";
+
 const ABORT_DELAY = 5_000;
 
-export default function handleRequest(
+export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext,
-  loadContext: AppLoadContext
+  _loadContext: AppLoadContext
 ) {
   return isbot(request.headers.get("user-agent"))
     ? handleBotRequest(
@@ -28,7 +32,7 @@ export default function handleRequest(
         responseHeaders,
         remixContext
       )
-    : handleBrowserRequest(
+    : await handleBrowserRequest(
         request,
         responseStatusCode,
         responseHeaders,
@@ -86,20 +90,25 @@ function handleBotRequest(
   });
 }
 
-function handleBrowserRequest(
+async function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   remixContext: EntryContext
 ) {
+  // we detect the language and initialize i18next with that language
+  await initI18Next(i18n, detectLanguage(request));
+
   return new Promise((resolve, reject) => {
     let shellRendered = false;
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer
-        context={remixContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <I18nextProvider i18n={i18n}>
+        <RemixServer
+          context={remixContext}
+          url={request.url}
+          abortDelay={ABORT_DELAY}
+        />
+      </I18nextProvider>,
       {
         onShellReady() {
           shellRendered = true;

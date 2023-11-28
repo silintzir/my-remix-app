@@ -2,6 +2,9 @@
 export default {
   ignoredRouteFiles: ["**/.*"],
   serverModuleFormat: "esm",
+  tailwind: true,
+  postcss: true,
+  browserNodeBuiltinsPolyfill: { modules: { events: true } },
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
   // publicPath: "/build/",

@@ -5,14 +5,29 @@
  */
 
 import { RemixBrowser } from "@remix-run/react";
-import { startTransition, StrictMode } from "react";
+import { startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
 
-startTransition(() => {
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <RemixBrowser />
-    </StrictMode>
-  );
+import i18n from "i18next";
+import { I18nextProvider } from "react-i18next";
+import { initI18Next } from "@/lib/i18n";
+
+// startTransition(() => {
+//   hydrateRoot(
+//     document,
+//     <StrictMode>
+//       <RemixBrowser />
+//     </StrictMode>
+//   );
+// });
+
+initI18Next(i18n).then(() => {
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <I18nextProvider i18n={i18n}>
+        <RemixBrowser />
+      </I18nextProvider>
+    );
+  });
 });
