@@ -4,6 +4,7 @@
 interface Window {
   ENV: Record<string, string>;
   html2pdf: any;
+  pdfjsLib: any;
 }
 
 declare module "crack-json";

@@ -16,11 +16,7 @@ import { Logo } from "@/components/website/logo";
 import { authToSession, throwOnStrapiError } from "@/lib/strapi.server";
 import successImg from "@/images/coffee_with_friends.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  redirect,
-  type ActionFunctionArgs,
-  type LoaderFunctionArgs,
-} from "@remix-run/node";
+import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form as RemixForm,
   Link,
@@ -42,7 +38,7 @@ import { FacebookButton } from "@/components/social/facebook";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { commitSession, getSession } from "@/sessions";
+import { AuthUser, commitSession, getSession } from "@/sessions";
 
 const loginSchema = z.object({
   email: requiredString().email(),
@@ -91,7 +87,7 @@ export async function action({ request }: ActionFunctionArgs) {
     } else {
       const url = `${process.env.STRAPI_HOST}/api/auth/local`;
       console.log(values);
-      let response = await fetch(url, {
+      const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
           identifier: values.email,
@@ -113,17 +109,15 @@ export async function action({ request }: ActionFunctionArgs) {
   if (result.success) {
     if (raw.useMagicLink) {
       return redirect(`?view=success&email=${raw.email}`);
-    } else {
-      console.log(result.data);
-      const session = await getSession(request.headers.get("Cookie"));
-      session.unset("guest");
-      session.set("user", result.data as any);
-      return redirect(`/app/dashboard`, {
-        headers: {
-          "Set-Cookie": await commitSession(session),
-        },
-      });
     }
+    const session = await getSession(request.headers.get("Cookie"));
+    session.unset("guest");
+    session.set("user", result.data as AuthUser);
+    return redirect("/app/dashboard", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   }
 
   return result;
@@ -169,11 +163,7 @@ export default function Signin() {
         <div className="fixed left-1/2 top-32 -translate-x-1/2 max-w-lg w-full">
           {view === "success" && (
             <div className="flex flex-col items-center px-4">
-              <img
-                src={successImg}
-                alt="Signin success"
-                className="h-[200px]"
-              />
+              <img src={successImg} alt="Signin success" className="h-[200px]" />
               <h2 className="text-3xl mt-4 font-semibold">Check your inbox</h2>
               <p className="mt-4">
                 We just emailed a confirmation link to <strong>{email}</strong>.
@@ -191,11 +181,7 @@ export default function Signin() {
           {view === "email" && (
             <div className="flex flex-col text-center items-center gap-8">
               <div className="space-y-1 px-10">
-                <img
-                  src="/images/join.svg"
-                  alt="Enter your email"
-                  className="h-[160px]"
-                />
+                <img src="/images/join.svg" alt="Enter your email" className="h-[160px]" />
                 <h1 className="font-semibold text-lg">Log In</h1>
                 <p className="muted">Enter your email</p>
               </div>
@@ -207,9 +193,7 @@ export default function Signin() {
                   className="max-w-xs w-full"
                 >
                   {errors.root && (
-                    <p className="small text-destructive mb-2">
-                      {errors.root.message}
-                    </p>
+                    <p className="small text-destructive mb-2">{errors.root.message}</p>
                   )}
                   <fieldset
                     className="space-y-4 w-full text-left"
@@ -221,17 +205,14 @@ export default function Signin() {
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                           </FormControl>
                           <FormMessage />
                           <div className="space-y-1 leading-none">
                             <FormLabel>Passwordless login</FormLabel>
                             <FormDescription>
-                              Forget passwords. We email you a magic link every
-                              time you want to login.
+                              Forget passwords. We email you a magic link every time you want to
+                              login.
                             </FormDescription>
                           </div>
                         </FormItem>
@@ -259,11 +240,7 @@ export default function Signin() {
                       />
                     )}
                     <div className="flex justify-between">
-                      <Button
-                        variant="outline"
-                        type="button"
-                        onClick={() => navigate(``)}
-                      >
+                      <Button variant="outline" type="button" onClick={() => navigate("")}>
                         Back
                       </Button>
                       <Button type="submit">

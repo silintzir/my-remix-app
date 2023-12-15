@@ -5,7 +5,7 @@ import { AutoSavedFeedback } from "@/components/builder/auto-saved-feedback";
 import { DownloadPdfButton } from "@/components/builder/download-pdf-button";
 import { OtherActionsButton } from "@/components/builder/other-actions-button";
 import { StartStep } from "@/components/builder/steps/start";
-// import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
+import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
 import { UserMenu } from "@/components/navbar/user-menu";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,6 +44,9 @@ import { cn } from "@/lib/utils";
 import { TailorStep } from "@/components/builder/steps/tailor";
 import { StepJump } from "@/components/builder/step-jump";
 import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
+import { sampleResume } from "@/lib/sample";
+import { ClientOnly } from "remix-utils/client-only";
+import { useBase64 } from "@/lib/templates/useBase64";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const fd = await request.formData();
@@ -122,6 +125,8 @@ export default function Builder() {
   const { previous, next } = getAdjacentSteps(step, submittedData);
 
   const stepHasErrors = !!get(errors, `resume.${step}`);
+
+  const base64 = useBase64({ values: defaultValues, isSample: step === 'start' });
 
   return (
     <div className="flex justify-center bg-muted min-h-screen w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0">
@@ -221,7 +226,7 @@ export default function Builder() {
             <div className="preview-container">
               <div className="aligner">
                 {/* focus button */}
-                {/* <SwitchViewOverlay /> */}
+                <SwitchViewOverlay />
 
                 {/* top-bar */}
 
@@ -231,13 +236,18 @@ export default function Builder() {
                     <FontSizeAdjust />
                   </div>
                   <div className="flex gap-1">
-                    <DownloadPdfButton />
+                    <DownloadPdfButton
+                      isSample={step === "start"}
+                      values={step === "start" ? sampleResume() : defaultValues}
+                    />
                     <OtherActionsButton />
                   </div>
                 </div>
 
                 {/* paper  */}
-                <PdfPaper values={defaultValues} />
+                <PdfPaper
+                  base64={base64}
+                />
 
                 {/* bottom-bar  */}
                 <div className="absolute left-0 right-0 flex flex-row h-10 items-center justify-center bottom-[-40px]">
@@ -308,14 +318,19 @@ export default function Builder() {
                 <span className="ml-1 leading-5">Updating...</span>
               </div>
 
-              <DownloadPdfButton />
+              <DownloadPdfButton
+                isSample={step === "start"}
+                values={step === "start" ? sampleResume() : defaultValues}
+              />
               <OtherActionsButton />
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto py-0 px-5">
             <div className="relative my-5 mx-auto">
-              <PdfPaper fullPage values={submittedData} />
+              <PdfPaper
+                base64={base64}
+              />
             </div>
           </div>
         </div>

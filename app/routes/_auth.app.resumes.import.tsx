@@ -29,7 +29,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const toks = [];
 
   toks.push(
-    "You are a text parser with the task of taking as input unstructured pieces of text from resumes and converting them to JSON objects structured according the jsonresume.org format so that these can be later analyzed and stored in a database. The following JSON ojbect is an example of the desired output:"
+    "You are a text parser with the task of taking as input unstructured pieces of text from resumes and converting them to JSON objects structured according the jsonresume.org format so that these can be later analyzed and stored in a database. The following JSON ojbect is an example of the desired output:",
   );
   toks.push(`
 {
@@ -37,9 +37,11 @@ export async function action({ request }: ActionFunctionArgs) {
       firstName: "John",
       lastName: "Lennon",
       email: "jlennon@gmail.com",
-      address: "2712 Broadway St, San Fransisco, CA 94115, USA",
+      location: {
+        address: "2712 Broadway St, San Fransisco, CA 94115, USA",
+      }
       phone: "9125554321",
-      social: "https://linkein.com/jlennon",
+      url: "https://linkein.com/jlennon",
     },
     work: [
       {
@@ -130,7 +132,7 @@ export async function action({ request }: ActionFunctionArgs) {
   toks.push("The following text is your unstructured input: ");
   toks.push(resumeText);
   toks.push(
-    "You must convert this input to the JSONresume.org format and return that back as a JSON object just like the one I provided you above. Wherever dates appear try to use the MM/YYYY format if possible or YYYY format if month is not available. Here is the your input text:"
+    "You must convert this input to the JSONresume.org format and return that back as a JSON object just like the one I provided you above. Wherever dates appear try to use the MM/YYYY format if possible or YYYY format if month is not available. Here is the your input text:",
   );
   const response = await bot.send(toks.join(""));
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -162,8 +164,10 @@ export function getResumeValues(data: any) {
     lastName: get(data, "basics.lastName", ""),
     email: get(data, "basics.email", ""),
     phone: get(data, "basics.phone", ""),
-    address: get(data, "basics.address", ""),
-    social: get(data, "basics.social", ""),
+    location: {
+      address: get(data, "basics.location.address", ""),
+    },
+    url: get(data, "basics.url", ""),
   } satisfies BasicsValues);
 
   set(output, "resume.summary", {
@@ -177,20 +181,20 @@ export function getResumeValues(data: any) {
     map(
       get(data, "work", []),
       (w) =>
-      ({
-        uuid: v4(),
-        name: get(w, "name", ""),
-        position: get(w, "position", ""),
-        city: get(w, "city", ""),
-        state: get(w, "state", ""),
-        startDate: get(w, "startDate", ""),
-        endDate: get(w, "endDate", ""),
-        bullets: map(get(w, "bullets", []), (b) => ({
+        ({
           uuid: v4(),
-          content: get(b, "content", ""),
-        })),
-      } satisfies WorkRecord)
-    )
+          name: get(w, "name", ""),
+          position: get(w, "position", ""),
+          city: get(w, "city", ""),
+          state: get(w, "state", ""),
+          startDate: get(w, "startDate", ""),
+          endDate: get(w, "endDate", ""),
+          bullets: map(get(w, "bullets", []), (b) => ({
+            uuid: v4(),
+            content: get(b, "content", ""),
+          })),
+        }) satisfies WorkRecord,
+    ),
   );
 
   set(
@@ -199,22 +203,22 @@ export function getResumeValues(data: any) {
     map(
       get(data, "education", []),
       (w) =>
-      ({
-        uuid: v4(),
-        institution: get(w, "institution", ""),
-        studyType: get(w, "studyType", ""),
-        area: get(w, "area", ""),
-        status: get(w, "status", "no_mention"),
-        city: get(w, "city", ""),
-        state: get(w, "state", ""),
-        startDate: get(w, "startDate", ""),
-        endDate: get(w, "endDate", ""),
-        bullets: map(get(w, "bullets", []), (b) => ({
+        ({
           uuid: v4(),
-          content: get(b, "content", ""),
-        })),
-      } satisfies EducationRecord)
-    )
+          institution: get(w, "institution", ""),
+          studyType: get(w, "studyType", ""),
+          area: get(w, "area", ""),
+          status: get(w, "status", "no_mention"),
+          city: get(w, "city", ""),
+          state: get(w, "state", ""),
+          startDate: get(w, "startDate", ""),
+          endDate: get(w, "endDate", ""),
+          bullets: map(get(w, "bullets", []), (b) => ({
+            uuid: v4(),
+            content: get(b, "content", ""),
+          })),
+        }) satisfies EducationRecord,
+    ),
   );
 
   set(
@@ -223,14 +227,14 @@ export function getResumeValues(data: any) {
     map(
       get(data, "certificates", []),
       (c) =>
-      ({
-        uuid: v4(),
-        name: get(c, "name", ""),
-        issuer: get(c, "issuer", ""),
-        url: get(c, "url", ""),
-        date: get(c, "date", ""),
-      } satisfies CertificateRecord)
-    )
+        ({
+          uuid: v4(),
+          name: get(c, "name", ""),
+          issuer: get(c, "issuer", ""),
+          url: get(c, "url", ""),
+          date: get(c, "date", ""),
+        }) satisfies CertificateRecord,
+    ),
   );
 
   set(output, "meta.mode", "custom");
@@ -244,11 +248,11 @@ export function getResumeValues(data: any) {
     map(
       get(data, "interests", []),
       (c) =>
-      ({
-        uuid: v4(),
-        name: get(c, "name", ""),
-      } satisfies InterestRecord)
-    )
+        ({
+          uuid: v4(),
+          name: get(c, "name", ""),
+        }) satisfies InterestRecord,
+    ),
   );
 
   set(
@@ -257,12 +261,12 @@ export function getResumeValues(data: any) {
     map(
       get(data, "skills", []),
       (s) =>
-      ({
-        uuid: v4(),
-        name: get(s, "name", ""),
-        level: get(s, "level", ""),
-      } satisfies SkillRecord)
-    )
+        ({
+          uuid: v4(),
+          name: get(s, "name", ""),
+          level: get(s, "level", ""),
+        }) satisfies SkillRecord,
+    ),
   );
 
   set(
@@ -271,11 +275,11 @@ export function getResumeValues(data: any) {
     map(
       get(data, "accomplishments", []),
       (c) =>
-      ({
-        uuid: v4(),
-        name: get(c, "name", ""),
-      } satisfies AccomplishmentRecord)
-    )
+        ({
+          uuid: v4(),
+          name: get(c, "name", ""),
+        }) satisfies AccomplishmentRecord,
+    ),
   );
 
   if (output.resume.accomplishments.length) {

@@ -33,13 +33,7 @@ export const Item = SortableElement(({ children }: { children: React.ReactNode }
 }) as any;
 
 export function StartStep() {
-  const {
-    control,
-    watch,
-    setValue,
-    formState: { errors },
-    register,
-  } = useFormContext<ResumeValues>();
+  const { control, watch, setValue, register } = useFormContext<ResumeValues>();
 
   const mode = watch("meta.mode");
 
@@ -88,9 +82,9 @@ export function StartStep() {
                       <div className="flex flex-col gap-0">
                         <Label htmlFor="r2">Custom resume</Label>
                         <FormDescription>
-                          Use the custom setup if you plan to add extra sectiosn in your resume and
-                          omit any of the standard ones. You may come back and change that at any
-                          time.
+                          Use the custom setup if you to want to add extra sections in your resume
+                          and omit any of the standard ones. Also reorder them as needed. You may
+                          come back and change that at any time.
                         </FormDescription>
                       </div>
                     </div>
@@ -98,12 +92,7 @@ export function StartStep() {
                 </FormControl>
               </FormItem>
               {mode === "custom" && (
-                <div className="space-y-4 small">
-                  <h4>Custom resume</h4>
-                  <p className="muted">
-                    Select the sections to include in the resume by toggling them on/off. Drag and
-                    reorder them, to change the order these sections appear in the final resume.
-                  </p>
+                <div className="space-y-2 text-sm ml-5">
                   <List lockAxis="y" onSortEnd={onSortEnd} useDragHandle>
                     {order.map((step, index) => (
                       <Item index={index} key={step}>

@@ -20,6 +20,7 @@ export function Stepper({ steps, current }: Props) {
             {steps.map((step, index) => {
               return (
                 <div
+                  key={step}
                   className={cn("w-full bg-gray-400 first:rounded-l-xl", { "w-0": index === 0 })}
                 >
                   <div className={cn("relative flex justify-end h-1 rounded-xl pt-[-5px]")}>

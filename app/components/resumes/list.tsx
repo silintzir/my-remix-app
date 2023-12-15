@@ -10,6 +10,7 @@ import {
 import { Form, Link } from "@remix-run/react";
 import { CreateResume } from "@/components/builder/steps/create";
 import { Trash } from "lucide-react";
+import { get } from "lodash-es";
 
 import { formatDistance } from "date-fns";
 
@@ -18,7 +19,6 @@ interface Props {
 }
 
 export function ResumesList({ resumes }: Props) {
-
   return (
     <Card className="max-w-xl">
       <CardHeader>
@@ -37,16 +37,14 @@ export function ResumesList({ resumes }: Props) {
               <div>
                 <Link className="link" to={`/app/resumes/${resume.id}/edit`}>
                   <h4 className="font-semibold text-lg">
-                    {resume.attributes.document.meta.title}
+                    {get(resume, "attributes.document.meta.title", "")}
                   </h4>
                 </Link>
                 <span className="small muted">
                   Last updated:{" "}
-                  {formatDistance(
-                    new Date(resume.attributes.updatedAt),
-                    new Date(),
-                    { addSuffix: true }
-                  )}
+                  {formatDistance(new Date(resume.attributes.updatedAt), new Date(), {
+                    addSuffix: true,
+                  })}
                 </span>
               </div>
               <Form method="post" action={`/app/resumes/${resume.id}/delete`}>
@@ -56,7 +54,7 @@ export function ResumesList({ resumes }: Props) {
                   onClick={(evt) => {
                     if (
                       confirm(
-                        "Deleting a resume is an action that cannot be undone. Proceed anyway?"
+                        "Deleting a resume is an action that cannot be undone. Proceed anyway?",
                       )
                     ) {
                       return true;

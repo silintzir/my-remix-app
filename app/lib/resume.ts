@@ -39,21 +39,21 @@ export const tailorSchema = z.object({
 
 export const certificateSchema = z.object({
   uuid: z.string(),
-  name: z.string().optional(),
-  date: z.string().optional(),
-  issuer: z.string().optional(),
-  url: z.string().optional(),
+  name: z.string(),
+  date: z.string(),
+  issuer: z.string(),
+  url: z.string(),
 });
 
 export const workSchema = z.object({
   uuid: z.string(),
-  name: z.string().optional(),
-  position: z.string().optional(),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  bullets: z.array(bulletSchema).optional().default([]),
+  name: z.string(),
+  position: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  city: z.string(),
+  state: z.string(),
+  bullets: z.array(bulletSchema).optional(),
 });
 
 export const basicsSchema = z.object({
@@ -69,15 +69,15 @@ export const basicsSchema = z.object({
 
 export const educationSchema = z.object({
   uuid: z.string(),
-  institution: z.string().optional(),
-  area: z.string().optional(),
-  studyType: z.string().optional(),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  status: z.string().optional(),
-  bullets: z.array(bulletSchema).optional().default([]),
+  institution: z.string(),
+  area: z.string(),
+  studyType: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  city: z.string(),
+  state: z.string(),
+  status: z.string(),
+  bullets: z.array(bulletSchema).optional(),
 });
 
 export const stepConfigSchema = z.object({

@@ -1,9 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import {
-  json,
-  type LoaderFunctionArgs,
-  type LinksFunction,
-} from "@remix-run/node";
+import { json, type LoaderFunctionArgs, type LinksFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -66,6 +62,7 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script src="/vendors/pdf.min.mjs" type="module"></script>
       </head>
       <body>
         <Outlet />
@@ -94,7 +91,8 @@ export function ErrorBoundary() {
         </h1>
       </div>
     );
-  } if (error instanceof Error) {
+  }
+  if (error instanceof Error) {
     return (
       <main>
         <NavBar>

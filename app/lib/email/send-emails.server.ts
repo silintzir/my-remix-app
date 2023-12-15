@@ -49,7 +49,8 @@ export const sendEmail = async (data: ContactData) => {
 export const sendAttachment = async (
   name: string,
   email: string,
-  data: any
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  data: any,
 ) => {
   const mailOptions: Mail.Options = {
     from: process.env.AWS_SES_FROM,
