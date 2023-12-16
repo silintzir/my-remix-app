@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import getDefinition from "@/lib/templates/structure";
+import getDefinition from "@/lib/templates/pdf.client";
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
 import type { ResumeValues } from "../types";

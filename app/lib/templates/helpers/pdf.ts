@@ -1,8 +1,4 @@
-import { Content } from "pdfmake/interfaces";
-
-export function constr(delimiter: string, ...strings: string[]): string {
-  return strings.filter((str) => str !== "").join(delimiter);
-}
+import type { Content } from "pdfmake/interfaces";
 
 export function getHeaderWithLine(text: string): Content {
   return {
@@ -49,3 +45,4 @@ export function pine(arr: Content[], text: string, style: string) {
     style,
   });
 }
+

@@ -1,68 +1,21 @@
-import { Content, StyleDictionary, TDocumentDefinitions } from "pdfmake/interfaces";
+import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { ResumeValues, Step } from "@/lib/types";
-import { constr, get2ColsSpaceBetween, getHeaderWithLine, pine } from "@/lib/templates/pdf-helpers";
+import { certificateDisplay, constr, skillDisplay } from "@/lib/templates/helpers/common";
+import { get2ColsSpaceBetween, getHeaderWithLine, pine, } from '@/lib/templates/helpers/pdf';
 import { map, groupBy } from "lodash-es";
+import { pdfStyles } from "./styles";
 
 interface ContentProvider {
   (): Content[];
 }
 
-abstract class Styler {
-  public config;
-  constructor(config: { fontSize: number }) {
-    this.config = config;
-  }
+class ChicagoPdfTemplate {
 
-  abstract getStyles(): StyleDictionary;
-}
-
-class DefaultStyler extends Styler {
-  getStyles(): StyleDictionary {
-    return {
-      paragraph: {
-        fontSize: 11,
-      },
-      heading1: {
-        fontSize: 14,
-        bold: true,
-        alignment: "center",
-        lineHeight: 1.2,
-      },
-      subheading1: {
-        fontSize: 10,
-        alignment: "center",
-        lineHeight: 1.2,
-      },
-      heading2: {
-        bold: true,
-        fontSize: 13,
-        lineHeight: 1.2,
-      },
-      heading3: {
-        fontSize: 11,
-        decoration: "underline",
-        lineHeight: 1.2,
-        bold: true,
-      },
-      heading4: {
-        fontSize: 11,
-        bold: true,
-        italics: true,
-      },
-    };
-  }
-}
-
-abstract class Structurer {
   public values: ResumeValues;
   public constructor(values: ResumeValues) {
     this.values = values;
   }
 
-  abstract create(): Content[];
-}
-
-class DefaultStructurer extends Structurer {
   basics = (): Content[] => {
     const {
       resume: { basics: { location: { address }, firstName, lastName, email, phone, url } },
@@ -119,10 +72,7 @@ class DefaultStructurer extends Structurer {
     return [
       getHeaderWithLine(title),
       {
-        ul: map(skills, (s) => {
-          const lv = s.level !== 'no_mention' ? constr("", '(', s.level, ')') : '';
-          return constr(" ", s.name, lv);
-        }), style: "paragraph"
+        ul: map(skills, skillDisplay), style: "paragraph"
       },
     ];
   };
@@ -140,17 +90,7 @@ class DefaultStructurer extends Structurer {
     return [
       getHeaderWithLine(title),
       {
-        ul: map(certificates, (s) => {
-          const firstLine = [];
-          if (s.name.trim().length) {
-            firstLine.push(s.name);
-          }
-          if (s.date.trim().length) {
-            firstLine.push(`[${s.date}]`);
-          }
-          const secondLine = constr(" - ", s.issuer, s.url);
-          return constr("\n", firstLine.join(" "), secondLine);
-        }),
+        ul: map(certificates, certificateDisplay),
         style: "paragraph",
       },
     ];
@@ -295,11 +235,11 @@ export default function getDefinition(
   data: ResumeValues,
   { isSample }: DefConf = { isSample: false },
 ): TDocumentDefinitions {
-  const styler = new DefaultStyler({ fontSize: 10 });
-  const struct = new DefaultStructurer(data);
+  const styles = pdfStyles.chicago({ fontSize: 11 });
+  const struct = new ChicagoPdfTemplate(data);
 
   return {
-    styles: styler.getStyles(),
+    styles,
     pageSize: "LETTER",
     ...(isSample
       ? {
@@ -331,3 +271,4 @@ export default function getDefinition(
     content: struct.create(),
   };
 }
+

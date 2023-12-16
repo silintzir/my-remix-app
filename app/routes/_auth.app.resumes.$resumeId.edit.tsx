@@ -3,7 +3,7 @@ import { TemplateSelector } from "@/components/builder/templates/selector";
 import { PdfPages } from "@/components/builder/PdfPages";
 import { AutoSavedFeedback } from "@/components/builder/auto-saved-feedback";
 import { DownloadPdfButton } from "@/components/builder/download-pdf-button";
-import { OtherActionsButton } from "@/components/builder/other-actions-button";
+import { ExportActionsButton } from "@/components/builder/export-actions";
 import { StartStep } from "@/components/builder/steps/start";
 import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
 import { UserMenu } from "@/components/navbar/user-menu";
@@ -24,7 +24,14 @@ import {
   useNavigate,
 } from "@remix-run/react";
 import { Form as SForm } from "@/components/ui/form";
-import { AlertCircle, ChevronLeft, ChevronRight, Home, Loader2, View } from "lucide-react";
+import {
+  AlertCircle,
+  ChevronLeft,
+  ChevronRight,
+  Home,
+  Loader2,
+  View,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { resumeSchema } from "@/lib/resume";
 import { useEffect, useRef, useState } from "react";
@@ -61,7 +68,11 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { resumeId } = params;
-  const response = await authenticatedFetch(request, `/api/resumes/${resumeId}`, { method: "GET" });
+  const response = await authenticatedFetch(
+    request,
+    `/api/resumes/${resumeId}`,
+    { method: "GET" }
+  );
 
   return response as { data: StrapiLongResume };
 }
@@ -79,9 +90,13 @@ export default function Builder() {
 
   const data = useLoaderData<typeof loader>();
   const {
-    data: { id, attributes: { document: defaultValues } },
+    data: {
+      id,
+      attributes: { document: defaultValues },
+    },
   } = data;
-  const [submittedData, setSubmittedData] = useState<ResumeValues>(defaultValues);
+  const [submittedData, setSubmittedData] =
+    useState<ResumeValues>(defaultValues);
 
   const form = useForm<ResumeValues>({
     mode: "onBlur",
@@ -105,7 +120,7 @@ export default function Builder() {
           data: { document: data },
         }),
       },
-      { method: "POST" },
+      { method: "POST" }
     );
   }
 
@@ -127,7 +142,10 @@ export default function Builder() {
 
   const stepHasErrors = !!get(errors, `resume.${step}`);
 
-  const base64 = useBase64({ values: step === 'start' ? sample : defaultValues, isSample: step === 'start' });
+  const base64 = useBase64({
+    values: step === "start" ? sample : defaultValues,
+    isSample: step === "start",
+  });
 
   return (
     <div className="flex justify-center bg-muted min-h-screen w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0">
@@ -140,7 +158,11 @@ export default function Builder() {
 
           <div className="px-4 md:px-12 py-16 sm:py-4">
             <SForm {...form}>
-              <form method="post" ref={ref} onSubmit={form.handleSubmit(onSubmit)}>
+              <form
+                method="post"
+                ref={ref}
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
                 <fieldset className="my-8">
                   {step === "start" && <StartStep />}
                   {step === "basics" && <BasicsStep />}
@@ -151,7 +173,9 @@ export default function Builder() {
                   {step === "certificates" && <CertificatesStep />}
                   {step === "accomplishments" && <AccomplishmentsStep />}
                   {step === "summary" && <SummaryStep />}
-                  {step === "tailor" && <TailorStep id={id} values={defaultValues} />}
+                  {step === "tailor" && (
+                    <TailorStep id={id} values={defaultValues} />
+                  )}
                 </fieldset>
                 <AutoSave onSubmit={onSubmit} defaultValues={submittedData} />
               </form>
@@ -173,7 +197,9 @@ export default function Builder() {
                 <Button
                   variant="outline"
                   type={previous ? "submit" : "button"}
-                  {...(previous ? {} : { onClick: () => navigate("/app/dashboard") })}
+                  {...(previous
+                    ? {}
+                    : { onClick: () => navigate("/app/dashboard") })}
                   disabled={isChangingStep}
                   name="step"
                   title="Previous step"
@@ -241,14 +267,12 @@ export default function Builder() {
                       isSample={step === "start"}
                       values={step === "start" ? sampleResume() : defaultValues}
                     />
-                    <OtherActionsButton />
+                    <ExportActionsButton resumeId={id} />
                   </div>
                 </div>
 
                 {/* paper  */}
-                <PdfPaper
-                  base64={base64}
-                />
+                <PdfPaper base64={base64} />
 
                 {/* bottom-bar  */}
                 <div className="absolute left-0 right-0 flex flex-row h-10 items-center justify-center bottom-[-40px]">
@@ -323,15 +347,13 @@ export default function Builder() {
                 isSample={step === "start"}
                 values={step === "start" ? sampleResume() : defaultValues}
               />
-              <OtherActionsButton />
+              <ExportActionsButton resumeId={id} />
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto py-0 px-5">
             <div className="relative my-5 mx-auto">
-              <PdfPaper
-                base64={base64}
-              />
+              <PdfPaper base64={base64} />
             </div>
           </div>
         </div>

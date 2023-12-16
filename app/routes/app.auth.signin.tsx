@@ -38,7 +38,7 @@ import { FacebookButton } from "@/components/social/facebook";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { AuthUser, commitSession, getSession } from "@/sessions";
+import { type AuthUser, commitSession, getSession } from "@/sessions";
 
 const loginSchema = z.object({
   email: requiredString().email(),
