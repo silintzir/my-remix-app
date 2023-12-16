@@ -12,25 +12,17 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
 import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import type { ResumeValues, Step } from "@/lib/types";
-import { GripVertical, Lock } from "lucide-react";
+import { Lock } from "lucide-react";
 import { useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { SortableContainer, SortableElement, SortableHandle } from "react-sortable-hoc";
 import { LanguagePicker } from "../language-picker";
 import { arrayMoveImmutable } from "array-move";
+import {
+  SortableHandle,
+  SortableItem,
+  SortableList,
+} from "@/components/builder/sortable";
 
-export const List = SortableContainer(
-  ({ children }: { children: React.ReactNode }) => {
-    return <ul className="list-none ml-0 space-y-2">{children}</ul>;
-  },
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-) as any;
-export const Handle = SortableHandle(() => <GripVertical className="w-4 h-4" />);
-
-export const Item = SortableElement(({ children }: { children: React.ReactNode }) => {
-  return <li className="flex items-center gap-2 h-6">{children}</li>;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-}) as any;
 
 export function StartStep() {
   const { control, watch, setValue, register } = useFormContext<ResumeValues>();
@@ -93,10 +85,10 @@ export function StartStep() {
               </FormItem>
               {mode === "custom" && (
                 <div className="space-y-2 text-sm ml-5">
-                  <List lockAxis="y" onSortEnd={onSortEnd} useDragHandle>
+                  <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle className="space-y-3">
                     {order.map((step, index) => (
-                      <Item index={index} key={step}>
-                        <Handle />
+                      <SortableItem index={index} key={step}>
+                        <SortableHandle />
                         <FormField
                           key={step}
                           control={control}
@@ -124,9 +116,9 @@ export function StartStep() {
                             </FormItem>
                           )}
                         />
-                      </Item>
+                      </SortableItem>
                     ))}
-                  </List>
+                  </SortableList>
                 </div>
               )}
             </div>

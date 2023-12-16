@@ -70,9 +70,9 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
         const canvasContext = ref.current.getContext("2d");
         if (canvasContext) {
           const renderContext = { canvasContext, viewport };
-          const renderTask = page.render(renderContext).promise;
+          const renderTask = page.render(renderContext);
 
-          renderTask.then(() => {
+          renderTask.promise.then(() => {
             pageRendering.current = false;
             if (pageNumPending.current !== null && pageDataPending.current !== null) {
               run(pageNumPending.current, pageDataPending.current);

@@ -1,12 +1,12 @@
 import {
-  SortableAccordionHandle,
-  SortableAccordionItem,
-  SortableAccordionList,
-} from "@/components/builder/sortable-accordions";
+  SortableHandle,
+  SortableItem,
+  SortableList,
+} from "@/components/builder/sortable";
 import { MonthPicker } from "@/components/month-picker";
 import { SelectInput } from "@/components/shadcn/SelectInput";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { AccordionContent, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -67,34 +67,130 @@ export function WorkStep() {
         </p>
       )}
 
-      <SortableAccordionList
+      <SortableList
         lockAxis="y"
         onSortEnd={onSortEnd}
         useDragHandle
         value={open}
       >
-        {sorted.map((field, index) => {
-          return (
-            <SortableAccordionItem
-              index={index}
-              key={field.uuid}
-              value={field.uuid}
-              className="flex"
-            >
-              <AccordionTrigger
-                className="flex py-3 justify-end gap-4"
-                onClick={() => setOpen(open === field.uuid ? "" : field.uuid)}
-              >
+        <Accordion value={open} type="single" className="space-y-1" collapsible>
+          {sorted.map((field, index) => {
+            return (
+              <SortableItem index={index} key={field.uuid} className="w-full flex items-center gap-2">
                 {autoSort !== true && fields.length > 1 && (
-                  <SortableAccordionHandle />
+                  <SortableHandle />
                 )}
-                <div className="flex-grow text-left small space-y-2">
-                  <div className="font-semibold">
-                    {getExperienceTitle(field)}
-                  </div>
-                  <div className="muted">{getRecordPeriod(field)}</div>
-                </div>
+                <AccordionItem
+                  value={field.uuid}
+                  className="border-2 border-bg-gray-500 bg-white px-4 rounded-md data-[state=open]:border-gray-600 data-[state=open]:bg-muted w-full"
+                >
+                  <AccordionTrigger
+                    className="flex py-3 justify-end gap-4 hover:no-underline"
+                    onClick={() => setOpen(open === field.uuid ? "" : field.uuid)}
+                  >
+                    <div className="flex-grow text-left small space-y-2">
+                      <div className="font-semibold hover:underline">
+                        {getExperienceTitle(field)}
+                      </div>
+                      <div className="muted">{getRecordPeriod(field)}</div>
+                    </div>
 
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 mt-2 px-1">
+                    <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
+                      <TextInput
+                        control={control}
+                        name={`resume.work.${index}.name`}
+                        placeholder="e.x. ABC Company"
+                        label="Company/Employer"
+                      />
+                      <TextInput
+                        control={control}
+                        name={`resume.work.${index}.position`}
+                        placeholder="e.x. Accountant"
+                        label="Job title/Position"
+                      />
+                    </div>
+                    <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
+                      <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
+                        <FormField
+                          control={control}
+                          name={`resume.work.${index}.startDate`}
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="inline-flex gap-2 items-center">
+                                <span>Start date</span>
+                                <MonthPicker
+                                  currentValue={field.value}
+                                  setValue={(expr: string) => {
+                                    setValue(
+                                      `resume.work.${index}.startDate`,
+                                      expr,
+                                      {
+                                        shouldDirty: true,
+                                      }
+                                    );
+                                  }}
+                                />
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="MM/YYYY" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={control}
+                          name={`resume.work.${index}.endDate`}
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="inline-flex gap-2 items-center">
+                                <span>End date</span>
+                                <MonthPicker
+                                  currentValue={field.value}
+                                  setValue={(expr: string) => {
+                                    setValue(`resume.work.${index}.endDate`, expr, {
+                                      shouldDirty: true,
+                                    });
+                                  }}
+                                  toPresent
+                                  toPresentText="Currently work here"
+                                />
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="MM/YYYY" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="flex gap-2 w-full sm:flex-8">
+                        <TextInput
+                          control={control}
+                          name={`resume.work.${index}.city`}
+                          placeholder="e.x. Miami"
+                          label="City"
+                        />
+                        <SelectInput
+                          className="w-48"
+                          options={map(usStateCodes, (s) => ({
+                            label: s,
+                            value: s,
+                          }))}
+                          control={control}
+                          name={`resume.work.${index}.state`}
+                          label="State"
+                          placeholder="Select state"
+                        />
+                      </div>
+                    </div>
+                    <Separator />
+                    {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
+                    <Bullets index={index} context={field as any} step="work" />
+                  </AccordionContent>
+                </AccordionItem>
                 <Button
                   type="button"
                   variant="ghost"
@@ -105,104 +201,11 @@ export function WorkStep() {
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-4 mt-2 px-1">
-                <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
-                  <TextInput
-                    control={control}
-                    name={`resume.work.${index}.name`}
-                    placeholder="e.x. ABC Company"
-                    label="Company/Employer"
-                  />
-                  <TextInput
-                    control={control}
-                    name={`resume.work.${index}.position`}
-                    placeholder="e.x. Accountant"
-                    label="Job title/Position"
-                  />
-                </div>
-                <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
-                  <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
-                    <FormField
-                      control={control}
-                      name={`resume.work.${index}.startDate`}
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormLabel className="inline-flex gap-2 items-center">
-                            <span>Start date</span>
-                            <MonthPicker
-                              currentValue={field.value}
-                              setValue={(expr: string) => {
-                                setValue(
-                                  `resume.work.${index}.startDate`,
-                                  expr,
-                                  {
-                                    shouldDirty: true,
-                                  }
-                                );
-                              }}
-                            />
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="MM/YYYY" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={control}
-                      name={`resume.work.${index}.endDate`}
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormLabel className="inline-flex gap-2 items-center">
-                            <span>End date</span>
-                            <MonthPicker
-                              currentValue={field.value}
-                              setValue={(expr: string) => {
-                                setValue(`resume.work.${index}.endDate`, expr, {
-                                  shouldDirty: true,
-                                });
-                              }}
-                              toPresent
-                              toPresentText="Currently work here"
-                            />
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="MM/YYYY" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="flex gap-2 w-full sm:flex-8">
-                    <TextInput
-                      control={control}
-                      name={`resume.work.${index}.city`}
-                      placeholder="e.x. Miami"
-                      label="City"
-                    />
-                    <SelectInput
-                      className="w-48"
-                      options={map(usStateCodes, (s) => ({
-                        label: s,
-                        value: s,
-                      }))}
-                      control={control}
-                      name={`resume.work.${index}.state`}
-                      label="State"
-                      placeholder="Select state"
-                    />
-                  </div>
-                </div>
-                <Separator />
-                <Bullets index={index} context={field} step="work" />
-              </AccordionContent>
-            </SortableAccordionItem>
-          );
-        })}
-      </SortableAccordionList>
+              </SortableItem>
+            );
+          })}
+        </Accordion>
+      </SortableList>
 
       <div className="flex justify-between items-center">
         <Button

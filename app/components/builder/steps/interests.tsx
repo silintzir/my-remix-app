@@ -1,42 +1,19 @@
 import { Button } from "@/components/ui/button";
 import type { InterestRecord, ResumeValues } from "@/lib/types";
-import { GripVertical, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { InlineEdit } from "@/components/inline-edit";
-import { StepTooltip } from "@/components/help/header-tooltip";
-import { EDUCATION_STEP_HELP } from "@/lib/help";
 import { map } from "lodash-es";
-
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle as Handle,
-} from "react-sortable-hoc";
-import type { ReactNode } from "react";
 import { useFetcher } from "@remix-run/react";
 import { useAiContext } from "@/components/hooks/aiContext";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
-import { ClientOnly } from "remix-utils/client-only";
-import { Separator } from "@/components/ui/separator";
 import { StepHeader } from "@/components/builder/header";
-
-type SProps = {
-  children: ReactNode;
-};
-
-const SortableList = SortableContainer(({ children }: SProps) => {
-  return <ul className="list-none ml-0 py-2">{children}</ul>;
-}) as any;
-const SortableHandle = Handle(() => (
-  <button type="button">
-    <GripVertical className="w-6 h-6" />
-  </button>
-));
-const SortableItem = SortableElement(({ children }: SProps) => {
-  return <li className="flex gap-1 items-center">{children}</li>;
-}) as any;
+import {
+  SortableHandle,
+  SortableItem,
+  SortableList,
+} from "@/components/builder/sortable";
 
 export function InterestsStep() {
   const { control } = useFormContext<ResumeValues>();
@@ -74,7 +51,7 @@ export function InterestsStep() {
         </p>
       )}
       {fields.length > 0 && (
-        <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle>
+        <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle className="space-y-1">
           {fields.map((field, index) => {
             return (
               <SortableItem key={field.uuid} index={index} className="flex">

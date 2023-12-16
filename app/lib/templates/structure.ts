@@ -118,7 +118,12 @@ class DefaultStructurer extends Structurer {
     }
     return [
       getHeaderWithLine(title),
-      { ul: map(skills, (s) => `${s.name} (${s.level})`), style: "paragraph" },
+      {
+        ul: map(skills, (s) => {
+          const lv = s.level !== 'no_mention' ? constr("", '(', s.level, ')') : '';
+          return constr(" ", s.name, lv);
+        }), style: "paragraph"
+      },
     ];
   };
 

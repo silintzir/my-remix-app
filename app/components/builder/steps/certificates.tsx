@@ -14,16 +14,16 @@ import { v4 as uuid } from "uuid";
 import { MonthPicker } from "@/components/month-picker";
 import { Separator } from "@/components/ui/separator";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Accordion, AccordionTrigger, AccordionItem, AccordionContent } from "@/components/ui/accordion";
 import type { ResumeValues } from "@/lib/types";
 import { Switch } from "@/components/ui/switch";
 import { orderBy } from "lodash-es";
 import { useState } from "react";
 import {
-  SortableAccordionHandle,
-  SortableAccordionItem,
-  SortableAccordionList,
-} from "@/components/builder/sortable-accordions";
+  SortableHandle,
+  SortableItem,
+  SortableList,
+} from "@/components/builder/sortable";
 import { cn } from "@/lib/utils";
 import { StepHeader } from "@/components/builder/header";
 
@@ -63,36 +63,97 @@ export function CertificatesStep() {
           You may keep adding as many certificates and reorder as needed.
         </p>
       )}
-      <SortableAccordionList
+      <SortableList
         lockAxis="y"
         onSortEnd={onSortEnd}
         useDragHandle
         value={open}
       >
-        {sorted.map((field, index) => {
-          return (
-            <SortableAccordionItem
-              index={index}
-              key={field.uuid}
-              value={field.uuid}
-              className="flex"
-            >
-              <AccordionTrigger
-                className="flex py-3 justify-end gap-4"
-                onClick={() => setOpen(open === field.uuid ? "" : field.uuid)}
+        <Accordion value={open} type="single" className="space-y-1" collapsible>
+          {sorted.map((field, index) => {
+            return (
+              <SortableItem
+                index={index}
+                key={field.uuid}
+                value={field.uuid}
+                className="flex"
               >
                 {autoSort !== true && fields.length > 1 && (
-                  <SortableAccordionHandle />
+                  <SortableHandle />
                 )}
-                <div className="flex-grow text-left small space-y-2">
-                  <div className="font-semibold flex flex-col gap-1">
-                    <span>{getCertificateTitle(field)}</span>
-                    <span className="font-normal">
-                      {field.date || "No date"}
-                    </span>
-                  </div>
-                </div>
+                <AccordionItem
+                  value={field.uuid}
+                  className="border-2 border-bg-gray-500 bg-white px-4 rounded-md data-[state=open]:border-gray-600 data-[state=open]:bg-muted w-full"
+                >
+                  <AccordionTrigger
+                    className="flex py-3 justify-end gap-4 hover:no-underline"
+                    onClick={() => setOpen(open === field.uuid ? "" : field.uuid)}
+                  >
+                    <div className="flex-grow text-left small">
+                      <div className="font-semibold flex flex-col gap-2">
+                        <span className="hover:underline">{getCertificateTitle(field)}</span>
+                        <span className="font-normal">
+                          {field.date || "No date"}
+                        </span>
+                      </div>
+                    </div>
 
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-4 mt-2 px-1">
+                    <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
+                      <TextInput
+                        control={control}
+                        name={`resume.certificates.${index}.name`}
+                        placeholder="e.x. "
+                        label="Certificate"
+                      />
+                      <TextInput
+                        control={control}
+                        name={`resume.certificates.${index}.issuer`}
+                        placeholder="e.x. Business management"
+                        label="Issuing authority"
+                      />
+                    </div>
+                    <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
+                      <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
+                        <FormField
+                          control={control}
+                          name={`resume.certificates.${index}.date`}
+                          render={({ field }) => (
+                            <FormItem className="w-full">
+                              <FormLabel className="inline-flex gap-2 items-center">
+                                <span>Date</span>
+                                <MonthPicker
+                                  currentValue={field.value}
+                                  setValue={(expr: string) => {
+                                    setValue(
+                                      `resume.certificates.${index}.date`,
+                                      expr,
+                                      {
+                                        shouldDirty: true,
+                                      }
+                                    );
+                                  }}
+                                />
+                              </FormLabel>
+                              <FormControl>
+                                <Input placeholder="MM/YYYY" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <TextInput
+                          control={control}
+                          name={`resume.certificates.${index}.url`}
+                          placeholder="e.x. Business management"
+                          label="URL/Website"
+                        />
+                      </div>
+                    </div>
+                    <Separator />
+                  </AccordionContent>
+                </AccordionItem>
                 <Button
                   type="button"
                   variant="ghost"
@@ -105,65 +166,11 @@ export function CertificatesStep() {
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
-              </AccordionTrigger>
-              <AccordionContent className="space-y-4 mt-2 px-1">
-                <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
-                  <TextInput
-                    control={control}
-                    name={`resume.certificates.${index}.name`}
-                    placeholder="e.x. "
-                    label="Certificate"
-                  />
-                  <TextInput
-                    control={control}
-                    name={`resume.certificates.${index}.issuer`}
-                    placeholder="e.x. Business management"
-                    label="Issuing authority"
-                  />
-                </div>
-                <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
-                  <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
-                    <FormField
-                      control={control}
-                      name={`resume.certificates.${index}.date`}
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormLabel className="inline-flex gap-2 items-center">
-                            <span>Date</span>
-                            <MonthPicker
-                              currentValue={field.value}
-                              setValue={(expr: string) => {
-                                setValue(
-                                  `resume.certificates.${index}.date`,
-                                  expr,
-                                  {
-                                    shouldDirty: true,
-                                  }
-                                );
-                              }}
-                            />
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="MM/YYYY" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <TextInput
-                      control={control}
-                      name={`resume.certificates.${index}.url`}
-                      placeholder="e.x. Business management"
-                      label="URL/Website"
-                    />
-                  </div>
-                </div>
-                <Separator />
-              </AccordionContent>
-            </SortableAccordionItem>
-          );
-        })}
-      </SortableAccordionList>
+              </SortableItem>
+            );
+          })}
+        </Accordion>
+      </SortableList>
 
       <div className="flex justify-between items-center">
         <Button

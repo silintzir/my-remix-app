@@ -45,7 +45,6 @@ import { TailorStep } from "@/components/builder/steps/tailor";
 import { StepJump } from "@/components/builder/step-jump";
 import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { sampleResume } from "@/lib/sample";
-import { ClientOnly } from "remix-utils/client-only";
 import { useBase64 } from "@/lib/templates/useBase64";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -66,6 +65,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return response as { data: StrapiLongResume };
 }
+
+const sample = sampleResume();
 
 export default function Builder() {
   const navigate = useNavigate();
@@ -126,7 +127,7 @@ export default function Builder() {
 
   const stepHasErrors = !!get(errors, `resume.${step}`);
 
-  const base64 = useBase64({ values: defaultValues, isSample: step === 'start' });
+  const base64 = useBase64({ values: step === 'start' ? sample : defaultValues, isSample: step === 'start' });
 
   return (
     <div className="flex justify-center bg-muted min-h-screen w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0">

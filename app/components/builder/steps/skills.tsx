@@ -3,38 +3,21 @@ import { TextInput } from "@/components/shadcn/TextInput";
 import { Button } from "@/components/ui/button";
 import type { ResumeValues, SkillRecord } from "@/lib/types";
 import { map } from "lodash-es";
-import { GripVertical, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { useAiContext } from "@/components/hooks/aiContext";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
 import { getSkillLevelOptions } from "@/lib/resume";
 import { useFetcher } from "@remix-run/react";
-import type { ReactNode } from "react";
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle as Handle,
-} from "react-sortable-hoc";
 import { StepHeader } from '@/components/builder/header';
+import {
+  SortableHandle,
+  SortableItem,
+  SortableList,
+} from "@/components/builder/sortable";
 
-type SProps = {
-  children: ReactNode;
-};
 
-const SortableList = SortableContainer(({ children }: SProps) => {
-  return <ul className="list-none ml-0 py-2">{children}</ul>;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-}) as any;
-const SortableHandle = Handle(() => (
-  <button type="button">
-    <GripVertical className="w-6 h-6" />
-  </button>
-));
-const SortableItem = SortableElement(({ children }: SProps) => {
-  return <li className="flex gap-1 items-center">{children}</li>;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-}) as any;
 
 export function SkillsStep() {
   const { control } = useFormContext<ResumeValues>();
@@ -72,7 +55,7 @@ export function SkillsStep() {
         </p>
       )}
       {fields.length > 0 && (
-        <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle>
+        <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle className="space-y-1">
           {fields.map((field, index) => {
             return (
               <SortableItem key={field.uuid} index={index} className="flex">
