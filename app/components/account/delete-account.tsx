@@ -19,38 +19,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import {
-  changePasswordSchema,
-  type ChangePasswordValues,
-  CHANGE_PASSWORD_INTENT,
+  type DeleteAccountValues,
+  deleteAccountSchema,
+  DELETE_ACCOUNT_INTENT,
 } from "@/lib/account/validation";
 import { useRef } from "react";
 import { useNavigation, useSubmit } from "@remix-run/react";
-import { useMe } from "../hooks/useMe";
 
-export function ChangePasswordForm() {
+export function DeleteAccountForm() {
   const { state, formData } = useNavigation();
-  const methods = useForm<ChangePasswordValues>({
+  const methods = useForm<DeleteAccountValues>({
     mode: "onBlur",
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(deleteAccountSchema),
     defaultValues: {
-      _intent: CHANGE_PASSWORD_INTENT,
-      password: "",
-      passwordRepeat: "",
+      _intent: DELETE_ACCOUNT_INTENT,
+      confirm: "",
     },
   });
   const submit = useSubmit();
   const { control, handleSubmit } = methods;
   const ref = useRef<HTMLFormElement>(null);
-  const me = useMe();
 
-  const onSubmit: SubmitHandler<ChangePasswordValues> = (_data) => {
+  const onSubmit: SubmitHandler<DeleteAccountValues> = (_data) => {
     submit(ref.current);
   };
 
   const isSubmitting =
     state === "submitting" &&
     formData &&
-    formData.get("_intent") === CHANGE_PASSWORD_INTENT;
+    formData.get("_intent") === DELETE_ACCOUNT_INTENT;
 
   return (
     <Card className="w-full">
@@ -69,40 +66,20 @@ export function ChangePasswordForm() {
               )}
             />
             <CardHeader>
-              <CardTitle>Password settings</CardTitle>
+              <CardTitle className="text-destructive">Delete account</CardTitle>
               <CardDescription>
-                <span>Change your password</span>
+                Delete forever any data you have provided to us.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {!me.provider && (
-                <p className="bg-orange-300 p-2 rounded-md small">
-                  Passwordless login is configured for your account. If you want
-                  to access your account with a password, use the form below to
-                  setup one.
-                </p>
-              )}
               <FormField
                 control={control}
-                name="password"
+                name="confirm"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Enter "Delete me"</FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="passwordRepeat"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Repeat password</FormLabel>
-                    <FormControl>
-                      <Input {...field} type="password" />
+                      <Input {...field} placeholder="Delete me" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -110,8 +87,8 @@ export function ChangePasswordForm() {
               />
             </CardContent>
             <CardFooter>
-              <Button type="submit">
-                {isSubmitting ? "Please wait" : "Update"}
+              <Button type="submit" variant="destructive">
+                {isSubmitting ? "Please wait" : "Delete"}
               </Button>
             </CardFooter>
           </fieldset>

@@ -251,9 +251,8 @@ export default function Signin() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="Username" {...field} />
+                            <Input placeholder="Email" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -263,8 +262,8 @@ export default function Signin() {
                       <TextInput
                         type="password"
                         control={form.control}
-                        label="Password"
                         name="password"
+                        placeholder="Password"
                       />
                     )}
                     <div className="flex justify-between">

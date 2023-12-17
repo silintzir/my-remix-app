@@ -22,6 +22,7 @@ import { Button } from "../ui/button";
 import {
   type UpdateProfileValues,
   updateProfileSchema,
+  UPDATE_PROFILE_INTENT,
 } from "@/lib/account/validation";
 import { useRef } from "react";
 import { type StrapiUser } from "@/lib/types";
@@ -31,13 +32,13 @@ interface Props {
 }
 export function UpdateProfileForm({ user }: Props) {
   const submit = useSubmit();
-  const { state } = useNavigation();
+  const { state, formData } = useNavigation();
   const ref = useRef<HTMLFormElement>(null);
   const methods = useForm<UpdateProfileValues>({
     mode: "onBlur",
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      _intent: "updateProfile",
+      _intent: UPDATE_PROFILE_INTENT,
       firstName: user.firstName || "",
       lastName: user.lastName || "",
     },
@@ -48,7 +49,10 @@ export function UpdateProfileForm({ user }: Props) {
     submit(ref.current);
   };
 
-  const isSubmitting = state === "submitting";
+  const isSubmitting =
+    state === "submitting" &&
+    formData &&
+    formData.get("_intent") === UPDATE_PROFILE_INTENT;
 
   return (
     <Card className="w-full">
@@ -67,8 +71,8 @@ export function UpdateProfileForm({ user }: Props) {
           />
           <fieldset disabled={isSubmitting}>
             <CardHeader>
-              <CardTitle>My profile</CardTitle>
-              <CardDescription>Manage your account settings</CardDescription>
+              <CardTitle>Profile settings</CardTitle>
+              <CardDescription>Update your profile</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               <FormField

@@ -41,8 +41,6 @@ export async function action({ request }: ActionFunctionArgs) {
     return redirect("?status=failed");
   }
 
-  console.log(parsed);
-
   const session = await getSession(request.headers.get("Cookie"));
   const firstName = get(parsed, "context.firstName", ""); // includes firstName and lastName
   const lastName = get(parsed, "context.lastName", ""); // includes firstName and lastName

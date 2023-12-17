@@ -27,7 +27,7 @@ export default function Account() {
           <UserMenu user={me as unknown as StrapiUser} />
         </div>
       </NavBar>
-      <div className="h-[calc(100vh-5rem)] bg-muted">
+      <div className="h-[calc(100dvh-5rem)] bg-muted overflow-y-auto">
         <div className="space-y-8 p-8">
           <Outlet />
         </div>
