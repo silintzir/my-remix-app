@@ -26,6 +26,7 @@ import {
 import { useRef } from "react";
 import { useNavigation, useSubmit } from "@remix-run/react";
 import { useMe } from "../hooks/useMe";
+import { capitalize } from "lodash-es";
 
 export function ChangePasswordForm() {
   const { state, formData } = useNavigation();
@@ -75,13 +76,23 @@ export function ChangePasswordForm() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
-              {!me.provider && (
-                <p className="bg-orange-300 p-2 rounded-md small">
-                  Passwordless login is configured for your account. If you want
-                  to access your account with a password, use the form below to
-                  setup one.
-                </p>
-              )}
+              <p className="bg-orange-300 py-2 px-4 rounded-md mb-4">
+                {!me.provider && (
+                  <>
+                    <strong>Passwordless login</strong> is currently configured
+                    for your account. If you want to access your account with a
+                    password, use the form below to setup one.
+                  </>
+                )}
+                {(me.provider === "google" || me.provider === "facebook") && (
+                  <>
+                    <strong>{capitalize(me.provider)} login</strong> is
+                    currently configured for your account. If you proceed and
+                    set a password, your {capitalize(me.provider)} login will be
+                    disabled in favor of your password login.
+                  </>
+                )}
+              </p>
               <FormField
                 control={control}
                 name="password"
