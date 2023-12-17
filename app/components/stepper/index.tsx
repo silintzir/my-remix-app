@@ -41,13 +41,13 @@ export function Stepper({ active }: StepperProps) {
   return (
     <div className="gap-2 hidden md:flex">
       <Step
-        title="Choose your template"
+        title="Select template"
         index={1}
         lineAfter
         isComplete={active >= 1}
       />
       <Step
-        title="Enter your details"
+        title="Enter details"
         index={2}
         lineAfter
         isComplete={active >= 2}

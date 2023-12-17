@@ -1,17 +1,15 @@
 import { createCookieSessionStorage } from "@remix-run/node";
 import { type GuestValues } from "./components/guest/schema";
 
-export type AuthUser = {
+export type AuthValues = {
   id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
   jwt: string;
+  email: string;
 };
 
 export type SessionData = {
   guest: GuestValues;
-  user: AuthUser;
+  user: AuthValues;
 };
 
 export type SessionFlashData = {

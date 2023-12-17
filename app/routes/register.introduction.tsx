@@ -17,8 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Link,
   useActionData,
-  useHref,
   useLoaderData,
+  useNavigation,
   useSubmit,
 } from "@remix-run/react";
 import { useForm } from "react-hook-form";
@@ -39,9 +39,10 @@ export const handle = {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
+  const { guest } = session.data;
 
-  if (session.has("guest")) {
-    return session.get("guest");
+  if (guest) {
+    return guest;
   }
   return defaultValues;
 }
@@ -55,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const session = await getSession(request.headers.get("Cookie"));
     session.set("guest", { ...(session.get("guest") || {}), ...result.data });
 
-    return redirect("/app/create-resume/account", {
+    return redirect("/register/account", {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -67,8 +68,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Introduction() {
   const submit = useSubmit();
+  const { state } = useNavigation();
   const defaultValues = useLoaderData<typeof loader>();
-  const hrefPrev = useHref("../social-profile");
   const ref = useRef<HTMLFormElement>(null);
   const result = useActionData<typeof action>();
   const form = useForm<GuestValues>({
@@ -83,10 +84,10 @@ export default function Introduction() {
     submit(ref.current);
   }
 
-  console.log(form.formState.errors);
+  const isSubmitting = state === "submitting";
 
   return (
-    <div className="space-y-4 max-w-xs mx-auto px-4">
+    <div className="space-y-4 max-w-xs mx-auto">
       <h1 className="font-semibold text-lg">Add your name</h1>
       <p className="muted">
         You made a great template selection! Now let’s add your name to it.
@@ -99,7 +100,10 @@ export default function Introduction() {
           ref={ref}
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <fieldset className="space-y-4 w-full text-left">
+          <fieldset
+            className="space-y-4 w-full text-left"
+            disabled={isSubmitting}
+          >
             <input type="hidden" name="step" value="one" />
             <FormField
               control={form.control}
@@ -127,7 +131,7 @@ export default function Introduction() {
             />
             <div className="flex justify-between items-center">
               <Link
-                to={hrefPrev}
+                to="/register/social-profile"
                 className={cn(buttonVariants({ variant: "outline" }))}
               >
                 Back

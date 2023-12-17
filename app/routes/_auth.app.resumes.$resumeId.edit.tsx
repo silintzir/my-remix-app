@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authenticatedFetch } from "@/lib/strapi.server";
 import type { ResumeValues, StrapiLongResume, Step } from "@/lib/types";
-import type { AuthUser } from "@/sessions";
+import type { AuthValues } from "@/sessions";
 import "@/styles/builder.css";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
@@ -81,7 +81,7 @@ const sample = sampleResume();
 
 export default function Builder() {
   const navigate = useNavigate();
-  const { user } = useOutletContext<{ user: AuthUser }>();
+  const { user } = useOutletContext<{ user: AuthValues }>();
   const { state, formMethod, formData } = useNavigation();
 
   const [searchParams] = useSearchParams();

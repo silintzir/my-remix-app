@@ -1,4 +1,4 @@
-import { type AuthUser, getSession } from "@/sessions";
+import { type AuthValues, getSession } from "@/sessions";
 import { InputErrors } from "domain-functions";
 import { get, map } from "lodash-es";
 
@@ -19,33 +19,30 @@ export interface StrapiRestResponse {
   };
 }
 
-export interface StrapiAuthResponse {
-  jwt: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    provider: string;
-    confirmed: boolean;
-    blocked: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    firstName: string | null;
-    lastName: string | null;
-  };
+export interface StrapiUser {
+  id: number;
+  username: string;
+  email: string;
+  confirmed: boolean;
+  provider: "local" | "facebook" | "google";
+  blocked: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  firstName: string | null;
+  lastName: string | null;
 }
 
-export function authToSession(apiResponse: StrapiAuthResponse): AuthUser {
-  const username = get(apiResponse, "user.username", "");
+export interface StrapiAuthResponse {
+  jwt: string;
+  user: StrapiUser;
+}
+
+export function authToSession(apiResponse: StrapiAuthResponse): AuthValues {
   const id = get(apiResponse, "user.id", 0);
-  const firstName = get(apiResponse, "user.firstName", "");
-  const lastName = get(apiResponse, "user.lastName", "");
   const email = get(apiResponse, "user.email", "");
   const jwt = get(apiResponse, "jwt", "");
   return {
     id,
-    firstName: firstName || username, // just for facebook
-    lastName,
     email,
     jwt,
   };
@@ -85,4 +82,8 @@ export async function authenticatedFetch(
     ...config,
   });
   return await response.json();
+}
+
+export async function fetchMe(request: Request): Promise<StrapiUser> {
+  return await authenticatedFetch(request, "/api/users/me", { method: "GET" });
 }

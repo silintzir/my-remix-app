@@ -14,23 +14,19 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import {
+  changePasswordSchema,
+  type ChangePasswordValues,
+} from "@/lib/account/validation";
 
-const PasswordSchema = z.object({
-  password: z.string(),
-  passwordRepeat: z.string(),
-});
-
-type ProfileValues = z.infer<typeof PasswordSchema>;
-
-export function PasswordForm() {
-  const methods = useForm<ProfileValues>({
+export function ChangePasswordForm() {
+  const methods = useForm<ChangePasswordValues>({
     mode: "onBlur",
-    resolver: zodResolver(PasswordSchema),
+    resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       password: "",
       passwordRepeat: "",

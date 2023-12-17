@@ -26,9 +26,7 @@ export function CallToAction() {
             Unleash Your Career Potential with Professional Resumes in Seconds
           </p>
           <div className="mt-4">
-            <Button onClick={() => navigate("/app/create-resume/templates")}>
-              Get started
-            </Button>
+            <Button onClick={() => navigate("/register")}>Get started</Button>
           </div>
         </div>
       </Container>

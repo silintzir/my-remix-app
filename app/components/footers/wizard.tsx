@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react";
 export function WizardFooter() {
   return (
     <div
-      className="fixed bottom-0 w-full mx-auto small muted text-center pb-4"
+      className="hidden sm:block fixed bg-white bottom-0 w-full mx-auto small muted text-center py-2 px-4 shadow-xl"
       style={{ lineHeight: 1.5 }}
     >
       By signing up via your social profile or by email you agree with our{" "}

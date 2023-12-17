@@ -15,8 +15,10 @@ export function Footer() {
               <Link to="#features">Features</Link>
               <Link to="#solutions">Solutions</Link>
               <Link to="#aboutus">About us</Link>
-              <button type="button" onClick={() => setContactModalOpen(true)}>Contact</button>
-              <Link to="/app/create-resume/templates">Get started</Link>
+              <button type="button" onClick={() => setContactModalOpen(true)}>
+                Contact
+              </button>
+              <Link to="/register">Get started</Link>
             </div>
           </nav>
         </div>

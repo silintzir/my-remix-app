@@ -4,7 +4,7 @@ import { UserMenu } from "@/components/navbar/user-menu";
 import { ResumesList } from "@/components/resumes/list";
 import { Logo } from "@/components/website/logo";
 import { getResumes } from "@/lib/resumes.server";
-import { type AuthUser } from "@/sessions";
+import { type AuthValues } from "@/sessions";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useOutletContext } from "@remix-run/react";
 
@@ -14,7 +14,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function AppDashboard() {
-  const { user } = useOutletContext<{ user: AuthUser }>();
+  const { user } = useOutletContext<{ user: AuthValues }>();
   const { resumes } = useLoaderData<typeof loader>();
 
   return (
@@ -30,9 +30,7 @@ export default function AppDashboard() {
         <div className="space-y-8 p-8">
           <h4>
             Welcome back,{" "}
-            <strong>
-              {`${(user.firstName || "")} ${user.lastName || ""}`}
-            </strong>
+            <strong>{`${user.firstName || ""} ${user.lastName || ""}`}</strong>
           </h4>
           <ResumesList resumes={resumes} />
         </div>

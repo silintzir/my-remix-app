@@ -5,20 +5,7 @@ import clsx from "clsx";
 import { Link, NavLink } from "@remix-run/react";
 import { Container } from "./container";
 import { Logo } from "./logo";
-
-function MobileNavLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Popover.Button as={Link} to={href} className="block w-full p-2">
-      {children}
-    </Popover.Button>
-  );
-}
+import { Button } from "../ui/button";
 
 function MobileNavIcon({ open }: { open: boolean }) {
   return (
@@ -47,7 +34,7 @@ function MobileNavIcon({ open }: { open: boolean }) {
   );
 }
 
-function MobileNavigation() {
+function MobileNavigation({ isLogged }: HeaderProps) {
   return (
     <Popover>
       <Popover.Button
@@ -81,13 +68,15 @@ function MobileNavigation() {
             as="div"
             className="absolute inset-x-0 top-full mt-4 flex origin-top flex-col rounded-2xl bg-white p-4 text-lg tracking-tight text-slate-900 shadow-xl ring-1 ring-slate-900/5"
           >
-            <MobileNavLink href="#features">Features</MobileNavLink>
-            <MobileNavLink href="#solutions">Solutions</MobileNavLink>
-            <MobileNavLink href="#aboutus">About us</MobileNavLink>
-            <MobileNavLink href="/app/create-resume/templates">
-              Register
-            </MobileNavLink>
-            <MobileNavLink href="/app/auth/signin">Login</MobileNavLink>
+            <Link to="#features">Features</Link>
+            <Link to="#solutions">Solutions</Link>
+            <Link to="#aboutus">About us</Link>
+            <Link to="/register">Register</Link>
+            {isLogged ? (
+              <Link to="/app/dashboard">My account</Link>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
           </Popover.Panel>
         </Transition.Child>
       </Transition.Root>
@@ -95,7 +84,10 @@ function MobileNavigation() {
   );
 }
 
-export function Header() {
+interface HeaderProps {
+  isLogged: boolean;
+}
+export function Header({ isLogged }: HeaderProps) {
   return (
     <header className="pt-8">
       <Container>
@@ -112,12 +104,18 @@ export function Header() {
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block space-x-5">
-              <NavLink to="/app/create-resume/templates">Register</NavLink>
-              <NavLink to="/app/auth/signin">Login</NavLink>
+              <NavLink to="/register">Register</NavLink>
+              {isLogged ? (
+                <Button asChild className="text-base">
+                  <NavLink to="/app/dashboard">My account</NavLink>
+                </Button>
+              ) : (
+                <NavLink to="/login">Login</NavLink>
+              )}
             </div>
 
             <div className="-mr-1 md:hidden">
-              <MobileNavigation />
+              <MobileNavigation isLogged={isLogged} />
             </div>
           </div>
         </nav>

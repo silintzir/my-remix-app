@@ -1,4 +1,8 @@
-import { type GuestValues, defaultValues, guestSchema } from "@/components/guest/schema";
+import {
+  type GuestValues,
+  defaultValues,
+  guestSchema,
+} from "@/components/guest/schema";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Form,
@@ -22,10 +26,14 @@ import {
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { useRef } from "react";
-import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
 import { inputFromForm, mdf } from "domain-functions";
 import { useServerErrors } from "@/components/hooks/serverErrors";
-import { AuthUser, commitSession, getSession } from "@/sessions";
+import { type AuthValues, commitSession, getSession } from "@/sessions";
 import { authToSession, throwOnStrapiError } from "@/lib/strapi.server";
 import { TextInput } from "@/components/shadcn/TextInput";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -36,11 +44,13 @@ export const handle = {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const session = await getSession(request.headers.get("Cookie"));
-  if (!session.has("guest")) {
-    return redirect("/app/create-resume/templates");
+  const {
+    data: { guest },
+  } = await getSession(request.headers.get("Cookie"));
+  if (!guest) {
+    return redirect("/register");
   }
-  return { ...defaultValues, ...session.get("guest") };
+  return { ...defaultValues, ...guest };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -83,11 +93,11 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (result.success) {
     if (raw.useMagicLink) {
-      return redirect(`/app/auth/signin?view=success&email=${raw.email}`);
+      return redirect(`/login?view=success&email=${raw.email}`);
     }
     const session = await getSession(request.headers.get("Cookie"));
     session.unset("guest");
-    session.set("user", result.data as AuthUser);
+    session.set("user", result.data as AuthValues);
     return redirect("/app/dashboard", {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -126,10 +136,11 @@ export default function Account() {
   const useMagic = watch("useMagicLink");
 
   return (
-    <div className="space-y-4 max-w-xl mx-auto">
-      <h3>Supply contact information</h3>
+    <div className="space-y-4 max-w-xs mx-auto">
+      <h1 className="font-semibold text-lg">Supply contact information</h1>
       <p className="muted">
-        It’s important to let employers know how to contact you. Enter your email address below.
+        It’s important to let employers know how to contact you. Enter your
+        email address below.
       </p>
 
       <Form {...form}>
@@ -140,11 +151,21 @@ export default function Account() {
           ref={ref}
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          {errors.root && <p className="small text-destructive mb-2">{errors.root.message}</p>}
+          {errors.root && (
+            <p className="small text-destructive mb-2">{errors.root.message}</p>
+          )}
           <fieldset className="space-y-4 w-full text-left">
             <input type="hidden" name="step" value="two" />
-            <input type="hidden" name="firstName" value={defaultValues.firstName} />
-            <input type="hidden" name="lastName" value={defaultValues.lastName} />
+            <input
+              type="hidden"
+              name="firstName"
+              value={defaultValues.firstName}
+            />
+            <input
+              type="hidden"
+              name="lastName"
+              value={defaultValues.lastName}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -163,13 +184,17 @@ export default function Account() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                   <div className="space-y-1 leading-none">
                     <FormLabel>Passwordless login</FormLabel>
                     <FormDescription>
-                      Forget passwords. We email you a magic link every time you want to login.
+                      Forget passwords. We email you a magic link every time you
+                      want to login.
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -180,19 +205,22 @@ export default function Account() {
                 <TextInput
                   type="password"
                   control={form.control}
-                  label="Password"
                   name="password"
+                  placeholder="Password"
                 />
                 <TextInput
                   type="password"
                   control={form.control}
-                  label="Repeat password"
                   name="passwordRepeat"
+                  placeholder="Repeat password"
                 />
               </>
             )}
             <div className="flex justify-between items-center">
-              <Link to={hrefPrev} className={cn(buttonVariants({ variant: "outline" }))}>
+              <Link
+                to={hrefPrev}
+                className={cn(buttonVariants({ variant: "outline" }))}
+              >
                 Back
               </Link>
 

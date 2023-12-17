@@ -16,7 +16,11 @@ import { Logo } from "@/components/website/logo";
 import { authToSession, throwOnStrapiError } from "@/lib/strapi.server";
 import successImg from "@/images/coffee_with_friends.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
 import {
   Form as RemixForm,
   Link,
@@ -30,7 +34,7 @@ import { inputFromForm, mdf } from "domain-functions";
 import { Mail, Loader2 } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
-
+import { WizardFooter } from "@/components/footers/wizard";
 import { requiredString } from "@/lib/validation";
 import { z } from "zod";
 import { GoogleButton } from "@/components/social/google";
@@ -38,7 +42,12 @@ import { FacebookButton } from "@/components/social/facebook";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { type AuthUser, commitSession, getSession } from "@/sessions";
+import {
+  type AuthValues,
+  commitSession,
+  getSession,
+  destroySession,
+} from "@/sessions";
 
 const loginSchema = z.object({
   email: requiredString().email(),
@@ -50,7 +59,7 @@ type LoginValues = z.infer<typeof loginSchema>;
 
 const defaultValues: LoginValues = {
   email: "",
-  useMagicLink: true,
+  useMagicLink: false,
   password: "",
 };
 
@@ -61,7 +70,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (view === "success" && !email) {
     return redirect("");
   }
-  return null;
+  return new Response(null, {
+    headers: {
+      "Set-Cookie": await destroySession(
+        await getSession(request.headers.get("Cookie"))
+      ),
+    },
+  });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -112,7 +127,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
     const session = await getSession(request.headers.get("Cookie"));
     session.unset("guest");
-    session.set("user", result.data as AuthUser);
+    session.set("user", result.data as AuthValues);
     return redirect("/app/dashboard", {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -159,11 +174,15 @@ export default function Signin() {
         <Logo />
         <ReturnToWebsite />
       </NavBar>
-      <div className="text-center pt-8 h-[calc(100vh-5rem)] bg-muted px-4">
-        <div className="fixed left-1/2 top-32 -translate-x-1/2 max-w-lg w-full">
+      <div className="text-center absolute top-20 py-8 h-[calc(100dvh-5rem)] bg-muted px-4 overflow-y-auto w-full">
+        <div className="mx-auto max-w-xs w-full">
           {view === "success" && (
             <div className="flex flex-col items-center px-4">
-              <img src={successImg} alt="Signin success" className="h-[200px]" />
+              <img
+                src={successImg}
+                alt="Signin success"
+                className="h-[200px]"
+              />
               <h2 className="text-3xl mt-4 font-semibold">Check your inbox</h2>
               <p className="mt-4">
                 We just emailed a confirmation link to <strong>{email}</strong>.
@@ -181,7 +200,11 @@ export default function Signin() {
           {view === "email" && (
             <div className="flex flex-col text-center items-center gap-8">
               <div className="space-y-1 px-10">
-                <img src="/images/join.svg" alt="Enter your email" className="h-[160px]" />
+                <img
+                  src="/images/join.svg"
+                  alt="Enter your email"
+                  className="h-[160px]"
+                />
                 <h1 className="font-semibold text-lg">Log In</h1>
                 <p className="muted">Enter your email</p>
               </div>
@@ -193,7 +216,9 @@ export default function Signin() {
                   className="max-w-xs w-full"
                 >
                   {errors.root && (
-                    <p className="small text-destructive mb-2">{errors.root.message}</p>
+                    <p className="small text-destructive mb-2">
+                      {errors.root.message}
+                    </p>
                   )}
                   <fieldset
                     className="space-y-4 w-full text-left"
@@ -205,14 +230,17 @@ export default function Signin() {
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
                           <FormControl>
-                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
                           </FormControl>
                           <FormMessage />
                           <div className="space-y-1 leading-none">
                             <FormLabel>Passwordless login</FormLabel>
                             <FormDescription>
-                              Forget passwords. We email you a magic link every time you want to
-                              login.
+                              Forget passwords. We email you a magic link every
+                              time you want to login.
                             </FormDescription>
                           </div>
                         </FormItem>
@@ -240,7 +268,11 @@ export default function Signin() {
                       />
                     )}
                     <div className="flex justify-between">
-                      <Button variant="outline" type="button" onClick={() => navigate("")}>
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={() => navigate("")}
+                      >
                         Back
                       </Button>
                       <Button type="submit">
@@ -282,7 +314,7 @@ export default function Signin() {
               </div>
               <span className="muted">
                 I am not registered -{" "}
-                <Link className="link" to="/app/create-resume/templates">
+                <Link className="link" to="/register">
                   Signup
                 </Link>
               </span>
@@ -290,6 +322,7 @@ export default function Signin() {
           )}
         </div>
       </div>
+      <WizardFooter />
     </main>
   );
 }

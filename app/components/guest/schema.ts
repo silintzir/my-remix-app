@@ -19,7 +19,6 @@ export const guestSchema = z
   })
   .refine(
     (data) => {
-      console.log(data.step);
       if (data.step === "two") {
         return data.email && data.email.trim().length > 0;
       }
@@ -44,7 +43,6 @@ export const guestSchema = z
   )
   .refine(
     (data) => {
-      console.log(data);
       if (data.step === "two" && !data.useMagicLink) {
         return data.password && data.password.trim().length > 0;
       }
@@ -87,7 +85,7 @@ export const defaultValues: GuestValues = {
   firstName: "",
   lastName: "",
   email: "",
-  useMagicLink: true,
+  useMagicLink: false,
   password: "",
   passwordRepeat: "",
 };

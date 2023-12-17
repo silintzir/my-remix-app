@@ -8,9 +8,7 @@ import { last, get } from "lodash-es";
 
 export default function CreateResume() {
   const matches = useMatches();
-
   const activeStep = get(last(matches), "handle.step", 1);
-
   return (
     <main>
       <NavBar>
@@ -18,7 +16,7 @@ export default function CreateResume() {
         <Stepper active={activeStep} />
         <ReturnToWebsite />
       </NavBar>
-      <div className="text-center pt-8 h-[calc(100vh-5rem)] bg-muted">
+      <div className="absolute top-20 w-full text-center py-8 px-4 h-[calc(100dvh-5rem)] bg-muted overflow-y-auto">
         <Outlet />
       </div>
       <WizardFooter />

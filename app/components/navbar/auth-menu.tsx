@@ -4,14 +4,14 @@ import { buttonVariants } from "../ui/button";
 export function AuthMenu() {
   return (
     <div className="hidden sm:flex items-center gap-4">
-      <Link className="large no-underline" to="/app/auth/signin">
+      <Link className="large no-underline" to="/login">
         Login
       </Link>
       <Link
         className={`large no-underline ${buttonVariants({
           variant: "default",
         })}`}
-        to="/app/create-resume/templates"
+        to="/register"
       >
         Create resume
       </Link>

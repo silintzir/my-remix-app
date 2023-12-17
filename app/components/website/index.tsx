@@ -8,10 +8,13 @@ import { About } from "./about";
 import { Footer } from "./footer";
 import { Header } from "./header";
 
-export default function Website() {
+interface Props {
+  isLogged: boolean;
+}
+export default function Website({ isLogged }: Props) {
   return (
     <main className="bg-muted relative">
-      <Header />
+      <Header isLogged={isLogged} />
 
       <div className="text-center h-[calc(100vh-5rem)]">
         <Hero />

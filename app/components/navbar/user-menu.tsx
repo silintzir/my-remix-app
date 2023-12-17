@@ -1,4 +1,4 @@
-import { type AuthUser } from "@/sessions";
+import { type AuthValues } from "@/sessions";
 import { Form, useNavigate, useSubmit } from "@remix-run/react";
 import {
   DropdownMenu,
@@ -14,17 +14,19 @@ import { CircleUserRound, GaugeCircle, HelpCircle, LogOut } from "lucide-react";
 import { useRef } from "react";
 
 interface Props {
-  user: AuthUser;
+  user: AuthValues;
 }
 
 function getInitials(firstName: string | null, lastName: string | null) {
   if (firstName && lastName) {
     // Both firstName and lastName are not null
     return firstName[0].toUpperCase() + lastName[0].toUpperCase();
-  } if (firstName) {
+  }
+  if (firstName) {
     // Only firstName is not null
     return firstName.substring(0, 2).toUpperCase();
-  } if (lastName) {
+  }
+  if (lastName) {
     // Only lastName is not null
     return lastName.substring(0, 2).toUpperCase();
   }

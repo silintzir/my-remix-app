@@ -1,8 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { Button } from "../ui/button";
 import { Container } from "./container";
-// import { TrustedBy } from './TrustedBy';
-// import { ContactUsButton } from './ContactUsButton';
 
 export function Hero() {
   const navigate = useNavigate();
@@ -28,13 +26,8 @@ export function Hero() {
         coaching—all in one place and absolutely free.
       </p>
       <div className="mt-4 flex justify-center gap-x-6">
-        <Button onClick={() => navigate("/app/create-resume/templates")}>
-          Get started
-        </Button>
+        <Button onClick={() => navigate("/register")}>Get started</Button>
       </div>
-      {/* <div className="mt-20"> */}
-      {/*   <TrustedBy /> */}
-      {/* </div> */}
     </Container>
   );
 }
