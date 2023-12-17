@@ -67,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
     await fetch(updateUrl, updateConfig);
   }
 
-  return redirect("/app/dashboard", {
+  return redirect("/account/dashboard", {
     status: 303,
     headers: {
       "Set-Cookie": await commitSession(session),

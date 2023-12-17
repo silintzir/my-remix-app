@@ -73,7 +73,7 @@ function MobileNavigation({ isLogged }: HeaderProps) {
             <Link to="#aboutus">About us</Link>
             <Link to="/register">Register</Link>
             {isLogged ? (
-              <Link to="/app/dashboard">My account</Link>
+              <Link to="/account/dashboard">My account</Link>
             ) : (
               <Link to="/login">Login</Link>
             )}
@@ -107,7 +107,7 @@ export function Header({ isLogged }: HeaderProps) {
               <NavLink to="/register">Register</NavLink>
               {isLogged ? (
                 <Button asChild className="text-base">
-                  <NavLink to="/app/dashboard">My account</NavLink>
+                  <NavLink to="/account/dashboard">My account</NavLink>
                 </Button>
               ) : (
                 <NavLink to="/login">Login</NavLink>

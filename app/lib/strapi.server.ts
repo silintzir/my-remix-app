@@ -1,6 +1,7 @@
 import { type AuthValues, getSession } from "@/sessions";
 import { InputErrors } from "domain-functions";
 import { get, map } from "lodash-es";
+import type { StrapiUser } from "./types";
 
 export interface StrapiRestResponse {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -17,19 +18,6 @@ export interface StrapiRestResponse {
       }>;
     };
   };
-}
-
-export interface StrapiUser {
-  id: number;
-  username: string;
-  email: string;
-  confirmed: boolean;
-  provider: "local" | "facebook" | "google";
-  blocked: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  firstName: string | null;
-  lastName: string | null;
 }
 
 export interface StrapiAuthResponse {
@@ -85,5 +73,6 @@ export async function authenticatedFetch(
 }
 
 export async function fetchMe(request: Request): Promise<StrapiUser> {
+  console.log("fetching me");
   return await authenticatedFetch(request, "/api/users/me", { method: "GET" });
 }

@@ -1,16 +1,16 @@
 import { type z } from "zod";
-import {
-  type bulletSchema,
-  type educationSchema,
-  type workSchema,
-  type resumeSchema,
-  type skillSchema,
-  type interestSchema,
-  type certificateSchema,
-  type accomplishmentSchema,
-  type summarySchema,
-  type basicsSchema,
-  type adapterSuggestionSchema,
+import type {
+  bulletSchema,
+  educationSchema,
+  workSchema,
+  resumeSchema,
+  skillSchema,
+  interestSchema,
+  certificateSchema,
+  accomplishmentSchema,
+  summarySchema,
+  basicsSchema,
+  adapterSuggestionSchema,
   stepConfigSchema,
 } from "./resume";
 
@@ -35,6 +35,19 @@ export interface StrapiShortResume {
     updatedAt: Date;
     document: ResumeValues;
   };
+}
+
+export interface StrapiUser {
+  id: number;
+  username: string;
+  email: string;
+  confirmed: boolean;
+  provider: "local" | "facebook" | "google";
+  blocked: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  firstName: string | null;
+  lastName: string | null;
 }
 
 export type Lang = "en" | "es" | "zh";

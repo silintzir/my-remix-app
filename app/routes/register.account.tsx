@@ -98,7 +98,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const session = await getSession(request.headers.get("Cookie"));
     session.unset("guest");
     session.set("user", result.data as AuthValues);
-    return redirect("/app/dashboard", {
+    return redirect("/account/dashboard", {
       headers: {
         "Set-Cookie": await commitSession(session),
       },

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-const UPDATE_PROFILE_INTENT = "updateProfile";
-const CHANGE_PASSWORD_INTENT = "changePassword";
+export const UPDATE_PROFILE_INTENT = "updateProfile";
+export const CHANGE_PASSWORD_INTENT = "changePassword";
 export type Intent =
   | typeof UPDATE_PROFILE_INTENT
   | typeof CHANGE_PASSWORD_INTENT;

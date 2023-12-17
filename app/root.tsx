@@ -1,5 +1,9 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import { json, type LoaderFunctionArgs, type LinksFunction } from "@remix-run/node";
+import {
+  json,
+  type LoaderFunctionArgs,
+  type LinksFunction,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -12,6 +16,7 @@ import {
   useRouteError,
 } from "@remix-run/react";
 
+import { Toaster } from "@/components/ui/toaster";
 import styles from "./tailwind.css";
 import { NavBar } from "./components/navbar";
 import { Logo } from "./components/website/logo";
@@ -66,6 +71,7 @@ export default function App() {
       </head>
       <body>
         <Outlet />
+        <Toaster />
         <script
           // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
           dangerouslySetInnerHTML={{

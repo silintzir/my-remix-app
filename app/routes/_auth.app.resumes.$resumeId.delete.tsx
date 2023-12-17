@@ -7,5 +7,5 @@ export async function action({ request, params }: ActionFunctionArgs) {
     method: "DELETE",
   });
 
-  return redirect("/app/dashboard");
+  return redirect("/account/dashboard");
 }

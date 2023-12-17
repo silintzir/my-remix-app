@@ -31,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const authData = authToSession(parsed);
   session.set("user", authData);
 
-  return redirect("/app/dashboard", {
+  return redirect("/account/dashboard", {
     status: 303,
     headers: {
       "Set-Cookie": await commitSession(session),

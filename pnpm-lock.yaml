@@ -65,6 +65,9 @@ dependencies:
   '@radix-ui/react-switch':
     specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+  '@radix-ui/react-toast':
+    specifier: ^1.1.5
+    version: 1.1.5(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
   '@radix-ui/react-tooltip':
     specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
@@ -183,8 +186,8 @@ dependencies:
     specifier: ^1.5.1
     version: 1.5.1
   langchain:
-    specifier: ^0.0.208
-    version: 0.0.208
+    specifier: ^0.0.209
+    version: 0.0.209
   lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
@@ -236,6 +239,9 @@ dependencies:
   remix-i18next:
     specifier: ^5.4.0
     version: 5.4.0(@remix-run/react@2.4.0)(@remix-run/server-runtime@2.4.0)(i18next@23.7.11)(react-i18next@13.5.0)(react@18.2.0)
+  remix-toast:
+    specifier: ^1.1.0
+    version: 1.1.0(@remix-run/server-runtime@2.4.0)
   remix-utils:
     specifier: ^7.3.0
     version: 7.3.0(@remix-run/node@2.4.0)(@remix-run/react@2.4.0)(react@18.2.0)(zod@3.22.4)
@@ -2062,8 +2068,8 @@ packages:
     resolution: {integrity: sha512-Lg3PnLp0QXpxwLIAuuJboLeRaIhrgJjeuh797QADg3xz8wGLugQOS5DpsE8A6i6Adgzf+bacllkKZG3J0tGfDw==}
     dev: true
 
-  /@langchain/community@0.0.6:
-    resolution: {integrity: sha512-GrRZ3i6hmXBxUtwnF9N5SAEHSW4EkHI/50hxGITACRxP2Nt6D+/xJGENtLFtzpSh/nzDSWNTF1GWivHAs+Zylg==}
+  /@langchain/community@0.0.7:
+    resolution: {integrity: sha512-4O41IF8Cirqbb/SC7xNecxUIjuHX7HZkOlEgj98Zex+UuBF4aggPawUAJnP7+ak30PfOxH7NymnIWcs4MqRfxg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-crypto/sha256-js': ^5.0.0
@@ -2299,8 +2305,8 @@ packages:
       ws:
         optional: true
     dependencies:
-      '@langchain/core': 0.1.1
-      '@langchain/openai': 0.0.5
+      '@langchain/core': 0.1.2
+      '@langchain/openai': 0.0.6
       flat: 5.0.2
       langsmith: 0.0.51
       uuid: 9.0.1
@@ -2309,8 +2315,8 @@ packages:
       - encoding
     dev: false
 
-  /@langchain/core@0.1.1:
-    resolution: {integrity: sha512-p+BzmILzGAWjHxzNy1ZygfsNWxZcipWH3zvY0WC33ly+nmBp4n+MCVd25hKQ4YYWOqoOGGWSzFJukd5PxaXMDQ==}
+  /@langchain/core@0.1.2:
+    resolution: {integrity: sha512-BX9vBovUi+FQLsUy+kh32kGtNU3Iv5GIBDB63xfCvAPefrt/WnqdsqwYnaXMB2MohBcZavIVMewHymsgiEYNcQ==}
     engines: {node: '>=18'}
     dependencies:
       ansi-styles: 5.2.0
@@ -2325,13 +2331,13 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /@langchain/openai@0.0.5:
-    resolution: {integrity: sha512-ojNx33zQPk29otCeeO4wn8Je79KMGWXcXe2ofUSL4VxK3EC6BuSeINzfODozP7KhQ24TWo7DKkl7vBqPzTI98w==}
+  /@langchain/openai@0.0.6:
+    resolution: {integrity: sha512-t4ZzBAPfBCHk56MyS/BlSzEHyXEJ6LLhw3QTjqt8+QKfl8U31pSKDOe3xuVveM2YqpaoVAqWY27DHUKNTZ0gNg==}
     engines: {node: '>=18'}
     dependencies:
-      '@langchain/core': 0.1.1
+      '@langchain/core': 0.1.2
       js-tiktoken: 1.0.8
-      openai: 4.22.0
+      openai: 4.23.0
       zod: 3.22.4
       zod-to-json-schema: 3.20.3(zod@3.22.4)
     transitivePeerDependencies:
@@ -3263,6 +3269,38 @@ packages:
       '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.45)(react@18.2.0)
       '@radix-ui/react-use-previous': 1.0.1(@types/react@18.2.45)(react@18.2.0)
       '@radix-ui/react-use-size': 1.0.1(@types/react@18.2.45)(react@18.2.0)
+      '@types/react': 18.2.45
+      '@types/react-dom': 18.2.18
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@radix-ui/react-toast@1.1.5(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-fRLn227WHIBRSzuRzGJ8W+5YALxofH23y0MlPLddaIpLpCDqdE0NZlS2NRQDRiptfxDeeCjgFIpexB1/zkxDlw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.6
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-collection': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.45)(react@18.2.0)
+      '@radix-ui/react-context': 1.0.1(@types/react@18.2.45)(react@18.2.0)
+      '@radix-ui/react-dismissable-layer': 1.0.5(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-portal': 1.0.4(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-presence': 1.0.1(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-use-callback-ref': 1.0.1(@types/react@18.2.45)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.45)(react@18.2.0)
+      '@radix-ui/react-use-layout-effect': 1.0.1(@types/react@18.2.45)(react@18.2.0)
+      '@radix-ui/react-visually-hidden': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
       '@types/react': 18.2.45
       '@types/react-dom': 18.2.18
       react: 18.2.0
@@ -8067,8 +8105,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /langchain@0.0.208:
-    resolution: {integrity: sha512-EYcYe/uTlFFFEAt6iAdOHmlHQ8UouzQrvyN+l3sPS2+AqzZ+ZN0mT+k7RV/VEqjOa3/yBnqvr3okElaJ6csgqw==}
+  /langchain@0.0.209:
+    resolution: {integrity: sha512-5+ixk2z6XP7NiPqAinrolwd4LKA4b+gWDiFHGaMnk3AHeOnquUHEEqDXghuQrMpr93p8egwO9AgmpKpAIvznFg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@aws-sdk/client-s3': ^3.310.0
@@ -8227,9 +8265,9 @@ packages:
         optional: true
     dependencies:
       '@anthropic-ai/sdk': 0.9.1
-      '@langchain/community': 0.0.6
-      '@langchain/core': 0.1.1
-      '@langchain/openai': 0.0.5
+      '@langchain/community': 0.0.7
+      '@langchain/core': 0.1.2
+      '@langchain/openai': 0.0.6
       binary-extensions: 2.2.0
       expr-eval: 2.0.2
       js-tiktoken: 1.0.8
@@ -9385,8 +9423,8 @@ packages:
       mimic-fn: 2.1.0
     dev: true
 
-  /openai@4.22.0:
-    resolution: {integrity: sha512-HrRx5pvkeG5H8ihaI8GmG1ls+H2pkLaFewIFmvh9Dnwz9GNcGQS6CSh5PjgalnYxE5Vu9jvz2ikRgw8xhOFweg==}
+  /openai@4.23.0:
+    resolution: {integrity: sha512-ey2CXh1OTcTUa0AWZWuTpgA9t5GuAG3DVU1MofCRUI7fQJij8XJ3Sr0VtgxoAE69C9wbHBMCux8Z/IQZfSwHiA==}
     hasBin: true
     dependencies:
       '@types/node': 18.19.3
@@ -10353,6 +10391,15 @@ packages:
       react: 18.2.0
       react-i18next: 13.5.0(i18next@23.7.11)(react-dom@18.2.0)(react@18.2.0)
       use-consistent-value: 1.0.0(react@18.2.0)
+    dev: false
+
+  /remix-toast@1.1.0(@remix-run/server-runtime@2.4.0):
+    resolution: {integrity: sha512-F7Nd/AncB8Jt+4p0k+ylhS091clMfmgWPwee6d+YWHSFX4lLt6vwwu6EB8V1lrxzNOSxrwJ87tUXE0gQy3Occg==}
+    peerDependencies:
+      '@remix-run/server-runtime': '>=1.15'
+    dependencies:
+      '@remix-run/server-runtime': 2.4.0(typescript@5.3.3)
+      zod: 3.22.4
     dev: false
 
   /remix-utils@7.3.0(@remix-run/node@2.4.0)(@remix-run/react@2.4.0)(react@18.2.0)(zod@3.22.4):

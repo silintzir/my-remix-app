@@ -1,4 +1,3 @@
-import { type AuthValues } from "@/sessions";
 import { Form, useNavigate, useSubmit } from "@remix-run/react";
 import {
   DropdownMenu,
@@ -12,9 +11,10 @@ import {
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { CircleUserRound, GaugeCircle, HelpCircle, LogOut } from "lucide-react";
 import { useRef } from "react";
+import type { StrapiUser } from "@/lib/types";
 
 interface Props {
-  user: AuthValues;
+  user: StrapiUser;
 }
 
 function getInitials(firstName: string | null, lastName: string | null) {
@@ -59,11 +59,11 @@ export function UserMenu({ user }: Props) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-muted" />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate("/app/dashboard")}>
+          <DropdownMenuItem onClick={() => navigate("/account/dashboard")}>
             <GaugeCircle className="w-4 h-4 mr-2" />
             <span>Dashboard</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/app/account")}>
+          <DropdownMenuItem onClick={() => navigate("/account/settings")}>
             <CircleUserRound className="w-4 h-4 mr-2" />
             <span>Account settings</span>
           </DropdownMenuItem>

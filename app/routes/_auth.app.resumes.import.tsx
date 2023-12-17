@@ -22,14 +22,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const resumeText = get(posted, "resumeText", "") as string;
   if (resumeText.trim().length === 0) {
-    return redirect("/app/dashboard");
+    return redirect("/account/dashboard");
   }
 
   const bot = new NoMemory(0.2);
   const toks = [];
 
   toks.push(
-    "You are a text parser with the task of taking as input unstructured pieces of text from resumes and converting them to JSON objects structured according the jsonresume.org format so that these can be later analyzed and stored in a database. The following JSON ojbect is an example of the desired output:",
+    "You are a text parser with the task of taking as input unstructured pieces of text from resumes and converting them to JSON objects structured according the jsonresume.org format so that these can be later analyzed and stored in a database. The following JSON ojbect is an example of the desired output:"
   );
   toks.push(`
 {
@@ -132,7 +132,7 @@ export async function action({ request }: ActionFunctionArgs) {
   toks.push("The following text is your unstructured input: ");
   toks.push(resumeText);
   toks.push(
-    "You must convert this input to the JSONresume.org format and return that back as a JSON object just like the one I provided you above. Wherever dates appear try to use the MM/YYYY format if possible or YYYY format if month is not available. Here is the your input text:",
+    "You must convert this input to the JSONresume.org format and return that back as a JSON object just like the one I provided you above. Wherever dates appear try to use the MM/YYYY format if possible or YYYY format if month is not available. Here is the your input text:"
   );
   const response = await bot.send(toks.join(""));
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -193,8 +193,8 @@ export function getResumeValues(data: any) {
             uuid: v4(),
             content: get(b, "content", ""),
           })),
-        }) satisfies WorkRecord,
-    ),
+        } satisfies WorkRecord)
+    )
   );
 
   set(
@@ -217,8 +217,8 @@ export function getResumeValues(data: any) {
             uuid: v4(),
             content: get(b, "content", ""),
           })),
-        }) satisfies EducationRecord,
-    ),
+        } satisfies EducationRecord)
+    )
   );
 
   set(
@@ -233,8 +233,8 @@ export function getResumeValues(data: any) {
           issuer: get(c, "issuer", ""),
           url: get(c, "url", ""),
           date: get(c, "date", ""),
-        }) satisfies CertificateRecord,
-    ),
+        } satisfies CertificateRecord)
+    )
   );
 
   set(output, "meta.mode", "custom");
@@ -251,8 +251,8 @@ export function getResumeValues(data: any) {
         ({
           uuid: v4(),
           name: get(c, "name", ""),
-        }) satisfies InterestRecord,
-    ),
+        } satisfies InterestRecord)
+    )
   );
 
   set(
@@ -265,8 +265,8 @@ export function getResumeValues(data: any) {
           uuid: v4(),
           name: get(s, "name", ""),
           level: get(s, "level", ""),
-        }) satisfies SkillRecord,
-    ),
+        } satisfies SkillRecord)
+    )
   );
 
   set(
@@ -278,8 +278,8 @@ export function getResumeValues(data: any) {
         ({
           uuid: v4(),
           name: get(c, "name", ""),
-        }) satisfies AccomplishmentRecord,
-    ),
+        } satisfies AccomplishmentRecord)
+    )
   );
 
   if (output.resume.accomplishments.length) {

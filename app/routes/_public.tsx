@@ -11,7 +11,7 @@ export const handle = {
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   if (session.has("user")) {
-    return redirect("/app/dashboard");
+    return redirect("/account/dashboard");
   }
   return null;
 }

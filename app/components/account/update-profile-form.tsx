@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useSubmit } from "@remix-run/react";
+import { useNavigation, useSubmit } from "@remix-run/react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
@@ -24,13 +24,14 @@ import {
   updateProfileSchema,
 } from "@/lib/account/validation";
 import { useRef } from "react";
-import { type StrapiUser } from "@/lib/strapi.server";
+import { type StrapiUser } from "@/lib/types";
 
 interface Props {
   user: StrapiUser;
 }
 export function UpdateProfileForm({ user }: Props) {
   const submit = useSubmit();
+  const { state } = useNavigation();
   const ref = useRef<HTMLFormElement>(null);
   const methods = useForm<UpdateProfileValues>({
     mode: "onBlur",
@@ -47,8 +48,10 @@ export function UpdateProfileForm({ user }: Props) {
     submit(ref.current);
   };
 
+  const isSubmitting = state === "submitting";
+
   return (
-    <Card className="flex-grow">
+    <Card className="w-full">
       <Form {...methods}>
         <form method="post" ref={ref} onSubmit={handleSubmit(onSubmit)}>
           <FormField
@@ -62,7 +65,7 @@ export function UpdateProfileForm({ user }: Props) {
               </FormItem>
             )}
           />
-          <fieldset>
+          <fieldset disabled={isSubmitting}>
             <CardHeader>
               <CardTitle>My profile</CardTitle>
               <CardDescription>Manage your account settings</CardDescription>
@@ -96,7 +99,9 @@ export function UpdateProfileForm({ user }: Props) {
               />
             </CardContent>
             <CardFooter>
-              <Button type="submit">Update</Button>
+              <Button type="submit">
+                {isSubmitting ? "Please wait" : "Update"}
+              </Button>
             </CardFooter>
           </fieldset>
         </form>

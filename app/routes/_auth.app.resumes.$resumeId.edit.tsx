@@ -199,7 +199,7 @@ export default function Builder() {
                   type={previous ? "submit" : "button"}
                   {...(previous
                     ? {}
-                    : { onClick: () => navigate("/app/dashboard") })}
+                    : { onClick: () => navigate("/account/dashboard") })}
                   disabled={isChangingStep}
                   name="step"
                   title="Previous step"
