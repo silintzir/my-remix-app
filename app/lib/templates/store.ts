@@ -3,6 +3,8 @@ import { create } from "zustand";
 interface PdfStore {
   numPages: number;
   currentPage: number;
+  sampleMode: boolean;
+  setSampleMode: (sampleMode: boolean) => void;
   setNumPages: (numPages: number) => void;
   nextPage: () => void;
   prevPage: () => void;
@@ -11,6 +13,13 @@ interface PdfStore {
 export const useTemplateStore = create<PdfStore>((set) => ({
   numPages: 1,
   currentPage: 1,
+  sampleMode: false,
+  setSampleMode: (sampleMode: boolean) => {
+    set((state) => ({
+      ...state,
+      sampleMode,
+    }));
+  },
   setNumPages: (numPages: number) => {
     set((state) => ({
       ...state,

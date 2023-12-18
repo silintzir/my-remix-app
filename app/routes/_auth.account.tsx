@@ -4,16 +4,24 @@ import { UpgradeNowButton } from "@/components/navbar/upgrade-now";
 import { UserMenu } from "@/components/navbar/user-menu";
 import { Logo } from "@/components/website/logo";
 import type { StrapiUser } from "@/lib/types";
-import { Outlet } from "@remix-run/react";
+import { Outlet, useNavigation } from "@remix-run/react";
+import { Loader2 } from "lucide-react";
 
 export default function Account() {
   const me = useMe();
+  const { state } = useNavigation();
 
   return (
     <main>
       <NavBar>
         <Logo />
-        <div className="flex gap-2 items-center">
+        {state === "loading" && (
+          <div className="font-semibold flex items-center muted">
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            <span>Loading...</span>
+          </div>
+        )}{" "}
+        <div className="flex gap-4 items-center">
           <UpgradeNowButton />
           <UserMenu user={me as unknown as StrapiUser} />
         </div>

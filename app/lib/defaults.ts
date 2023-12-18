@@ -16,6 +16,20 @@ export const DEFAULT_SECTION_TITLES: Record<Step, string> = {
   finish: "Finish",
 };
 
+export const DEFAULT_SECTIONT_TITLES_ES: Record<Step, string> = {
+  start: "Iniciar",
+  basics: "Información básica",
+  work: "Experiencia",
+  education: "Educación",
+  skills: "Habilidades",
+  accomplishments: "Logros",
+  certificates: "Certificados",
+  interests: "Intereses",
+  summary: "Resumen",
+  tailor: "Job tailor",
+  finish: "Finalizar",
+};
+
 export const DEFAULT_STEPS: Step[] = [
   "start",
   "basics",

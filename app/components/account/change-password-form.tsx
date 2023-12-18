@@ -95,6 +95,13 @@ export function ChangePasswordForm() {
                   )}
                 </p>
               )}
+              <input
+                type="text"
+                name="username"
+                autoComplete="username email"
+                defaultValue={me.email}
+                className="sr-only"
+              />
               <FormField
                 control={control}
                 name="password"
@@ -102,7 +109,11 @@ export function ChangePasswordForm() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
+                      <Input
+                        {...field}
+                        type="password"
+                        autoComplete="new-password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -115,7 +126,11 @@ export function ChangePasswordForm() {
                   <FormItem>
                     <FormLabel>Repeat password</FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" />
+                      <Input
+                        {...field}
+                        type="password"
+                        autoComplete="new-password"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

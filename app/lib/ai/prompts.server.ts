@@ -1,6 +1,5 @@
 import type { Lang, Step } from "@/lib/types";
-
-const getLanguage = (code: Lang) => (code === "en" ? "English" : "Spanish");
+import { getLanguage } from "@/lib/utils";
 
 function introPrompt(lang: Lang) {
   const language = getLanguage(lang);

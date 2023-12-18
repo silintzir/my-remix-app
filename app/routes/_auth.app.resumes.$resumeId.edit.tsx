@@ -48,6 +48,9 @@ import { useMe } from "@/components/hooks/useMe";
 import { Separator } from "@/components/ui/separator";
 import { BackToEditor } from "@/components/builder/back-to-editor";
 import { OpenPreview } from "@/components/builder/open-preview";
+import { SampleToggle } from "@/components/builder/sample-toggle";
+import { useTemplateStore } from "@/lib/templates/store";
+import { OutputSettings } from "@/components/builder/output-settings";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const fd = await request.formData();
@@ -138,15 +141,17 @@ export default function Builder() {
 
   const stepHasErrors = !!get(errors, `resume.${step}`);
 
+  const { sampleMode } = useTemplateStore();
+
   const base64 = useBase64({
-    values: step === "start" ? sample : defaultValues,
-    isSample: step === "start",
+    values: sampleMode ? sample : defaultValues,
+    isSample: sampleMode,
     fontSize: submittedData.meta.fontSize,
   });
 
   const downloadPdf = (
     <DownloadPdfButton
-      isSample={step === "start"}
+      isSample={sampleMode}
       values={step === "start" ? sampleResume() : defaultValues}
       fontSize={submittedData.meta.fontSize}
     />
@@ -289,6 +294,8 @@ export default function Builder() {
                     <TemplateSelector />
                     <Separator orientation="vertical" className="h-5 w-0.5" />
                     {fontSizeAdjust}
+                    <Separator orientation="vertical" className="h-5 w-0.5" />
+                    <OutputSettings />
                   </div>
                   <div className="flex gap-1">
                     {downloadPdf}
@@ -300,13 +307,10 @@ export default function Builder() {
                 {pdfPaper}
 
                 {/* bottom-bar  */}
-                <div className="absolute left-0 right-0 flex flex-row h-16 items-center justify-center bottom-[-60px]">
-                  <div className="absolute left-0">
-                    <AutoSavedFeedback isSaving={isSaving} />
-                  </div>
-                  <div className="flex justify-center items-center">
-                    <PdfPages />
-                  </div>
+                <div className="absolute left-0 right-0 flex flex-row h-16 items-center justify-between bottom-[-60px]">
+                  <AutoSavedFeedback isSaving={isSaving} />
+                  <PdfPages />
+                  <SampleToggle />
                 </div>
               </div>
             </div>

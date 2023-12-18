@@ -7,7 +7,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import type { ResumeValues } from "@/lib/types";
+import type { ResumeValues, Step } from "@/lib/types";
 import {
   Select,
   SelectContent,
@@ -15,11 +15,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTranslation } from "react-i18next";
+import {
+  DEFAULT_SECTIONT_TITLES_ES,
+  DEFAULT_SECTION_TITLES,
+} from "@/lib/defaults";
+// import { useTranslation } from "react-i18next";
 
 export function LanguagePicker() {
-  const { i18n } = useTranslation();
-  const { control } = useFormContext<ResumeValues>();
+  // const { i18n } = useTranslation();
+  const { control, setValue } = useFormContext<ResumeValues>();
+
   return (
     <div className="small flex gap-1 items-center">
       <FormField
@@ -31,7 +36,27 @@ export function LanguagePicker() {
             <Select
               onValueChange={(val) => {
                 field.onChange(val);
-                i18n.changeLanguage(val);
+                const source =
+                  val === "en"
+                    ? DEFAULT_SECTION_TITLES
+                    : DEFAULT_SECTIONT_TITLES_ES;
+                (
+                  [
+                    "basics",
+                    "work",
+                    "education",
+                    "skills",
+                    "interests",
+                    "accomplishments",
+                    "certificates",
+                    "summary",
+                  ] as Step[]
+                ).forEach((step) => {
+                  setValue(`meta.steps.${step}.title`, source[step], {
+                    shouldDirty: true,
+                  });
+                });
+                // i18n.changeLanguage(val);
               }}
               defaultValue={field.value}
             >

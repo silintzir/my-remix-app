@@ -9,7 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { CircleUserRound, GaugeCircle, HelpCircle, LogOut } from "lucide-react";
+import {
+  CircleUserRound,
+  GaugeCircle,
+  HelpCircle,
+  LogOut,
+  Settings,
+} from "lucide-react";
 import { useRef } from "react";
 import type { StrapiUser } from "@/lib/types";
 
@@ -54,8 +60,9 @@ export function UserMenu({ user }: Props) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel className="text-center">
-          {user.email}
+        <DropdownMenuLabel className="text-primary flex items-center">
+          <CircleUserRound className="w-4 h-4 mr-2" />
+          <span>{user.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-muted" />
         <DropdownMenuGroup>
@@ -64,7 +71,7 @@ export function UserMenu({ user }: Props) {
             <span>Dashboard</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigate("/account/settings")}>
-            <CircleUserRound className="w-4 h-4 mr-2" />
+            <Settings className="w-4 h-4 mr-2" />
             <span>Account settings</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
