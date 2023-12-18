@@ -29,11 +29,7 @@ export function DownloadPdfButton({
   }, [values, isSample, fontSize]);
 
   return (
-    <Button
-      size="sm"
-      className="h-[38px] my-0 bg-blue-600 hover:bg-blue-500"
-      onClick={create}
-    >
+    <Button size="sm" className="h-[38px] my-0" onClick={create}>
       <Download className="w-4 h-4 mr-2" />
       Download PDF
     </Button>

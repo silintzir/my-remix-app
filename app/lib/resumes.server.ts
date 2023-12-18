@@ -30,7 +30,7 @@ export async function getResumes(request: Request) {
     { method: "GET" }
   );
 
-  return get(response, "data", []) as StrapiShortResume[];
+  return get(response, "data", []) || ([] as StrapiShortResume[]);
 }
 
 export async function updateResume(

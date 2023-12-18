@@ -16,10 +16,7 @@ export function ExportActionsButton({ resumeId }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          size="sm"
-          className="h-[38px] my-0 bg-blue-600 hover:bg-blue-500"
-        >
+        <Button size="sm" className="h-[38px] my-0">
           <MoreHorizontal className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>

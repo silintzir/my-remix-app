@@ -3,10 +3,10 @@ import { Crown } from "lucide-react";
 
 export function UpgradeNowButton() {
   return (
-    <Button variant="outline">
+    <Button variant="secondary" size="sm">
       <div className="flex gap-2 items-center">
         <Crown className="w-4 h-4" />
-        <span>Upgrade Now</span>
+        <span>Upgrade</span>
       </div>
     </Button>
   );

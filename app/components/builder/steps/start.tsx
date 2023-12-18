@@ -23,7 +23,6 @@ import {
   SortableList,
 } from "@/components/builder/sortable";
 
-
 export function StartStep() {
   const { control, watch, setValue, register } = useFormContext<ResumeValues>();
 
@@ -32,16 +31,12 @@ export function StartStep() {
   const order = watch("meta.order") as Step[];
 
   const onSortEnd = useCallback(
-    ({
-      oldIndex,
-      newIndex,
-    }: {
-      oldIndex: number;
-      newIndex: number;
-    }) => {
-      setValue("meta.order", arrayMoveImmutable(order, oldIndex, newIndex), { shouldDirty: true });
+    ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
+      setValue("meta.order", arrayMoveImmutable(order, oldIndex, newIndex), {
+        shouldDirty: true,
+      });
     },
-    [order, setValue],
+    [order, setValue]
   );
 
   const nonConfigurableSteps: Step[] = ["basics", "work"];
@@ -59,12 +54,15 @@ export function StartStep() {
               <FormItem>
                 <FormLabel>Resume mode</FormLabel>
                 <FormControl>
-                  <RadioGroup onValueChange={field.onChange} defaultValue={field.value}>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <div className="flex items-start space-x-2">
                       <RadioGroupItem value="standard" id="r1" />
                       <div className="flex flex-col gap-0">
                         <Label htmlFor="r1">Standard resume</Label>
-                        <FormDescription>
+                        <FormDescription className="text-muted-foreground">
                           Experience, education, skills, Interests & Summary
                         </FormDescription>
                       </div>
@@ -74,9 +72,10 @@ export function StartStep() {
                       <div className="flex flex-col gap-0">
                         <Label htmlFor="r2">Custom resume</Label>
                         <FormDescription>
-                          Use the custom setup if you to want to add extra sections in your resume
-                          and omit any of the standard ones. Also reorder them as needed. You may
-                          come back and change that at any time.
+                          Use the custom setup if you to want to add extra
+                          sections in your resume and omit any of the standard
+                          ones. Also reorder them as needed. You may come back
+                          and change that at any time.
                         </FormDescription>
                       </div>
                     </div>
@@ -85,7 +84,12 @@ export function StartStep() {
               </FormItem>
               {mode === "custom" && (
                 <div className="space-y-2 text-sm ml-5">
-                  <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle className="space-y-3">
+                  <SortableList
+                    lockAxis="y"
+                    onSortEnd={onSortEnd}
+                    useDragHandle
+                    className="space-y-3"
+                  >
                     {order.map((step, index) => (
                       <SortableItem index={index} key={step}>
                         <SortableHandle />
@@ -104,12 +108,17 @@ export function StartStep() {
                                     <Lock className="w-4 h-4" />
                                     <span>Locked</span>
                                     <input
-                                      {...register(`meta.steps.${step}.enabled`)}
+                                      {...register(
+                                        `meta.steps.${step}.enabled`
+                                      )}
                                       type="hidden"
                                     />
                                   </div>
                                 ) : (
-                                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                  <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
                                 )}
                               </FormControl>
                               <FormMessage />

@@ -22,11 +22,11 @@ export function PdfPaper({ base64, id, fullPage = false }: Props) {
   useEffect(() => {
     const updateHeight = () => {
       const maxHeight = fullPage
-        ? window.innerHeight - 114
-        : window.innerHeight - 114;
+        ? window.innerHeight - 120
+        : window.innerHeight - 120;
       const maxWidth = fullPage
         ? window.innerWidth - 40
-        : window.innerWidth / 2 - 2 * 74;
+        : window.innerWidth / 2 - 2 * 80;
 
       let width;
       let height;

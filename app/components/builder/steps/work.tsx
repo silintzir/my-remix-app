@@ -6,7 +6,12 @@ import {
 import { MonthPicker } from "@/components/month-picker";
 import { SelectInput } from "@/components/shadcn/SelectInput";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   FormControl,
@@ -76,17 +81,21 @@ export function WorkStep() {
         <Accordion value={open} type="single" className="space-y-1" collapsible>
           {sorted.map((field, index) => {
             return (
-              <SortableItem index={index} key={field.uuid} className="w-full flex items-center gap-2">
-                {autoSort !== true && fields.length > 1 && (
-                  <SortableHandle />
-                )}
+              <SortableItem
+                index={index}
+                key={field.uuid}
+                className="w-full flex items-center gap-2"
+              >
+                {autoSort !== true && fields.length > 1 && <SortableHandle />}
                 <AccordionItem
                   value={field.uuid}
-                  className="border-2 border-bg-gray-500 bg-white px-4 rounded-md data-[state=open]:border-gray-600 data-[state=open]:bg-muted w-full"
+                  className="border-2 border-bg-gray-500 bg-white px-4 rounded-md data-[state=open]:border-primary data-[state=open]:bg-muted w-full"
                 >
                   <AccordionTrigger
                     className="flex py-3 justify-end gap-4 hover:no-underline"
-                    onClick={() => setOpen(open === field.uuid ? "" : field.uuid)}
+                    onClick={() =>
+                      setOpen(open === field.uuid ? "" : field.uuid)
+                    }
                   >
                     <div className="flex-grow text-left small space-y-2">
                       <div className="font-semibold hover:underline">
@@ -94,7 +103,6 @@ export function WorkStep() {
                       </div>
                       <div className="muted">{getRecordPeriod(field)}</div>
                     </div>
-
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4 mt-2 px-1">
                     <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
@@ -150,9 +158,13 @@ export function WorkStep() {
                                 <MonthPicker
                                   currentValue={field.value}
                                   setValue={(expr: string) => {
-                                    setValue(`resume.work.${index}.endDate`, expr, {
-                                      shouldDirty: true,
-                                    });
+                                    setValue(
+                                      `resume.work.${index}.endDate`,
+                                      expr,
+                                      {
+                                        shouldDirty: true,
+                                      }
+                                    );
                                   }}
                                   toPresent
                                   toPresentText="Currently work here"

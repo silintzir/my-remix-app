@@ -6,6 +6,7 @@ import { get } from "lodash-es";
 
 import { formatDistance } from "date-fns";
 import { Separator } from "../ui/separator";
+import { ClientOnly } from "remix-utils/client-only";
 
 interface Props {
   resumes: StrapiShortResume[];
@@ -13,12 +14,14 @@ interface Props {
 
 export function ResumesList({ resumes }: Props) {
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-2xl">My saved resumes</h2>
-        <CreateResume startOpen={resumes.length === 0} />
+        <h2 className="font-semibold text-xl sm:text-2xl">My resumes</h2>
+        <ClientOnly>
+          {() => <CreateResume startOpen={resumes.length === 0} />}
+        </ClientOnly>
       </div>
-      <Separator className="my-4" />
+      <Separator className="my-4 bg-gray-300" />
       <div className="flex flex-wrap justify-around">
         {resumes.map((resume) => (
           <div

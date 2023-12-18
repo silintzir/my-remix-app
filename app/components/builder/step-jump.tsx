@@ -14,15 +14,20 @@ import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 
 type Props = {
   values: ResumeValues;
+  disabled: boolean;
 };
-export function StepJump({ values }: Props) {
+export function StepJump({ values, disabled }: Props) {
   const steps = getEnabledSteps(values.meta.steps);
   const navigate = useNavigate();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" title="Jump to any step">
+        <Button
+          variant="secondary"
+          title="Jump to any step"
+          disabled={disabled}
+        >
           <MoreHorizontal className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>

@@ -47,7 +47,7 @@ export function UserMenu({ user }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="hover:border-primary hover:border-2 h-10 w-10">
+        <Avatar className="hover:border-primary hover:border-2 h-10 w-10 bg-muted-foreground">
           <AvatarFallback>
             {getInitials(user.firstName, user.lastName)}
           </AvatarFallback>

@@ -22,14 +22,7 @@ import {
   useNavigate,
 } from "@remix-run/react";
 import { Form as SForm } from "@/components/ui/form";
-import {
-  AlertCircle,
-  ChevronLeft,
-  ChevronRight,
-  Home,
-  Loader2,
-  View,
-} from "lucide-react";
+import { AlertCircle, ChevronLeft, ChevronRight, Home } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { resumeSchema } from "@/lib/resume";
 import { useEffect, useRef, useState } from "react";
@@ -53,6 +46,8 @@ import { sampleResume } from "@/lib/sample";
 import { useBase64 } from "@/lib/templates/useBase64";
 import { useMe } from "@/components/hooks/useMe";
 import { Separator } from "@/components/ui/separator";
+import { BackToEditor } from "@/components/builder/back-to-editor";
+import { OpenPreview } from "@/components/builder/open-preview";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const fd = await request.formData();
@@ -214,7 +209,7 @@ export default function Builder() {
                   )}
                 </div>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   type={previous ? "submit" : "button"}
                   {...(previous
                     ? {}
@@ -236,9 +231,11 @@ export default function Builder() {
                     </>
                   )}
                 </Button>
-                <StepJump values={submittedData} />
+                <StepJump
+                  values={submittedData}
+                  disabled={isChangingStep || stepHasErrors}
+                />
                 <Button
-                  variant="outline"
                   disabled={isChangingStep || !next || stepHasErrors}
                   type="submit"
                   name="step"
@@ -268,14 +265,25 @@ export default function Builder() {
       {/* Preview - Right Side */}
       {view === "" && (
         <>
-          <div className="right-panel py-4">
-            <div className="preview-container">
-              <div className="aligner">
+          <div
+            className={cn(
+              "hidden xl:flex w-1/2 3xl:w-[calc(100%-960px)]",
+              "fixed top-0 bottom-0 right-0",
+              "items-center justify-center flex-col",
+              "bg-muted-foreground text-white select-none z-0"
+            )}
+          >
+            <div
+              className={cn(
+                "flex justify-center items-center",
+                "absolute top-[80px] inset-x-[74px] bottom-[60px]"
+              )}
+            >
+              <div className="inline-block relative">
                 {/* focus button */}
                 <SwitchViewOverlay />
 
                 {/* top-bar */}
-
                 <div className="absolute left-0 w-full flex items-center justify-between top-[-60px]">
                   <div className="flex items-center gap-2">
                     <TemplateSelector />
@@ -292,7 +300,7 @@ export default function Builder() {
                 {pdfPaper}
 
                 {/* bottom-bar  */}
-                <div className="absolute left-0 right-0 flex flex-row h-10 items-center justify-center bottom-[-40px]">
+                <div className="absolute left-0 right-0 flex flex-row h-16 items-center justify-center bottom-[-60px]">
                   <div className="absolute left-0">
                     <AutoSavedFeedback isSaving={isSaving} />
                   </div>
@@ -303,46 +311,14 @@ export default function Builder() {
               </div>
             </div>
           </div>
-          <Form>
-            <Button
-              type="submit"
-              name="view"
-              value="preview"
-              disabled={isSaving}
-              size="sm"
-              className="xl:hidden fixed top-4 gap-2 left-4 bg-blue-600 hover:bg-blue-700 flex h-8"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Saving...</span>
-                </>
-              ) : (
-                <>
-                  <View className="w-4 h-4" />
-                  <span>PDF</span>
-                </>
-              )}
-            </Button>
-          </Form>
+          <OpenPreview />
         </>
       )}
       {(view === "preview" || step === "finish") && (
-        <div className="fixed z-50 inset-0 bg-[#525659] dtyMNP">
+        <div className="fixed z-50 inset-0 bg-muted-foreground dtyMNP">
           <div className="relative flex items-center justify-between h-16 px-8 py-0 bg-[#0F141E] text-white blggRB">
             <div className="flex items-center flex-1 kcpatE">
-              <Form>
-                <button
-                  type="submit"
-                  name="view"
-                  value=""
-                  className="flex items-center cursor-pointer h-8 rounded pr-3.5 pl-1 -ml-2.5"
-                  style={{ transition: "background-color 0.15s ease 0s" }}
-                >
-                  <ChevronLeft className="w-5 h-5 mr-2" />
-                  <span>Back to editor</span>
-                </button>
-              </Form>
+              <BackToEditor />
             </div>
 
             <div className="kaOuvr relative flex items-center">

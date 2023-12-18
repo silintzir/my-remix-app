@@ -61,7 +61,7 @@ export function CreateResume({ startOpen = false }: Props) {
       <DialogTrigger asChild>
         <Button>
           <PlusCircle className="w-4 h-4 mr-2" />
-          Create new resume
+          Add new
         </Button>
       </DialogTrigger>
 

@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { CertificateRecord, EducationRecord, WorkRecord } from "./types";
 
 export const MIN_FONT_SIZE = 8;
-export const DEFAULT_FONT_SIZE = 12;
+export const DEFAULT_FONT_SIZE = 11;
 export const MAX_FONT_SIZE = 16;
 
 export const bulletSchema = z.object({

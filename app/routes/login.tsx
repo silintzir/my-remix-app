@@ -228,7 +228,7 @@ export default function Signin() {
                       control={form.control}
                       name="useMagicLink"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                        <FormItem className="flex flex-row bg-white items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
                           <FormControl>
                             <Checkbox
                               checked={field.value}
@@ -268,7 +268,7 @@ export default function Signin() {
                     )}
                     <div className="flex justify-between">
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         type="button"
                         onClick={() => navigate("")}
                       >
@@ -304,7 +304,8 @@ export default function Signin() {
                   <Button
                     name="view"
                     value="email"
-                    className="min-w-[160px] relative font-bold w-full"
+                    variant="secondary"
+                    className="min-w-[160px] relative w-full"
                   >
                     <Mail className="w-5 h-5 absolute left-[18px] top-1/2 mt-[-10px]" />
                     <span className="w-full">Email</span>
