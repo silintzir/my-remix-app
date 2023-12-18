@@ -1,22 +1,13 @@
+import { useMe } from "@/components/hooks/useMe";
 import { NavBar } from "@/components/navbar";
 import { UpgradeNowButton } from "@/components/navbar/upgrade-now";
 import { UserMenu } from "@/components/navbar/user-menu";
 import { Logo } from "@/components/website/logo";
-import { fetchMe } from "@/lib/strapi.server";
 import type { StrapiUser } from "@/lib/types";
-import { type LoaderFunctionArgs, json } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
-
-export const handle = "auth";
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  return json({
-    me: await fetchMe(request),
-  });
-}
+import { Outlet } from "@remix-run/react";
 
 export default function Account() {
-  const { me } = useLoaderData<typeof loader>();
+  const me = useMe();
 
   return (
     <main>

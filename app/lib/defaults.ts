@@ -1,5 +1,4 @@
-import type { AuthValues } from "@/sessions";
-import type { ResumeValues, Step } from "./types";
+import type { ResumeValues, Step, StrapiUser } from "./types";
 
 export const DEFAULT_RESUME_TITLE = "Untitled resume";
 
@@ -28,9 +27,7 @@ export const DEFAULT_STEPS: Step[] = [
   "finish",
 ];
 
-export const defaultResumeValues = (
-  user: Pick<AuthValues, "firstName" | "lastName" | "email">
-): ResumeValues => ({
+export const defaultResumeValues = (user: StrapiUser): ResumeValues => ({
   meta: {
     title: DEFAULT_RESUME_TITLE,
     language: "en",

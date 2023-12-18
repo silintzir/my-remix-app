@@ -1,23 +1,32 @@
 import { useEffect, useRef } from "react";
 import type * as PDFJS from "pdfjs-dist";
 import { usePdfStore } from "@/lib/templates/store";
+import html2canvas from "html2canvas";
+import { useFetcher } from "@remix-run/react";
 
 type Props = {
   base64: string;
   fullPage?: boolean;
+  id: number;
 };
 
 const US_LETTER_RATIO = 1.2941;
 
-export function PdfPaper({ base64, fullPage = false }: Props) {
+export function PdfPaper({ base64, id, fullPage = false }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
+
+  const { submit } = useFetcher({ key: "resume-screenshot" });
 
   const { setNumPages, currentPage } = usePdfStore();
 
   useEffect(() => {
     const updateHeight = () => {
-      const maxHeight = fullPage ? window.innerHeight : window.innerHeight - 114;
-      const maxWidth = fullPage ? window.innerWidth - 40 : window.innerWidth / 2 - 2 * 74;
+      const maxHeight = fullPage
+        ? window.innerHeight
+        : window.innerHeight - 114;
+      const maxWidth = fullPage
+        ? window.innerWidth - 40
+        : window.innerWidth / 2 - 2 * 74;
 
       let width;
       let height;
@@ -74,7 +83,11 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
 
           renderTask.promise.then(() => {
             pageRendering.current = false;
-            if (pageNumPending.current !== null && pageDataPending.current !== null) {
+
+            if (
+              pageNumPending.current !== null &&
+              pageDataPending.current !== null
+            ) {
               run(pageNumPending.current, pageDataPending.current);
               pageNumPending.current = null;
             }
@@ -82,10 +95,19 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
         }
       }
     }
-    console.log('rendering');
+    console.log("rendering");
 
     run(currentPage, base64);
-  }, [currentPage, base64, setNumPages]);
+  }, [currentPage, base64, setNumPages, submit]);
+
+  useEffect(() => {
+    html2canvas(ref.current as HTMLCanvasElement).then((canvas) => {
+      const screenshot = canvas.toDataURL();
+      const fd = new FormData();
+      fd.append("screenshot", screenshot);
+      submit(fd, { method: "POST", action: `/app/resumes/${id}/screenshot` });
+    });
+  }, [base64, submit, id]);
 
   return <canvas ref={ref} className="rounded-md shadow-xl" />;
 }

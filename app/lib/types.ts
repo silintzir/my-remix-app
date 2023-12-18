@@ -34,6 +34,7 @@ export interface StrapiShortResume {
     createdAt: Date;
     updatedAt: Date;
     document: ResumeValues;
+    screenshot: string;
   };
 }
 

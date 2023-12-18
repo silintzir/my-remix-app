@@ -73,6 +73,5 @@ export async function authenticatedFetch(
 }
 
 export async function fetchMe(request: Request): Promise<StrapiUser> {
-  console.log("fetching me");
   return await authenticatedFetch(request, "/api/users/me", { method: "GET" });
 }

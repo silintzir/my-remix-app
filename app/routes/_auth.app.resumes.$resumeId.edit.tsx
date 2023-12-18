@@ -11,11 +11,9 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { authenticatedFetch } from "@/lib/strapi.server";
 import type { ResumeValues, StrapiLongResume, Step } from "@/lib/types";
-import type { AuthValues } from "@/sessions";
 import "@/styles/builder.css";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
-  useOutletContext,
   useSearchParams,
   Form,
   useLoaderData,
@@ -53,6 +51,7 @@ import { StepJump } from "@/components/builder/step-jump";
 import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { sampleResume } from "@/lib/sample";
 import { useBase64 } from "@/lib/templates/useBase64";
+import { useMe } from "@/components/hooks/useMe";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const fd = await request.formData();
@@ -81,7 +80,7 @@ const sample = sampleResume();
 
 export default function Builder() {
   const navigate = useNavigate();
-  const { user } = useOutletContext<{ user: AuthValues }>();
+  const user = useMe();
   const { state, formMethod, formData } = useNavigation();
 
   const [searchParams] = useSearchParams();
@@ -272,7 +271,7 @@ export default function Builder() {
                 </div>
 
                 {/* paper  */}
-                <PdfPaper base64={base64} />
+                <PdfPaper base64={base64} id={id} />
 
                 {/* bottom-bar  */}
                 <div className="absolute left-0 right-0 flex flex-row h-10 items-center justify-center bottom-[-40px]">
@@ -353,7 +352,7 @@ export default function Builder() {
 
           <div className="flex-1 overflow-y-auto py-0 px-5">
             <div className="relative my-5 mx-auto">
-              <PdfPaper base64={base64} />
+              <PdfPaper base64={base64} id={id} />
             </div>
           </div>
         </div>

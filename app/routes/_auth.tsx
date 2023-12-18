@@ -1,7 +1,10 @@
 import { type LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { Outlet, useLoaderData } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 
 import { getSession, commitSession } from "@/sessions";
+import { fetchMe } from "@/lib/strapi.server";
+
+export const handle = "auth";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -14,7 +17,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return json(
     {
-      user,
+      me: await fetchMe(request),
     },
     {
       headers: {
@@ -25,6 +28,5 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function App() {
-  const session = useLoaderData<typeof loader>();
-  return <Outlet context={session} />;
+  return <Outlet />;
 }
