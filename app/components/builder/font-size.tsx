@@ -1,23 +1,56 @@
-import { Minus, Plus } from "lucide-react";
+import { CaseSensitive, Minus, Plus } from "lucide-react";
+import { Button } from "../ui/button";
+import type { UseFormSetValue } from "react-hook-form";
+import type { ResumeValues } from "@/lib/types";
+import { DEFAULT_FONT_SIZE, MAX_FONT_SIZE, MIN_FONT_SIZE } from "@/lib/resume";
 
-export function FontSizeAdjust() {
+interface Props {
+  current: number;
+  setValue: UseFormSetValue<ResumeValues>;
+}
+export function FontSizeAdjust({ setValue, current }: Props) {
   return (
     <div className="flex items-center small gap-px">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         title="Decrease font size"
-        className="flex justify-center hover:bg-gray-700 items-center small h-[32px] px-2 rounded-full transition-all"
+        className="px-1"
+        onClick={() =>
+          setValue("meta.fontSize", Math.max(MIN_FONT_SIZE, current - 1), {
+            shouldDirty: true,
+          })
+        }
+        size="sm"
       >
         <Minus className="w-4 h-4" />
-      </button>
-      <span>Aa</span>
-      <button
+      </Button>
+      <Button
+        variant="ghost"
         type="button"
+        title="Reset font size"
+        onClick={() =>
+          setValue("meta.fontSize", DEFAULT_FONT_SIZE, { shouldDirty: true })
+        }
+        className="px-1"
+        size="sm"
+      >
+        <CaseSensitive className="h-6 w-6" />
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
         title="Increase font size"
-        className="flex justify-center hover:bg-gray-700 items-center small h-[32px] px-2 rounded-full transition-all"
+        onClick={() =>
+          setValue("meta.fontSize", Math.min(MAX_FONT_SIZE, current + 1), {
+            shouldDirty: true,
+          })
+        }
+        className="px-1"
+        size="sm"
       >
         <Plus className="w-4 h-4" />
-      </button>
+      </Button>
     </div>
   );
 }

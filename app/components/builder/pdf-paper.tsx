@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type * as PDFJS from "pdfjs-dist";
-import { usePdfStore } from "@/lib/templates/store";
+import { useTemplateStore } from "@/lib/templates/store";
 import html2canvas from "html2canvas";
 import { useFetcher } from "@remix-run/react";
 
@@ -17,12 +17,12 @@ export function PdfPaper({ base64, id, fullPage = false }: Props) {
 
   const { submit } = useFetcher({ key: "resume-screenshot" });
 
-  const { setNumPages, currentPage } = usePdfStore();
+  const { setNumPages, currentPage } = useTemplateStore();
 
   useEffect(() => {
     const updateHeight = () => {
       const maxHeight = fullPage
-        ? window.innerHeight
+        ? window.innerHeight - 114
         : window.innerHeight - 114;
       const maxWidth = fullPage
         ? window.innerWidth - 40
@@ -95,19 +95,23 @@ export function PdfPaper({ base64, id, fullPage = false }: Props) {
         }
       }
     }
-    console.log("rendering");
 
     run(currentPage, base64);
   }, [currentPage, base64, setNumPages, submit]);
 
   useEffect(() => {
-    html2canvas(ref.current as HTMLCanvasElement).then((canvas) => {
-      const screenshot = canvas.toDataURL();
-      const fd = new FormData();
-      fd.append("screenshot", screenshot);
-      submit(fd, { method: "POST", action: `/app/resumes/${id}/screenshot` });
-    });
+    const intervalId = setInterval(() => {
+      html2canvas(ref.current as HTMLCanvasElement).then((canvas) => {
+        const screenshot = canvas.toDataURL();
+        const fd = new FormData();
+        fd.append("screenshot", screenshot);
+        submit(fd, { method: "POST", action: `/app/resumes/${id}/screenshot` });
+      });
+    }, 30000);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [base64, submit, id]);
 
-  return <canvas ref={ref} className="rounded-md shadow-xl" />;
+  return <canvas ref={ref} className="mx-auto rounded-md shadow-xl" />;
 }

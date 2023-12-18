@@ -8,7 +8,7 @@ interface PdfStore {
   prevPage: () => void;
 }
 
-export const usePdfStore = create<PdfStore>((set) => ({
+export const useTemplateStore = create<PdfStore>((set) => ({
   numPages: 1,
   currentPage: 1,
   setNumPages: (numPages: number) => {

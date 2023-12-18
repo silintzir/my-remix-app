@@ -52,6 +52,7 @@ import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { sampleResume } from "@/lib/sample";
 import { useBase64 } from "@/lib/templates/useBase64";
 import { useMe } from "@/components/hooks/useMe";
+import { Separator } from "@/components/ui/separator";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const fd = await request.formData();
@@ -105,6 +106,7 @@ export default function Builder() {
   const submit = useSubmit();
 
   const {
+    setValue,
     formState: { isSubmitSuccessful, errors },
     reset,
   } = form;
@@ -144,12 +146,30 @@ export default function Builder() {
   const base64 = useBase64({
     values: step === "start" ? sample : defaultValues,
     isSample: step === "start",
+    fontSize: submittedData.meta.fontSize,
   });
+
+  const downloadPdf = (
+    <DownloadPdfButton
+      isSample={step === "start"}
+      values={step === "start" ? sampleResume() : defaultValues}
+      fontSize={submittedData.meta.fontSize}
+    />
+  );
+  const fontSizeAdjust = (
+    <FontSizeAdjust setValue={setValue} current={submittedData.meta.fontSize} />
+  );
+
+  const exportActions = <ExportActionsButton resumeId={id} />;
+
+  const pdfPaper = (
+    <PdfPaper base64={base64} id={id} fullPage={view === "preview"} />
+  );
 
   return (
     <div className="flex justify-center bg-muted min-h-screen w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0">
       {/* Editor - Left Side */}
-      <div className="w-full max-w-full flex-1 border-8 border-blue-600">
+      <div className="w-full max-w-full flex-1">
         <div className="max-w-[860px] h-full m-auto">
           <div className="fixed top-4 right-4 z-50">
             <UserMenu user={user} />
@@ -248,7 +268,7 @@ export default function Builder() {
       {/* Preview - Right Side */}
       {view === "" && (
         <>
-          <div className="right-panel border-8 border-pink-600 py-4">
+          <div className="right-panel py-4">
             <div className="preview-container">
               <div className="aligner">
                 {/* focus button */}
@@ -257,21 +277,19 @@ export default function Builder() {
                 {/* top-bar */}
 
                 <div className="absolute left-0 w-full flex items-center justify-between top-[-60px]">
-                  <div className="flex">
+                  <div className="flex items-center gap-2">
                     <TemplateSelector />
-                    <FontSizeAdjust />
+                    <Separator orientation="vertical" className="h-5 w-0.5" />
+                    {fontSizeAdjust}
                   </div>
                   <div className="flex gap-1">
-                    <DownloadPdfButton
-                      isSample={step === "start"}
-                      values={step === "start" ? sampleResume() : defaultValues}
-                    />
-                    <ExportActionsButton resumeId={id} />
+                    {downloadPdf}
+                    {exportActions}
                   </div>
                 </div>
 
                 {/* paper  */}
-                <PdfPaper base64={base64} id={id} />
+                {pdfPaper}
 
                 {/* bottom-bar  */}
                 <div className="absolute left-0 right-0 flex flex-row h-10 items-center justify-center bottom-[-40px]">
@@ -328,32 +346,17 @@ export default function Builder() {
             </div>
 
             <div className="kaOuvr relative flex items-center">
-              <FontSizeAdjust />
+              {fontSizeAdjust}
             </div>
 
-            <div className="fzdKjU flex items-center justify-end flex-1 gap-1">
-              <div
-                className="eK0xeB items-center flex mr-8"
-                style={{
-                  transition: "opacity 0.1s ease 0s, visibility 0.1s ease 0s",
-                }}
-              >
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="ml-1 leading-5">Updating...</span>
-              </div>
-
-              <DownloadPdfButton
-                isSample={step === "start"}
-                values={step === "start" ? sampleResume() : defaultValues}
-              />
-              <ExportActionsButton resumeId={id} />
+            <div className="flex items-center justify-end flex-1 gap-1">
+              {downloadPdf}
+              {exportActions}
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto py-0 px-5">
-            <div className="relative my-5 mx-auto">
-              <PdfPaper base64={base64} id={id} />
-            </div>
+            <div className="relative my-5 mx-auto">{pdfPaper}</div>
           </div>
         </div>
       )}

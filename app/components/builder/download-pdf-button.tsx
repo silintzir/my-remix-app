@@ -7,20 +7,26 @@ import filenamify from "filenamify";
 
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
+import { DEFAULT_FONT_SIZE } from "@/lib/resume";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 type Props = {
   values: ResumeValues;
   isSample?: boolean;
+  fontSize?: number;
 };
-export function DownloadPdfButton({ values, isSample = false }: Props) {
+export function DownloadPdfButton({
+  values,
+  isSample = false,
+  fontSize = DEFAULT_FONT_SIZE,
+}: Props) {
   const create = useCallback(() => {
-    const def = getDefinition(values, { isSample });
+    const def = getDefinition(values, { isSample, fontSize });
     pdfMake
       .createPdf(def)
       .download(filenamify(`${values.meta.title} [resumerunner.io].pdf`));
-  }, [values, isSample]);
+  }, [values, isSample, fontSize]);
 
   return (
     <Button

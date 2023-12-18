@@ -1,6 +1,10 @@
 import { z } from "zod";
 import type { CertificateRecord, EducationRecord, WorkRecord } from "./types";
 
+export const MIN_FONT_SIZE = 8;
+export const DEFAULT_FONT_SIZE = 12;
+export const MAX_FONT_SIZE = 16;
+
 export const bulletSchema = z.object({
   uuid: z.string(),
   content: z.string(),
@@ -89,6 +93,7 @@ export const resumeSchema = z.object({
   meta: z.object({
     order: z.array(z.string()),
     title: z.string(),
+    fontSize: z.number(),
     language: z.enum(["en", "es"]),
     mode: z.enum(["standard", "custom"]),
     tailor: tailorSchema,

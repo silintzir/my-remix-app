@@ -33,6 +33,7 @@ export const defaultResumeValues = (user: StrapiUser): ResumeValues => ({
     language: "en",
     mode: "standard",
     tailor: { content: "", suggestions: {} },
+    fontSize: 12,
     order: [
       "basics",
       "work",

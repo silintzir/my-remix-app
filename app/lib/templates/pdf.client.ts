@@ -1,7 +1,15 @@
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { ResumeValues, Step } from "@/lib/types";
-import { certificateDisplay, constr, skillDisplay } from "@/lib/templates/helpers/common";
-import { get2ColsSpaceBetween, getHeaderWithLine, pine, } from '@/lib/templates/helpers/pdf';
+import {
+  certificateDisplay,
+  constr,
+  skillDisplay,
+} from "@/lib/templates/helpers/common";
+import {
+  get2ColsSpaceBetween,
+  getHeaderWithLine,
+  pine,
+} from "@/lib/templates/helpers/pdf";
 import { map, groupBy } from "lodash-es";
 import { pdfStyles } from "./styles";
 
@@ -10,7 +18,6 @@ interface ContentProvider {
 }
 
 class ChicagoPdfTemplate {
-
   public values: ResumeValues;
   public constructor(values: ResumeValues) {
     this.values = values;
@@ -18,7 +25,16 @@ class ChicagoPdfTemplate {
 
   basics = (): Content[] => {
     const {
-      resume: { basics: { location: { address }, firstName, lastName, email, phone, url } },
+      resume: {
+        basics: {
+          location: { address },
+          firstName,
+          lastName,
+          email,
+          phone,
+          url,
+        },
+      },
     } = this.values;
 
     const output: Content = [];
@@ -32,7 +48,11 @@ class ChicagoPdfTemplate {
   accomplishments = (): Content[] => {
     const {
       resume: { accomplishments },
-      meta: { steps: { accomplishments: { title } } },
+      meta: {
+        steps: {
+          accomplishments: { title },
+        },
+      },
     } = this.values;
     if (!accomplishments.length) {
       return [];
@@ -47,7 +67,11 @@ class ChicagoPdfTemplate {
   interests = (): Content[] => {
     const {
       resume: { interests },
-      meta: { steps: { interests: { title } } },
+      meta: {
+        steps: {
+          interests: { title },
+        },
+      },
     } = this.values;
 
     if (!interests.length) {
@@ -56,14 +80,21 @@ class ChicagoPdfTemplate {
 
     return [
       getHeaderWithLine(title),
-      { text: constr(", ", ...map(interests, (i) => i.name)), style: "paragraph" },
+      {
+        text: constr(", ", ...map(interests, (i) => i.name)),
+        style: "paragraph",
+      },
     ];
   };
 
   skills: ContentProvider = () => {
     const {
       resume: { skills },
-      meta: { steps: { skills: { title } } },
+      meta: {
+        steps: {
+          skills: { title },
+        },
+      },
     } = this.values;
 
     if (!skills.length) {
@@ -72,7 +103,8 @@ class ChicagoPdfTemplate {
     return [
       getHeaderWithLine(title),
       {
-        ul: map(skills, skillDisplay), style: "paragraph"
+        ul: map(skills, skillDisplay),
+        style: "paragraph",
       },
     ];
   };
@@ -80,7 +112,11 @@ class ChicagoPdfTemplate {
   certificates: ContentProvider = () => {
     const {
       resume: { certificates },
-      meta: { steps: { certificates: { title } } },
+      meta: {
+        steps: {
+          certificates: { title },
+        },
+      },
     } = this.values;
 
     if (!certificates.length) {
@@ -98,8 +134,14 @@ class ChicagoPdfTemplate {
 
   summary = (): Content[] => {
     const {
-      resume: { summary: { content } },
-      meta: { steps: { summary: { title } } },
+      resume: {
+        summary: { content },
+      },
+      meta: {
+        steps: {
+          summary: { title },
+        },
+      },
     } = this.values;
     const output: Content[] = [];
 
@@ -116,7 +158,11 @@ class ChicagoPdfTemplate {
   education: ContentProvider = () => {
     const {
       resume: { education },
-      meta: { steps: { education: { title } } },
+      meta: {
+        steps: {
+          education: { title },
+        },
+      },
     } = this.values;
 
     if (!education.length) {
@@ -135,12 +181,22 @@ class ChicagoPdfTemplate {
       const stack = [];
       stack.push({ text: group, style: "heading3" });
 
-      for (const { area, studyType, startDate, endDate, bullets } of p2[group]) {
+      for (const { area, studyType, startDate, endDate, bullets } of p2[
+        group
+      ]) {
         stack.push(
           get2ColsSpaceBetween(
-            { text: constr(", ", area, studyType), style: "heading4", alignment: 'left' },
-            { text: constr(" - ", startDate, endDate), italics: true, fontSize: 11 },
-          ),
+            {
+              text: constr(", ", area, studyType),
+              style: "heading4",
+              alignment: "left",
+            },
+            {
+              text: constr(" - ", startDate, endDate),
+              italics: true,
+              fontSize: 11,
+            }
+          )
         );
         stack.push({
           ul: map(bullets, (b) => b.content),
@@ -167,7 +223,11 @@ class ChicagoPdfTemplate {
   work: ContentProvider = () => {
     const {
       resume: { work },
-      meta: { steps: { work: { title } } },
+      meta: {
+        steps: {
+          work: { title },
+        },
+      },
     } = this.values;
 
     if (!work.length) {
@@ -189,9 +249,13 @@ class ChicagoPdfTemplate {
       for (const { position, startDate, endDate, bullets } of p2[group]) {
         stack.push(
           get2ColsSpaceBetween(
-            { text: position, style: "heading4", alignment: 'left' },
-            { text: constr(" - ", startDate, endDate), italics: true, fontSize: 11 },
-          ),
+            { text: position, style: "heading4", alignment: "left" },
+            {
+              text: constr(" - ", startDate, endDate),
+              italics: true,
+              fontSize: 11,
+            }
+          )
         );
         stack.push({
           ul: map(bullets, (b) => b.content),
@@ -229,13 +293,14 @@ class ChicagoPdfTemplate {
 
 type DefConf = {
   isSample?: boolean;
+  fontSize?: number;
 };
 
 export default function getDefinition(
   data: ResumeValues,
-  { isSample }: DefConf = { isSample: false },
+  { isSample = false, fontSize = 11 }: DefConf
 ): TDocumentDefinitions {
-  const styles = pdfStyles.chicago({ fontSize: 11 });
+  const styles = pdfStyles.chicago({ fontSize });
   const struct = new ChicagoPdfTemplate(data);
 
   return {
@@ -243,8 +308,8 @@ export default function getDefinition(
     pageSize: "LETTER",
     ...(isSample
       ? {
-        watermark: { text: "Sample resume", fontSize: 60 },
-      }
+          watermark: { text: "Sample resume", fontSize: 60 },
+        }
       : {}),
     header: {
       marginTop: 2,
@@ -271,4 +336,3 @@ export default function getDefinition(
     content: struct.create(),
   };
 }
-
