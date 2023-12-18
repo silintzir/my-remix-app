@@ -17,8 +17,10 @@ function enhancePrompt(terms: string) {
     : "";
 }
 
-function deliverablePrompt() {
-  return 'Your response must be formatted as a JSON object with a single root property named "results" which must be an array of strings that correspond to your suggestions.';
+function deliverablePrompt(lang: Lang) {
+  return `Your response must be formatted as a JSON object with a single root property named "results" which must be an array of strings in ${getLanguage(
+    lang
+  )}  that correspond to your suggestions.`;
 }
 
 export function createPrompt(
@@ -35,7 +37,7 @@ export function createPrompt(
   toks.push(`${JSON.stringify(context)}. `);
   toks.push(outputExpectation(step));
   toks.push(enhancePrompt(enhance));
-  toks.push(deliverablePrompt());
+  toks.push(deliverablePrompt(lang));
   toks.push();
   return toks.join("");
 }

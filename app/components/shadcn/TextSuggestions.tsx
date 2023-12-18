@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Step } from "@/lib/types";
+import type { Lang, Step } from "@/lib/types";
 import { type FetcherWithComponents } from "@remix-run/react";
 import { Loader2, Plus, RotateCw, Wand2 } from "lucide-react";
 import { get, filter, map, range } from "lodash-es";
@@ -25,6 +25,7 @@ type Props = {
   endpoint: Step;
   append: (texts: string[]) => void;
   label: string;
+  lang?: Lang;
 };
 
 export function TextSuggestions({
@@ -33,6 +34,7 @@ export function TextSuggestions({
   endpoint,
   append,
   label,
+  lang = "en",
 }: Props) {
   const results = get(fetcher.data, "results", []);
 
@@ -41,10 +43,10 @@ export function TextSuggestions({
   const generate = useCallback(() => {
     setPicked([]);
     fetcher.submit(
-      { context: JSON.stringify(context) },
+      { context: JSON.stringify(context), lang },
       { method: "post", action: `/ai/${endpoint}` }
     );
-  }, [fetcher, context, endpoint]);
+  }, [fetcher, context, endpoint, lang]);
 
   const insert = useCallback(() => {
     const newBullets = map(picked, (p) => results[p]);

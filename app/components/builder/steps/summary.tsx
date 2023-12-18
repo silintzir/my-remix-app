@@ -15,7 +15,10 @@ import { TextAlternatives } from "@/components/shadcn/TextAlternatives";
 
 export function SummaryStep() {
   const { control, watch, setValue } = useFormContext<ResumeValues>();
-  const enhancer = useFetcher<{ results: string[] }>({ key: "summary-enhance" });
+  const lang = watch("meta.language");
+  const enhancer = useFetcher<{ results: string[] }>({
+    key: "summary-enhance",
+  });
   const getContext = useAiContext();
 
   const summary = watch("resume.summary.content");
@@ -56,6 +59,7 @@ export function SummaryStep() {
               update={(text: string) => {
                 setValue("resume.summary.content", text);
               }}
+              lang={lang}
             />
           </div>
         }

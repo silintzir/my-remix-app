@@ -16,6 +16,7 @@ type Props = {
 
 export function TailorStep({ id, values }: Props) {
   const { getValues, control, watch } = useFormContext<ResumeValues>();
+  const lang = watch("meta.language");
 
   const content = watch("meta.tailor.content");
 
@@ -42,7 +43,7 @@ export function TailorStep({ id, values }: Props) {
       fetcher.submit(
         {
           data: JSON.stringify({
-            language: "en",
+            language: lang,
             jobDescription: content,
             resume,
             maxNewEntries: 5,
@@ -55,7 +56,7 @@ export function TailorStep({ id, values }: Props) {
       window.alert("Please provide a description first");
       return;
     }
-  }, [content, fetcher, getValues, id]);
+  }, [content, fetcher, getValues, id, lang]);
 
   const appendSuggestion = useCallback(
     (uuid: string, section: string) => {

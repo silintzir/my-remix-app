@@ -16,7 +16,7 @@ import { get, range } from "lodash-es";
 import { Label } from "@radix-ui/react-label";
 import { useCallback, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import type { Step } from "@/lib/types";
+import type { Lang, Step } from "@/lib/types";
 
 type Props = {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -25,6 +25,7 @@ type Props = {
   original: string;
   endpoint: Step;
   buttonLabel?: string;
+  lang?: Lang;
   update: (alternative: string) => void;
 };
 
@@ -35,6 +36,7 @@ export function TextAlternatives({
   endpoint,
   update,
   buttonLabel,
+  lang = "en",
 }: Props) {
   const results = get(fetcher.data, "results", []);
 
@@ -43,10 +45,10 @@ export function TextAlternatives({
   const enhance = useCallback(() => {
     setPicked(null);
     fetcher.submit(
-      { context: JSON.stringify(context), original: original || "" },
+      { context: JSON.stringify(context), original: original || "", lang },
       { method: "post", action: `/ai/${endpoint}` }
     );
-  }, [fetcher, original, context, endpoint]);
+  }, [fetcher, original, context, endpoint, lang]);
 
   return (
     <Sheet>

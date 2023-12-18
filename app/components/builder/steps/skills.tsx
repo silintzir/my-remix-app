@@ -10,20 +10,21 @@ import { useAiContext } from "@/components/hooks/aiContext";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
 import { getSkillLevelOptions } from "@/lib/resume";
 import { useFetcher } from "@remix-run/react";
-import { StepHeader } from '@/components/builder/header';
+import { StepHeader } from "@/components/builder/header";
 import {
   SortableHandle,
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
 
-
-
 export function SkillsStep() {
-  const { control } = useFormContext<ResumeValues>();
+  const { control, watch } = useFormContext<ResumeValues>();
+  const lang = watch("meta.language");
 
   const enhancer = useFetcher<{ results: string[] }>({ key: "skills-enhance" });
-  const suggester = useFetcher<{ results: string[] }>({ key: "skills-suggest" });
+  const suggester = useFetcher<{ results: string[] }>({
+    key: "skills-suggest",
+  });
 
   const getContext = useAiContext();
 
@@ -55,7 +56,12 @@ export function SkillsStep() {
         </p>
       )}
       {fields.length > 0 && (
-        <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle className="space-y-1">
+        <SortableList
+          lockAxis="y"
+          onSortEnd={onSortEnd}
+          useDragHandle
+          className="space-y-1"
+        >
           {fields.map((field, index) => {
             return (
               <SortableItem key={field.uuid} index={index} className="flex">
@@ -69,6 +75,7 @@ export function SkillsStep() {
                     fetcher: enhancer,
                     context: getContext({ step: "skills", uuid: field.uuid }),
                     endpoint: "skills",
+                    lang,
                   }}
                 />
                 <SelectInput
@@ -123,6 +130,7 @@ export function SkillsStep() {
           }}
           endpoint="skills"
           label="Suggest skills"
+          lang={lang}
         />
       </div>
     </div>

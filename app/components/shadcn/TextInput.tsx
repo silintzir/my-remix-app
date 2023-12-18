@@ -11,7 +11,7 @@ import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 import { TextAlternatives } from "./TextAlternatives";
 import type { FetcherWithComponents } from "@remix-run/react";
-import type { Step } from "@/lib/types";
+import type { Lang, Step } from "@/lib/types";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -26,6 +26,7 @@ type Props<T extends FieldValues> = {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     context: any;
     endpoint: Step;
+    lang: Lang;
   };
 };
 export function TextInput<T extends FieldValues>({

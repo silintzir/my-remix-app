@@ -14,7 +14,12 @@ import { v4 as uuid } from "uuid";
 import { MonthPicker } from "@/components/month-picker";
 import { Separator } from "@/components/ui/separator";
 import { TextInput } from "@/components/shadcn/TextInput";
-import { Accordion, AccordionTrigger, AccordionItem, AccordionContent } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionTrigger,
+  AccordionItem,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import type { ResumeValues } from "@/lib/types";
 import { Switch } from "@/components/ui/switch";
 import { orderBy } from "lodash-es";
@@ -78,26 +83,27 @@ export function CertificatesStep() {
                 value={field.uuid}
                 className="flex"
               >
-                {autoSort !== true && fields.length > 1 && (
-                  <SortableHandle />
-                )}
+                {autoSort !== true && fields.length > 1 && <SortableHandle />}
                 <AccordionItem
                   value={field.uuid}
                   className="border-2 border-bg-gray-500 bg-white px-4 rounded-md data-[state=open]:border-gray-600 data-[state=open]:bg-muted w-full"
                 >
                   <AccordionTrigger
                     className="flex py-3 justify-end gap-4 hover:no-underline"
-                    onClick={() => setOpen(open === field.uuid ? "" : field.uuid)}
+                    onClick={() =>
+                      setOpen(open === field.uuid ? "" : field.uuid)
+                    }
                   >
                     <div className="flex-grow text-left small">
                       <div className="font-semibold flex flex-col gap-2">
-                        <span className="hover:underline">{getCertificateTitle(field)}</span>
+                        <span className="hover:underline">
+                          {getCertificateTitle(field)}
+                        </span>
                         <span className="font-normal">
                           {field.date || "No date"}
                         </span>
                       </div>
                     </div>
-
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4 mt-2 px-1">
                     <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">

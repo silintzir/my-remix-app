@@ -1,6 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { FormLabel } from "@/components/ui/form";
-import type { Bullet, RecordWithBullets, ResumeValues } from "@/lib/types";
+import type {
+  Bullet,
+  Lang,
+  RecordWithBullets,
+  ResumeValues,
+} from "@/lib/types";
 import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
@@ -18,10 +23,16 @@ type Props = {
   step: "education" | "work";
 };
 export function Bullets({ step, index, context }: Props) {
-  const { control } = useFormContext<ResumeValues>();
+  const { control, watch } = useFormContext<ResumeValues>();
 
-  const enhancer = useFetcher<{ results: string[] }>({ key: "bullets-enhance" });
-  const suggester = useFetcher<{ results: string[] }>({ key: "bullets-suggest" });
+  const lang = watch("meta.language") as Lang;
+
+  const enhancer = useFetcher<{ results: string[] }>({
+    key: "bullets-enhance",
+  });
+  const suggester = useFetcher<{ results: string[] }>({
+    key: "bullets-suggest",
+  });
 
   const { fields, append, remove, swap } = useFieldArray({
     control,
@@ -65,6 +76,7 @@ export function Bullets({ step, index, context }: Props) {
             }}
             endpoint={step}
             label="Suggest bullets"
+            lang={lang}
           />
           <Button
             size="sm"
@@ -109,6 +121,7 @@ export function Bullets({ step, index, context }: Props) {
                   fetcher: enhancer,
                   endpoint: step,
                   context: ctx,
+                  lang,
                 }}
               />
               <button

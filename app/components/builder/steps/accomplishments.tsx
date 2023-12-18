@@ -8,7 +8,7 @@ import { map } from "lodash-es";
 import { useFetcher } from "@remix-run/react";
 import { useAiContext } from "@/components/hooks/aiContext";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
-import { StepHeader } from '@/components/builder/header';
+import { StepHeader } from "@/components/builder/header";
 import {
   SortableHandle,
   SortableItem,
@@ -16,10 +16,15 @@ import {
 } from "@/components/builder/sortable";
 
 export function AccomplishmentsStep() {
-  const { control } = useFormContext<ResumeValues>();
+  const { control, watch } = useFormContext<ResumeValues>();
+  const lang = watch("meta.language");
 
-  const enhancer = useFetcher<{ results: string[] }>({ key: "accomplishments-enhance" });
-  const suggester = useFetcher<{ results: string[] }>({ key: "accomplishments-suggest" });
+  const enhancer = useFetcher<{ results: string[] }>({
+    key: "accomplishments-enhance",
+  });
+  const suggester = useFetcher<{ results: string[] }>({
+    key: "accomplishments-suggest",
+  });
 
   const getContext = useAiContext();
 
@@ -52,7 +57,12 @@ export function AccomplishmentsStep() {
         </p>
       )}
       {fields.length > 0 && (
-        <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle className="space-y-1">
+        <SortableList
+          lockAxis="y"
+          onSortEnd={onSortEnd}
+          useDragHandle
+          className="space-y-1"
+        >
           {fields.map((field, index) => {
             return (
               <SortableItem key={field.uuid} index={index} className="flex">
@@ -69,6 +79,7 @@ export function AccomplishmentsStep() {
                       uuid: field.uuid,
                     }),
                     endpoint: "accomplishments",
+                    lang,
                   }}
                 />
                 <Button
@@ -117,6 +128,7 @@ export function AccomplishmentsStep() {
             append(newAccomplishments);
           }}
           endpoint="accomplishments"
+          lang={lang}
           label="Suggest accomplishments"
         />
       </div>

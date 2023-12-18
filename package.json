@@ -7,7 +7,7 @@
     "build": "remix build",
     "dev": "remix dev --manual -c \"node --watch-path server.js --watch server.js\"",
     "start": "cross-env NODE_ENV=production node --require dotenv/config ./server.js",
-    "lint": "biome lint app/",
+    "lint": "eslint app/",
     "worker": "esbuild ./app/components/worker/app.worker.js --bundle --minify --target=chrome58,firefox57,safari11,edge16 --outfile=./app/components/worker/app.worker.bundle.js",
     "typecheck": "tsc"
   },

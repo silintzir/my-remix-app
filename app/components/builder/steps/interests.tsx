@@ -16,10 +16,15 @@ import {
 } from "@/components/builder/sortable";
 
 export function InterestsStep() {
-  const { control } = useFormContext<ResumeValues>();
+  const { control, watch } = useFormContext<ResumeValues>();
+  const lang = watch("meta.language");
 
-  const enhancer = useFetcher<{ results: string[] }>({ key: "interests-enhance" });
-  const suggester = useFetcher<{ results: string[] }>({ key: "interests-suggest" });
+  const enhancer = useFetcher<{ results: string[] }>({
+    key: "interests-enhance",
+  });
+  const suggester = useFetcher<{ results: string[] }>({
+    key: "interests-suggest",
+  });
 
   const getContext = useAiContext();
 
@@ -51,7 +56,12 @@ export function InterestsStep() {
         </p>
       )}
       {fields.length > 0 && (
-        <SortableList lockAxis="y" onSortEnd={onSortEnd} useDragHandle className="space-y-1">
+        <SortableList
+          lockAxis="y"
+          onSortEnd={onSortEnd}
+          useDragHandle
+          className="space-y-1"
+        >
           {fields.map((field, index) => {
             return (
               <SortableItem key={field.uuid} index={index} className="flex">
@@ -68,6 +78,7 @@ export function InterestsStep() {
                       uuid: field.uuid,
                     }),
                     endpoint: "interests",
+                    lang,
                   }}
                 />
                 <Button
@@ -114,6 +125,7 @@ export function InterestsStep() {
           }}
           endpoint="interests"
           label="Suggest interests"
+          lang={lang}
         />
       </div>
     </div>
