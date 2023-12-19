@@ -10,7 +10,6 @@ import { useAiContext } from "@/components/hooks/aiContext";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
 import { getSkillLevelOptions } from "@/lib/resume";
 import { useFetcher } from "@remix-run/react";
-import { StepHeader } from "@/components/builder/header";
 import {
   SortableHandle,
   SortableItem,
@@ -45,7 +44,6 @@ export function SkillsStep() {
 
   return (
     <div className="space-y-4">
-      <StepHeader step="skills" />
       {fields.length === 0 ? (
         <p className="small">
           If you do not wish to enter any skills, continue to the next step.

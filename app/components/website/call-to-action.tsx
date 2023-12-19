@@ -2,6 +2,7 @@ import backgroundImage from "@/images/background-call-to-action.jpg";
 import { Container } from "./container";
 import { useNavigate } from "@remix-run/react";
 import { Button } from "../ui/button";
+import { REGISTER } from "@/lib/routes";
 
 export function CallToAction() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export function CallToAction() {
             Unleash Your Career Potential with Professional Resumes in Seconds
           </p>
           <div className="mt-4">
-            <Button onClick={() => navigate("/register")}>Get started</Button>
+            <Button onClick={() => navigate(REGISTER)}>Get started</Button>
           </div>
         </div>
       </Container>

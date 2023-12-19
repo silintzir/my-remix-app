@@ -1,6 +1,7 @@
 import { useNavigate } from "@remix-run/react";
 import { Button } from "../ui/button";
 import { Container } from "./container";
+import { REGISTER } from "@/lib/routes";
 
 export function Hero() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ export function Hero() {
         coaching—all in one place and absolutely free.
       </p>
       <div className="mt-4 flex justify-center gap-x-6">
-        <Button onClick={() => navigate("/register")}>Get started</Button>
+        <Button onClick={() => navigate(REGISTER)}>Get started</Button>
       </div>
     </Container>
   );

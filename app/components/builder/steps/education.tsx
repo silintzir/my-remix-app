@@ -37,7 +37,6 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { StepHeader } from "@/components/builder/header";
 
 export function EducationStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -64,7 +63,6 @@ export function EducationStep() {
 
   return (
     <div className="space-y-4">
-      <StepHeader step="education" />
       {fields.length === 0 ? (
         <p className="small">
           If you do not wish to enter any education, continue to the next step.

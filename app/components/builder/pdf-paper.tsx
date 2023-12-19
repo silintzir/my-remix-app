@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import type * as PDFJS from "pdfjs-dist";
 import { useTemplateStore } from "@/lib/templates/store";
 import html2canvas from "html2canvas";
-import { useFetcher } from "@remix-run/react";
+import { useBlocker, useFetcher } from "@remix-run/react";
 
 type Props = {
   base64: string;
@@ -14,19 +14,29 @@ const US_LETTER_RATIO = 1.2941;
 
 export function PdfPaper({ base64, id, fullPage = false }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const screenshotSaved = useRef(false);
 
   const { submit } = useFetcher({ key: "resume-screenshot" });
 
   const { setNumPages, currentPage } = useTemplateStore();
 
+  const { state, proceed } = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      !screenshotSaved.current &&
+      currentLocation.pathname !== nextLocation.pathname
+  );
+
   useEffect(() => {
     const updateHeight = () => {
+      const iw = window.innerWidth;
+      const rightPanelWidth = fullPage ? iw : iw > 1920 ? iw - 960 : iw / 2;
+
       const maxHeight = fullPage
         ? window.innerHeight - 120
         : window.innerHeight - 120;
       const maxWidth = fullPage
-        ? window.innerWidth - 40
-        : window.innerWidth / 2 - 2 * 80;
+        ? rightPanelWidth - 40
+        : rightPanelWidth - 2 * 72;
 
       let width;
       let height;
@@ -100,18 +110,23 @@ export function PdfPaper({ base64, id, fullPage = false }: Props) {
   }, [currentPage, base64, setNumPages, submit]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      html2canvas(ref.current as HTMLCanvasElement).then((canvas) => {
+    if (state === "blocked") {
+      html2canvas(ref.current as HTMLCanvasElement).then(async (canvas) => {
         const screenshot = canvas.toDataURL();
         const fd = new FormData();
         fd.append("screenshot", screenshot);
-        submit(fd, { method: "POST", action: `/app/resumes/${id}/screenshot` });
+        // submit(fd, { method: "POST", action: `/app/resumes/${id}/screenshot` });
+        fetch(`/app/resumes/${id}/screenshot`, {
+          method: "POST",
+          body: JSON.stringify({ screenshot }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        proceed();
       });
-    }, 30000);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [base64, submit, id]);
+    }
+  }, [state, proceed, id, base64]);
 
   return <canvas ref={ref} className="mx-auto rounded-md shadow-xl" />;
 }

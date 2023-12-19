@@ -1,6 +1,5 @@
 import type { ResumeValues } from "@/lib/types";
 import { useFormContext } from "react-hook-form";
-import { StepHeader } from "@/components/builder/header";
 import {
   FormControl,
   FormField,
@@ -26,7 +25,6 @@ export function SummaryStep() {
 
   return (
     <div className="space-y-4">
-      <StepHeader step="summary" />
       <p className="small">
         A couple sentence recap of your experience and skills to date that will
         go at the top of your resume.

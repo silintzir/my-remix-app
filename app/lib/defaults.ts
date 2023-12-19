@@ -41,47 +41,54 @@ export const DEFAULT_STEPS: Step[] = [
   "finish",
 ];
 
-export const defaultResumeValues = (user: StrapiUser): ResumeValues => ({
+export const DEFAULT_STEPS_ORDER: Step[] = [
+  "basics",
+  "work",
+  "education",
+  "skills",
+  "certificates",
+  "accomplishments",
+  "interests",
+  "summary",
+];
+
+export const DEFAULT_STEPS_SETUP = {
+  start: { title: DEFAULT_SECTION_TITLES.start, enabled: true },
+  basics: { title: DEFAULT_SECTION_TITLES.basics, enabled: true },
+  work: { title: DEFAULT_SECTION_TITLES.work, enabled: true },
+  education: { title: DEFAULT_SECTION_TITLES.education, enabled: true },
+  skills: { title: DEFAULT_SECTION_TITLES.skills, enabled: true },
+  certificates: {
+    title: DEFAULT_SECTION_TITLES.certificates,
+    enabled: false,
+  },
+  accomplishments: {
+    title: DEFAULT_SECTION_TITLES.accomplishments,
+    enabled: false,
+  },
+  interests: { title: DEFAULT_SECTION_TITLES.interests, enabled: false },
+  summary: { title: DEFAULT_SECTION_TITLES.summary, enabled: true },
+  tailor: { title: DEFAULT_SECTION_TITLES.tailor, enabled: true },
+  finish: { title: DEFAULT_SECTION_TITLES.finish, enabled: true },
+};
+
+export const defaultResumeValues = (
+  user: Pick<StrapiUser, "firstName" | "lastName" | "email">
+): ResumeValues => ({
   meta: {
     title: DEFAULT_RESUME_TITLE,
+    paperSize: "LETTER",
     language: "en",
     mode: "standard",
     tailor: { content: "", suggestions: {} },
     fontSize: 12,
-    order: [
-      "basics",
-      "work",
-      "education",
-      "skills",
-      "certificates",
-      "accomplishments",
-      "interests",
-      "summary",
-    ],
+    order: [...DEFAULT_STEPS_ORDER],
     autoSort: {
       education: false,
       work: false,
       certificates: false,
     },
-    steps: {
-      start: { title: DEFAULT_SECTION_TITLES.start, enabled: true },
-      basics: { title: DEFAULT_SECTION_TITLES.basics, enabled: true },
-      work: { title: DEFAULT_SECTION_TITLES.work, enabled: true },
-      education: { title: DEFAULT_SECTION_TITLES.education, enabled: true },
-      skills: { title: DEFAULT_SECTION_TITLES.skills, enabled: true },
-      certificates: {
-        title: DEFAULT_SECTION_TITLES.certificates,
-        enabled: false,
-      },
-      accomplishments: {
-        title: DEFAULT_SECTION_TITLES.accomplishments,
-        enabled: false,
-      },
-      interests: { title: DEFAULT_SECTION_TITLES.interests, enabled: false },
-      summary: { title: DEFAULT_SECTION_TITLES.summary, enabled: true },
-      tailor: { title: DEFAULT_SECTION_TITLES.tailor, enabled: true },
-      finish: { title: DEFAULT_SECTION_TITLES.finish, enabled: true },
-    },
+    steps: { ...DEFAULT_STEPS_SETUP },
   },
   resume: {
     basics: {

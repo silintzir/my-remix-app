@@ -2,6 +2,7 @@ import { useWebsiteStore } from "./store";
 import { Link } from "@remix-run/react";
 import { Logo } from "@/components/website/logo";
 import { Container } from "./container";
+import { REGISTER } from "@/lib/routes";
 
 export function Footer() {
   const { setContactModalOpen } = useWebsiteStore();
@@ -18,7 +19,7 @@ export function Footer() {
               <button type="button" onClick={() => setContactModalOpen(true)}>
                 Contact
               </button>
-              <Link to="/register">Get started</Link>
+              <Link to={REGISTER}>Get started</Link>
             </div>
           </nav>
         </div>

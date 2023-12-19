@@ -48,6 +48,7 @@ import {
   getSession,
   destroySession,
 } from "@/sessions";
+import { DASHBOARD, REGISTER } from "@/lib/routes";
 
 const loginSchema = z.object({
   email: requiredString().email(),
@@ -128,7 +129,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const session = await getSession(request.headers.get("Cookie"));
     session.unset("guest");
     session.set("user", result.data as AuthValues);
-    return redirect("/account/dashboard", {
+    return redirect(DASHBOARD, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -314,7 +315,7 @@ export default function Signin() {
               </div>
               <span className="muted">
                 I am not registered -{" "}
-                <Link className="link" to="/register">
+                <Link className="link" to={REGISTER}>
                   Signup
                 </Link>
               </span>

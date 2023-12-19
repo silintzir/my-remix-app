@@ -16,13 +16,14 @@ import { extractJson } from "crack-json";
 import { v4 } from "uuid";
 import { createResume } from "@/lib/resumes.server";
 import { defaultResumeValues } from "@/lib/defaults";
+import { DASHBOARD } from "@/lib/routes";
 
 export async function action({ request }: ActionFunctionArgs) {
   const posted = Object.fromEntries(await request.formData());
 
   const resumeText = get(posted, "resumeText", "") as string;
   if (resumeText.trim().length === 0) {
-    return redirect("/account/dashboard");
+    return redirect(DASHBOARD);
   }
 
   const bot = new NoMemory(0.2);

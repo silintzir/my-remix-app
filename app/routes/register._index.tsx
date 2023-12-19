@@ -3,6 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { destroySession, getSession } from "@/sessions";
+import { REGISTER } from "@/lib/routes";
 
 export const handle = {
   step: 1,
@@ -24,7 +25,7 @@ export default function Templates() {
       <h1 className="font-semibold text-lg">Templates</h1>
       <p className="muted">-- Template carousel should go here --</p>
       <Link
-        to={"/register/social-profile"}
+        to={`${REGISTER}/social-profile`}
         className={cn(buttonVariants({ variant: "default" }))}
       >
         Pick this template

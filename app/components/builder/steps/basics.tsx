@@ -1,14 +1,12 @@
 import { TextInput } from "@/components/shadcn/TextInput";
 import type { ResumeValues } from "@/lib/types";
 import { useFormContext } from "react-hook-form";
-import { StepHeader } from "@/components/builder/header";
 
 export function BasicsStep() {
   const { control } = useFormContext<ResumeValues>();
 
   return (
     <div className="space-y-2">
-      <StepHeader step="basics" />
       <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
         <TextInput
           control={control}

@@ -8,7 +8,6 @@ import { map } from "lodash-es";
 import { useFetcher } from "@remix-run/react";
 import { useAiContext } from "@/components/hooks/aiContext";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
-import { StepHeader } from "@/components/builder/header";
 import {
   SortableHandle,
   SortableItem,
@@ -45,7 +44,6 @@ export function InterestsStep() {
 
   return (
     <div className="space-y-4">
-      <StepHeader step="interests" />
       {fields.length === 0 ? (
         <p className="small">
           If you do not wish to enter any interests, continue to the next step.

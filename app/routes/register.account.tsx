@@ -38,6 +38,7 @@ import { authToSession, throwOnStrapiError } from "@/lib/strapi.server";
 import { TextInput } from "@/components/shadcn/TextInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-react";
+import { DASHBOARD, LOGIN, REGISTER } from "@/lib/routes";
 
 export const handle = {
   step: 2,
@@ -48,7 +49,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     data: { guest },
   } = await getSession(request.headers.get("Cookie"));
   if (!guest) {
-    return redirect("/register");
+    return redirect(REGISTER);
   }
   return { ...defaultValues, ...guest };
 }
@@ -93,12 +94,12 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (result.success) {
     if (raw.useMagicLink) {
-      return redirect(`/login?view=success&email=${raw.email}`);
+      return redirect(`${LOGIN}?view=success&email=${raw.email}`);
     }
     const session = await getSession(request.headers.get("Cookie"));
     session.unset("guest");
     session.set("user", result.data as AuthValues);
-    return redirect("/account/dashboard", {
+    return redirect(DASHBOARD, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },

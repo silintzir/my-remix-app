@@ -1,12 +1,15 @@
 import type { ResumeValues, Step, StepConfig } from "@/lib/types";
 import { filter, pick, mapValues, values, map } from "lodash-es";
-import { DEFAULT_SECTION_TITLES, DEFAULT_STEPS } from "./defaults";
+import { DEFAULT_SECTION_TITLES } from "./defaults";
 
 export function getEnabledSteps(config: Record<Step, StepConfig>) {
   const ordered = Object.keys(DEFAULT_SECTION_TITLES);
   const picked = pick(config, ordered);
   const collection = values(mapValues(picked, (v, k) => ({ ...v, step: k })));
-  return map(filter(collection, m => m.enabled), 'step') as Step[];
+  return map(
+    filter(collection, (m) => m.enabled),
+    "step"
+  ) as Step[];
 }
 
 type AdjacentSteps = {
@@ -17,8 +20,7 @@ export function getAdjacentSteps(
   currentStep: Step,
   values: ResumeValues
 ): AdjacentSteps {
-  const steps =
-    values.meta?.mode === "standard" ? DEFAULT_STEPS : getEnabledSteps(values.meta.steps);
+  const steps = getEnabledSteps(values.meta.steps);
   const currentIndex = steps.indexOf(currentStep);
 
   // Object to hold the previous and next steps
@@ -46,5 +48,5 @@ export function getAdjacentSteps(
 }
 
 export function hasEditableTitle(step: Step) {
-  return step !== 'start' && step !== 'finish' && step !== 'tailor';
+  return step !== "start" && step !== "finish" && step !== "tailor";
 }

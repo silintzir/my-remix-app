@@ -1,3 +1,4 @@
+import { DASHBOARD } from "@/lib/routes";
 import { authenticatedFetch } from "@/lib/strapi.server";
 import { type ActionFunctionArgs } from "@remix-run/node";
 import { redirectWithSuccess } from "remix-toast";
@@ -8,5 +9,5 @@ export async function action({ request, params }: ActionFunctionArgs) {
     method: "DELETE",
   });
 
-  return redirectWithSuccess("/account/dashboard", "Resume was deleted");
+  return redirectWithSuccess(DASHBOARD, "Resume was deleted");
 }

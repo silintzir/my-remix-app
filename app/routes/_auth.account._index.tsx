@@ -3,6 +3,7 @@ import { Link } from "@remix-run/react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
+import { DASHBOARD } from "@/lib/routes";
 
 export default function Index() {
   const me = useMe();
@@ -16,7 +17,7 @@ export default function Index() {
         </AlertDescription>
         <br />
         <Button size="sm" asChild>
-          <Link to="/account/dashboard">
+          <Link to={DASHBOARD}>
             <Home className="w-4 h-4 mr-2" />
             <span>Back to dashboard</span>
           </Link>

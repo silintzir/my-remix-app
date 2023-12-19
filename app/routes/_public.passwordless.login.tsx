@@ -13,6 +13,7 @@ import { get } from "lodash-es";
 import { commitSession, getSession } from "@/sessions";
 import { authToSession } from "@/lib/strapi.server";
 import { cn } from "@/lib/utils";
+import { DASHBOARD } from "@/lib/routes";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const loginToken = new URL(request.url).searchParams.get("loginToken");
@@ -65,7 +66,7 @@ export async function action({ request }: ActionFunctionArgs) {
     await fetch(updateUrl, updateConfig);
   }
 
-  return redirect("/account/dashboard", {
+  return redirect(DASHBOARD, {
     status: 303,
     headers: {
       "Set-Cookie": await commitSession(session),

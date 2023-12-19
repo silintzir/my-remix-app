@@ -33,7 +33,6 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
-import { StepHeader } from "@/components/builder/header";
 
 export function WorkStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -60,7 +59,6 @@ export function WorkStep() {
 
   return (
     <div className="space-y-4">
-      <StepHeader step="work" />
       {fields.length === 0 ? (
         <p className="small">
           If you do not wish to enter any experience, continue to the next step.

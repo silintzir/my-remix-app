@@ -50,11 +50,11 @@ class ChicagoPdfTemplate {
       resume: { accomplishments },
       meta: {
         steps: {
-          accomplishments: { title },
+          accomplishments: { title, enabled },
         },
       },
     } = this.values;
-    if (!accomplishments.length) {
+    if (!enabled || !accomplishments.length) {
       return [];
     }
 
@@ -69,12 +69,12 @@ class ChicagoPdfTemplate {
       resume: { interests },
       meta: {
         steps: {
-          interests: { title },
+          interests: { title, enabled },
         },
       },
     } = this.values;
 
-    if (!interests.length) {
+    if (!enabled || !interests.length) {
       return [];
     }
 
@@ -92,12 +92,12 @@ class ChicagoPdfTemplate {
       resume: { skills },
       meta: {
         steps: {
-          skills: { title },
+          skills: { title, enabled },
         },
       },
     } = this.values;
 
-    if (!skills.length) {
+    if (!enabled || !skills.length) {
       return [];
     }
     return [
@@ -114,12 +114,12 @@ class ChicagoPdfTemplate {
       resume: { certificates },
       meta: {
         steps: {
-          certificates: { title },
+          certificates: { title, enabled },
         },
       },
     } = this.values;
 
-    if (!certificates.length) {
+    if (!enabled || !certificates.length) {
       return [];
     }
 
@@ -139,13 +139,13 @@ class ChicagoPdfTemplate {
       },
       meta: {
         steps: {
-          summary: { title },
+          summary: { title, enabled },
         },
       },
     } = this.values;
     const output: Content[] = [];
 
-    if (!content.trim().length) {
+    if (!enabled || !content.trim().length) {
       return output;
     }
 
@@ -160,12 +160,12 @@ class ChicagoPdfTemplate {
       resume: { education },
       meta: {
         steps: {
-          education: { title },
+          education: { title, enabled },
         },
       },
     } = this.values;
 
-    if (!education.length) {
+    if (!enabled || !education.length) {
       return [];
     }
 
@@ -225,12 +225,12 @@ class ChicagoPdfTemplate {
       resume: { work },
       meta: {
         steps: {
-          work: { title },
+          work: { title, enabled },
         },
       },
     } = this.values;
 
-    if (!work.length) {
+    if (!enabled || !work.length) {
       return [];
     }
 

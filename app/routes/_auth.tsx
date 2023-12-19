@@ -3,6 +3,7 @@ import { Outlet } from "@remix-run/react";
 
 import { getSession, commitSession } from "@/sessions";
 import { fetchMe } from "@/lib/strapi.server";
+import { LOGIN } from "@/lib/routes";
 
 export const handle = "auth";
 
@@ -12,7 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { user } = session.data;
 
   if (!user) {
-    return redirect("/login");
+    return redirect(LOGIN);
   }
 
   return json(

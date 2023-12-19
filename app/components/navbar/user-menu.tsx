@@ -1,4 +1,4 @@
-import { Form, useNavigate, useSubmit } from "@remix-run/react";
+import { Link, useSubmit } from "@remix-run/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +16,8 @@ import {
   LogOut,
   Settings,
 } from "lucide-react";
-import { useRef } from "react";
 import type { StrapiUser } from "@/lib/types";
+import { DASHBOARD } from "@/lib/routes";
 
 interface Props {
   user: StrapiUser;
@@ -42,50 +42,55 @@ function getInitials(firstName: string | null, lastName: string | null) {
 
 export function UserMenu({ user }: Props) {
   const submit = useSubmit();
-  const navigate = useNavigate();
-
-  const ref = useRef<HTMLFormElement>(null);
 
   const logout = () => {
-    submit(ref.current);
+    submit(null, { method: "POST", action: "/logout" });
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar className="hover:border-primary hover:border-2 h-10 w-10 bg-muted-foreground">
-          <AvatarFallback>
-            {getInitials(user.firstName, user.lastName)}
-          </AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel className="text-primary flex items-center">
-          <CircleUserRound className="w-4 h-4 mr-2" />
-          <span>{user.email}</span>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-muted" />
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate("/account/dashboard")}>
-            <GaugeCircle className="w-4 h-4 mr-2" />
-            <span>Dashboard</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => navigate("/account/settings")}>
-            <Settings className="w-4 h-4 mr-2" />
-            <span>Account settings</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <HelpCircle className="w-4 h-4 mr-2" />
-            <span>FAQ</span>
-          </DropdownMenuItem>
-          <Form method="post" action="/logout" ref={ref}>
-            <DropdownMenuItem onClick={logout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              <span>Logout</span>
+    <div id="user-menu">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Avatar className="hover:border-primary hover:border-2">
+            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+              {getInitials(user.firstName, user.lastName)}
+            </AvatarFallback>
+          </Avatar>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuLabel className="text-primary flex items-center">
+            <CircleUserRound className="w-4 h-4 mr-2" />
+            <span>{user.email}</span>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator className="-mx-1 my-1 h-px bg-muted" />
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link to={DASHBOARD}>
+                <GaugeCircle />
+                <span>Dashboard</span>
+              </Link>
             </DropdownMenuItem>
-          </Form>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <DropdownMenuItem asChild>
+              <Link to="/account/settings">
+                <Settings />
+                <span>Account settings</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/faq">
+                <HelpCircle />
+                <span>FAQ</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <button onClick={logout} className="flex">
+                <LogOut />
+                <span>Logout</span>
+              </button>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }

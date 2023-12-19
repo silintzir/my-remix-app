@@ -1,4 +1,5 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DASHBOARD } from "@/lib/routes";
 import { authToSession } from "@/lib/strapi.server";
 import { commitSession, getSession } from "@/sessions";
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
@@ -31,7 +32,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const authData = authToSession(parsed);
   session.set("user", authData);
 
-  return redirect("/account/dashboard", {
+  return redirect(DASHBOARD, {
     status: 303,
     headers: {
       "Set-Cookie": await commitSession(session),

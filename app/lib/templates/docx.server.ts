@@ -58,11 +58,11 @@ export class ChicagoDocxTemplate {
       resume: { accomplishments },
       meta: {
         steps: {
-          accomplishments: { title },
+          accomplishments: { title, enabled },
         },
       },
     } = this.values;
-    if (!accomplishments.length) {
+    if (!enabled || !accomplishments.length) {
       return [];
     }
     return [
@@ -75,12 +75,12 @@ export class ChicagoDocxTemplate {
       resume: { work },
       meta: {
         steps: {
-          work: { title },
+          work: { title, enabled },
         },
       },
     } = this.values;
 
-    if (!work.length) {
+    if (!enabled || !work.length) {
       return [];
     }
     // group by employer / location
@@ -120,12 +120,12 @@ export class ChicagoDocxTemplate {
       resume: { education },
       meta: {
         steps: {
-          education: { title },
+          education: { title, enabled },
         },
       },
     } = this.values;
 
-    if (!education.length) {
+    if (!enabled || !education.length) {
       return [];
     }
     // group by employer / location
@@ -173,11 +173,11 @@ export class ChicagoDocxTemplate {
       resume: { skills },
       meta: {
         steps: {
-          skills: { title },
+          skills: { title, enabled },
         },
       },
     } = this.values;
-    if (!skills.length) {
+    if (!enabled || !skills.length) {
       return [];
     }
     return [
@@ -191,11 +191,11 @@ export class ChicagoDocxTemplate {
       resume: { certificates },
       meta: {
         steps: {
-          certificates: { title },
+          certificates: { title, enabled },
         },
       },
     } = this.values;
-    if (!certificates.length) {
+    if (!enabled || !certificates.length) {
       return [];
     }
     return [
@@ -227,11 +227,11 @@ export class ChicagoDocxTemplate {
       resume: { interests },
       meta: {
         steps: {
-          interests: { title },
+          interests: { title, enabled },
         },
       },
     } = this.values;
-    if (!interests.length) {
+    if (!enabled || !interests.length) {
       return [];
     }
     return [
@@ -240,7 +240,22 @@ export class ChicagoDocxTemplate {
     ];
   };
   summary: ContentProvider = () => {
-    return [];
+    const {
+      resume: {
+        summary: { content },
+      },
+      meta: {
+        steps: {
+          summary: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    if (!enabled || !content.trim().length) {
+      return [];
+    }
+
+    return [this.sectionTitle(title), new Paragraph({ text: content })];
   };
 
   create(): FileChild[] {

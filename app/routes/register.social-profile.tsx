@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { GoogleButton } from "@/components/social/google";
 import { FacebookButton } from "@/components/social/facebook";
+import { REGISTER } from "@/lib/routes";
 
 export const handle = {
   step: 2,
@@ -25,13 +26,13 @@ export default function SocialProfile() {
       <Separator className="my-4" />
       <div className="flex justify-between items-center">
         <Link
-          to={"/register"}
+          to={REGISTER}
           className={cn(buttonVariants({ variant: "outline" }))}
         >
           Back
         </Link>
         <Link
-          to={"/register/introduction"}
+          to={`${REGISTER}/introduction`}
           className={cn(buttonVariants({ variant: "default" }))}
         >
           Skip

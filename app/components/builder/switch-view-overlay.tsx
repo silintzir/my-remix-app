@@ -1,9 +1,10 @@
+import { Link, useHref } from "@remix-run/react";
 import { Maximize2 } from "lucide-react";
 import { useRef } from "react";
-import { Form } from "@remix-run/react";
 
 export function SwitchViewOverlay() {
-  const ref = useRef<HTMLButtonElement>(null);
+  const ref = useRef<any>(null);
+  const href = useHref("?view=preview");
   return (
     <div
       onMouseEnter={() => {
@@ -19,18 +20,14 @@ export function SwitchViewOverlay() {
       className="absolute inset-0 z-30 rounded flex items-center justify-center cursor-pointer hover:bg-[#DDDDDD88]"
       style={{ transition: "background 0.1s ease 0s" }}
     >
-      <Form>
-        <button
-          type="submit"
-          name="view"
-          value="preview"
-          ref={ref}
-          className="flex z-40 items-center justify-center bg-blue-600 rounded-full p-4 scale-0"
-          style={{ transition: "transform 0.1s ease 0s" }}
-        >
-          <Maximize2 className="w-6 h-6" />
-        </button>
-      </Form>
+      <Link
+        className="flex z-40 items-center justify-center bg-blue-600 rounded-full p-4 scale-0"
+        style={{ transition: "transform 0.1s ease 0s" }}
+        to={href}
+        ref={ref}
+      >
+        <Maximize2 className="w-6 h-6" />
+      </Link>
     </div>
   );
 }

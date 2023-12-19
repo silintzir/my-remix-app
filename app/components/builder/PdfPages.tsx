@@ -8,27 +8,27 @@ export function PdfPages() {
   return (
     <ClientOnly fallback={<div>Page switcher</div>}>
       {() => (
-        <div className="flex items-center gap-2 small font-thin">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
-            size="sm"
             title="Go to previous page"
             onClick={prevPage}
+            size="sm"
             disabled={currentPage === 1}
           >
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft />
           </Button>
-          <span>
+          <span className="small">
             {currentPage} / {numPages}
           </span>
           <Button
             variant="ghost"
-            size="sm"
             title="Go to next page"
             onClick={nextPage}
+            size="sm"
             disabled={currentPage === numPages}
           >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight />
           </Button>
         </div>
       )}

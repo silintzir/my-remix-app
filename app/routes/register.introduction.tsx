@@ -32,6 +32,7 @@ import {
 import { inputFromForm, mdf } from "domain-functions";
 import { useServerErrors } from "@/components/hooks/serverErrors";
 import { commitSession, getSession } from "@/sessions";
+import { REGISTER } from "@/lib/routes";
 
 export const handle = {
   step: 2,
@@ -56,7 +57,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const session = await getSession(request.headers.get("Cookie"));
     session.set("guest", { ...(session.get("guest") || {}), ...result.data });
 
-    return redirect("/register/account", {
+    return redirect(`${REGISTER}/account`, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
@@ -131,7 +132,7 @@ export default function Introduction() {
             />
             <div className="flex justify-between items-center">
               <Link
-                to="/register/social-profile"
+                to={`${REGISTER}/social-profile`}
                 className={cn(buttonVariants({ variant: "outline" }))}
               >
                 Back

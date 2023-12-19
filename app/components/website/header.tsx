@@ -6,6 +6,7 @@ import { Link, NavLink } from "@remix-run/react";
 import { Container } from "./container";
 import { Logo } from "./logo";
 import { Button } from "../ui/button";
+import { DASHBOARD, LOGIN, REGISTER } from "@/lib/routes";
 
 function MobileNavIcon({ open }: { open: boolean }) {
   return (
@@ -71,11 +72,11 @@ function MobileNavigation({ isLogged }: HeaderProps) {
             <Link to="#features">Features</Link>
             <Link to="#solutions">Solutions</Link>
             <Link to="#aboutus">About us</Link>
-            <Link to="/register">Register</Link>
+            <Link to={REGISTER}>Register</Link>
             {isLogged ? (
-              <Link to="/account/dashboard">My account</Link>
+              <Link to={DASHBOARD}>My account</Link>
             ) : (
-              <Link to="/login">Login</Link>
+              <Link to={LOGIN}>Login</Link>
             )}
           </Popover.Panel>
         </Transition.Child>
@@ -93,9 +94,7 @@ export function Header({ isLogged }: HeaderProps) {
       <Container>
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
-            <Link to="/" aria-label="Home">
-              <Logo />
-            </Link>
+            <Logo />
             <div className="hidden md:flex md:gap-x-6">
               <NavLink to="#features">Features</NavLink>
               <NavLink to="#solutions">Solutions</NavLink>
@@ -104,13 +103,13 @@ export function Header({ isLogged }: HeaderProps) {
           </div>
           <div className="flex items-center gap-x-5 md:gap-x-8">
             <div className="hidden md:block space-x-5">
-              <NavLink to="/register">Register</NavLink>
+              <NavLink to={REGISTER}>Register</NavLink>
               {isLogged ? (
                 <Button asChild className="text-base">
-                  <NavLink to="/account/dashboard">My account</NavLink>
+                  <NavLink to={DASHBOARD}>My account</NavLink>
                 </Button>
               ) : (
-                <NavLink to="/login">Login</NavLink>
+                <NavLink to={LOGIN}>Login</NavLink>
               )}
             </div>
 

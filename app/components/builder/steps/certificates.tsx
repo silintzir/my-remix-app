@@ -30,7 +30,6 @@ import {
   SortableList,
 } from "@/components/builder/sortable";
 import { cn } from "@/lib/utils";
-import { StepHeader } from "@/components/builder/header";
 
 export function CertificatesStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -57,7 +56,6 @@ export function CertificatesStep() {
 
   return (
     <div className="space-y-4">
-      <StepHeader step="certificates" />
       {fields.length === 0 ? (
         <p className="small">
           If you do not wish to enter any certificates, continue to the next

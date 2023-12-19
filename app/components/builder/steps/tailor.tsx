@@ -3,11 +3,15 @@ import { useFetcher } from "@remix-run/react";
 import { useCallback } from "react";
 import { Loader2, Wand } from "lucide-react";
 import { get, useFormContext } from "react-hook-form";
-import type { AdapterSuggestion, ResumeValues, WorkRecord } from "@/lib/types";
+import type {
+  AdapterSuggestion,
+  EducationRecord,
+  ResumeValues,
+  WorkRecord,
+} from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { TextareaInput } from "@/components/shadcn/TextareaInput";
 import { getEducationTitle, getExperienceTitle } from "@/lib/resume";
-import { StepHeader } from "@/components/builder/header";
 
 type Props = {
   id: number;
@@ -34,7 +38,7 @@ export function TailorStep({ id, values }: Props) {
   >;
 
   const work = get(values, "resume.work", []) as WorkRecord[];
-  const education = get(values, "resume.education", []) as WorkRecord[];
+  const education = get(values, "resume.education", []) as EducationRecord[];
 
   const suggestEnhancements = useCallback(() => {
     const resume = getValues();
@@ -79,7 +83,6 @@ export function TailorStep({ id, values }: Props) {
 
   return (
     <div className="space-y-4">
-      <StepHeader step="tailor" />
       <p className="small mb-4 muted">
         Enter the description from a job posting and then click the button to
         get suggestions for your resume.

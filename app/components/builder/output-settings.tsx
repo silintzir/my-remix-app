@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -7,13 +6,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { SlidersHorizontal } from "lucide-react";
+import { FontSizeAdjust } from ".";
+import { useFormContext } from "react-hook-form";
+import type { ResumeValues } from "@/lib/types";
+import { SelectInput } from "../shadcn/SelectInput";
+import { cn } from "@/lib/utils";
+import { Slider } from "../ui/slider";
 
-export function OutputSettings() {
+interface Props {
+  values: ResumeValues;
+}
+export function OutputSettings({ values }: Props) {
+  const { control } = useFormContext<ResumeValues>();
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="sm">
-          <SlidersHorizontal className="w-5 h-5" />
+        <Button variant="ghost">
+          <SlidersHorizontal />
+          <span>Settings</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
@@ -26,35 +36,28 @@ export function OutputSettings() {
           </div>
           <div className="grid gap-2">
             <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="width">Width</Label>
-              <Input
-                id="width"
-                defaultValue="100%"
-                className="col-span-2 h-8"
+              <Label htmlFor="maxWidth">Paper size</Label>
+              <SelectInput
+                control={control}
+                options={[
+                  { label: "A4", value: "A4" },
+                  { label: "US Letter", value: "LETTER" },
+                ]}
+                name="meta.paperSize"
               />
             </div>
             <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxWidth">Max. width</Label>
-              <Input
-                id="maxWidth"
-                defaultValue="300px"
-                className="col-span-2 h-8"
-              />
+              <Label htmlFor="width">Font size</Label>
+              <FontSizeAdjust />
+              <strong>{values.meta.fontSize}pt</strong>
             </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="height">Height</Label>
-              <Input
-                id="height"
-                defaultValue="25px"
-                className="col-span-2 h-8"
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxHeight">Max. height</Label>
-              <Input
-                id="maxHeight"
-                defaultValue="none"
-                className="col-span-2 h-8"
+            <div className="flex items-center gap-4">
+              <Label htmlFor="maxWidth">Vertical margin</Label>
+              <Slider
+                defaultValue={[50]}
+                max={100}
+                step={1}
+                className={cn("w-full")}
               />
             </div>
           </div>

@@ -93,6 +93,7 @@ export const resumeSchema = z.object({
   meta: z.object({
     order: z.array(z.string()),
     title: z.string(),
+    paperSize: z.enum(["A4", "LETTER"]),
     fontSize: z.number(),
     language: z.enum(["en", "es"]),
     mode: z.enum(["standard", "custom"]),
