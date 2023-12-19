@@ -4,7 +4,7 @@ import { Download } from "lucide-react";
 
 export function OpenPreview() {
   return (
-    <Button asChild>
+    <Button asChild variant="link" className="ml-0 pl-0">
       <Link to={useHref("?view=preview")}>
         <Download />
         <span>Preview & Download</span>

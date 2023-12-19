@@ -23,6 +23,20 @@ export async function createResume(request: Request, me: StrapiUser) {
   return get(response, "data.id") as number;
 }
 
+export async function importResume(request: Request, values: ResumeValues) {
+  const url = "/api/resumes";
+  const response = await authenticatedFetch(request, url, {
+    method: "POST",
+    body: JSON.stringify({
+      data: {
+        name: DEFAULT_RESUME_TITLE,
+        document: values,
+      },
+    }),
+  });
+  return get(response, "data.id") as number;
+}
+
 export async function getResumes(request: Request) {
   const response = await authenticatedFetch(
     request,

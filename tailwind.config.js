@@ -21,6 +21,9 @@ module.exports = {
         sans: ["Inter sans", ...defaultTheme.fontFamily.sans],
       },
       screens: {
+        xxs: "320px",
+        xs: "480px",
+        sm: "640px",
         lg: "960px",
         xl: "1200px",
         "2xl": "1400px",

@@ -1,6 +1,5 @@
 import { useMe } from "@/components/hooks/useMe";
 import { NavBar } from "@/components/navbar";
-import { UpgradeNowButton } from "@/components/navbar/upgrade-now";
 import { UserMenu } from "@/components/navbar/user-menu";
 import { Logo } from "@/components/website/logo";
 import type { StrapiUser } from "@/lib/types";
@@ -22,7 +21,6 @@ export default function Account() {
           </div>
         )}{" "}
         <div className="flex gap-4 items-center">
-          <UpgradeNowButton />
           <UserMenu user={me as unknown as StrapiUser} />
         </div>
       </NavBar>

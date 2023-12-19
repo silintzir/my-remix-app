@@ -1,16 +1,23 @@
-import { Stepper } from "@/components/builder/stepper";
+import { Stepper } from "@/components/builder/stepper-2";
 import { InlineEdit } from "@/components/inline-edit";
 import { DEFAULT_RESUME_TITLE, DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { getEnabledSteps } from "@/lib/steps";
 import type { ResumeValues, Step } from "@/lib/types";
 import { useSearchParams } from "@remix-run/react";
+import { AlertCircle } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { ClientOnly } from "remix-utils/client-only";
+import { AutoSavedFeedback } from "./auto-saved-feedback";
+import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
 
 type Props = {
   step: Step;
+  isSaving: boolean;
+  hasErrors: boolean;
+  children: ReactNode;
 };
-export function StepHeader({ step }: Props) {
+export function StepHeader({ step, isSaving, hasErrors, children }: Props) {
   const { watch } = useFormContext<ResumeValues>();
   const steps = getEnabledSteps(watch("meta.steps"));
   const [searchParams] = useSearchParams();
@@ -19,8 +26,8 @@ export function StepHeader({ step }: Props) {
   const currentIndex = steps.indexOf(activeStep);
 
   return (
-    <div className="mb-4">
-      <h2 className="text-xl font-semibold flex justify-center w-auto mb-2">
+    <>
+      <h2 className="text-xl font-semibold flex flex-col items-center gap-2 w-auto mb-2">
         <ClientOnly fallback={<span>{DEFAULT_RESUME_TITLE}</span>}>
           {() => (
             <InlineEdit
@@ -31,11 +38,26 @@ export function StepHeader({ step }: Props) {
             />
           )}
         </ClientOnly>
+
+        <div className="flex justify-center">
+          {hasErrors ? (
+            <span className="text-destructive flex items-center small">
+              <AlertCircle className="w-4 h-4 mr-2" />
+              Fix errors to proceed
+            </span>
+          ) : (
+            <div className={cn({ muted: !isSaving })}>
+              <AutoSavedFeedback isSaving={isSaving} />
+            </div>
+          )}
+        </div>
       </h2>
-      <Stepper steps={steps} current={currentIndex} />
-      <h3 className="text-lg font-semibold my-2">
-        {currentIndex + 1}. {DEFAULT_SECTION_TITLES[step]}
-      </h3>
-    </div>
+      <Stepper
+        title={DEFAULT_SECTION_TITLES[step]}
+        steps={steps}
+        current={currentIndex}
+      />
+      {children}
+    </>
   );
 }

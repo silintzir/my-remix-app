@@ -24,22 +24,39 @@ type ButtonProps = {
   description: string;
   type: "submit" | "button";
   onClick?: () => void;
+  loading?: boolean;
 };
-function SourceButton({ title, description, type, onClick }: ButtonProps) {
+function SourceButton({
+  title,
+  description,
+  type,
+  onClick,
+  loading = false,
+}: ButtonProps) {
   return (
     <button
       className="outline-none text-left w-full hover:bg-gray-300 bg-gray-200 flex justify-between items-center rounded-md px-4 py-4"
       type={type}
       onClick={onClick}
     >
-      <div>
-        <div className="flex items-center">
-          <PlusSquare className="h-4 w-4 mr-2" />
-          <span className="text-lg">{title}</span>
-        </div>
-        <span className="small muted">{description}</span>
-      </div>
-      <ArrowRight className="w-4 h-4" />
+      {loading ? (
+        <>
+          <div className="text-lg">Processing...</div>
+          <Loader2 className="animate-spin" />
+        </>
+      ) : (
+        <>
+          <div>
+            <div className="flex items-center">
+              <PlusSquare className="h-4 w-4 mr-2" />
+              <span className="text-lg">{title}</span>
+            </div>
+            <span className="small muted">{description}</span>
+          </div>
+
+          <ArrowRight className="w-4 h-4" />
+        </>
+      )}
     </button>
   );
 }
@@ -79,6 +96,7 @@ export function CreateResume({ startOpen = false }: Props) {
                 title="New resume from scratch"
                 description="Choose a blank template and fill in the fields yourself"
                 type="submit"
+                loading={state === "submitting"}
               />
             </Form>
             <SourceButton
@@ -101,7 +119,7 @@ export function CreateResume({ startOpen = false }: Props) {
               </DialogHeader>
               <Textarea rows={10} name="resumeText" />
               <DialogFooter>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                   <Button type="button" variant="outline">
                     Cancel
                   </Button>
@@ -110,7 +128,7 @@ export function CreateResume({ startOpen = false }: Props) {
                   {state === "submitting" ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      <span>Please wait</span>
+                      <span>Processing...</span>
                     </>
                   ) : (
                     <>

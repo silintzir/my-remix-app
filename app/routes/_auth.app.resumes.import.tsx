@@ -14,7 +14,7 @@ import type {
 } from "@/lib/types";
 import { extractJson } from "crack-json";
 import { v4 } from "uuid";
-import { createResume } from "@/lib/resumes.server";
+import { importResume } from "@/lib/resumes.server";
 import { defaultResumeValues } from "@/lib/defaults";
 import { DASHBOARD } from "@/lib/routes";
 
@@ -147,7 +147,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const toStore = getResumeValues(extracted);
 
-  const id = await createResume(request, toStore);
+  const id = await importResume(request, toStore);
 
   return redirect(`/app/resumes/${id}/edit`);
 }

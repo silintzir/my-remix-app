@@ -24,7 +24,7 @@ import {
   useFetcher,
 } from "@remix-run/react";
 import { Form as SForm } from "@/components/ui/form";
-import { AlertCircle, ChevronLeft, ChevronRight, Home } from "lucide-react";
+import { ChevronLeft, ChevronRight, Home } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { resumeSchema } from "@/lib/resume";
 import { useEffect, useRef, useState } from "react";
@@ -167,160 +167,182 @@ export default function Builder() {
   return (
     <>
       <Overlay visible={state === "loading"} />
-      <div className="fixed top-4 right-4 z-50">
-        <div className="flex gap-2">
-          <div className="xl:hidden">
+      <header className="block xl:hidden h-16 relative z-50 bg-white border-b shadow-lg">
+        <div className="fixed top-0 left-0 right-0 h-inherit">
+          <div className="flex justify-between items-center px-4 relative h-inherit">
             <OpenPreview />
+            <UserMenu user={user} />
           </div>
-          <UserMenu user={user} />
         </div>
-      </div>
-      <SForm {...form}>
-        <form method="post" ref={ref} onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex justify-center bg-muted min-h-screen w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0">
-            {/* Editor - Left Side */}
-            <div className="w-full max-w-full flex-1">
-              <div className="max-w-[860px] h-full m-auto">
-                <div className="px-4 md:px-12 py-16 sm:py-4">
-                  <fieldset className="my-8">
-                    <StepHeader step={step} />
-                    {step === "start" && <StartStep />}
-                    {step === "basics" && <BasicsStep />}
-                    {step === "work" && <WorkStep />}
-                    {step === "education" && <EducationStep />}
-                    {step === "skills" && <SkillsStep />}
-                    {step === "interests" && <InterestsStep />}
-                    {step === "certificates" && <CertificatesStep />}
-                    {step === "accomplishments" && <AccomplishmentsStep />}
-                    {step === "summary" && <SummaryStep />}
-                    {step === "tailor" && (
-                      <TailorStep id={id} values={defaultValues} />
-                    )}
-                  </fieldset>
-                  <AutoSave onSubmit={onSubmit} defaultValues={submittedData} />
-                  <div className="flex justify-end items-center gap-1">
-                    <div className="flex justify-center">
-                      {stepHasErrors ? (
-                        <span className="text-destructive flex items-center small">
-                          <AlertCircle className="w-4 h-4 mr-2" />
-                          Fix errors to proceed
-                        </span>
-                      ) : (
-                        <div className={cn({ muted: !isSaving })}>
-                          <AutoSavedFeedback isSaving={isSaving} />
-                        </div>
-                      )}
-                    </div>
-                    <Button variant="secondary" type="button" asChild>
-                      {previous ? (
-                        <Link to={`?step=${previous}`}>
-                          <ChevronLeft />
-                          <span>Prev: {DEFAULT_SECTION_TITLES[previous]}</span>
-                        </Link>
-                      ) : (
-                        <Link to={DASHBOARD}>
-                          <Home />
-                          <span>Exit</span>
-                        </Link>
-                      )}
-                    </Button>
-                    <StepJump values={submittedData} />
-                    <Button type="button" asChild>
-                      {next ? (
-                        <Link to={`?step=${next}`}>
-                          <span className="ml-0 mr-2">
-                            Next: {DEFAULT_SECTION_TITLES[next]}
-                          </span>
-                          <ChevronRight />
-                        </Link>
-                      ) : (
-                        <Link to={DASHBOARD}>
-                          <Home />
-                          <span>Exit to Dashboard</span>
-                        </Link>
-                      )}
-                    </Button>
+      </header>
+      <div
+        className={cn(
+          "bg-muted",
+          "overflow-y-auto h-[calc(100dvh-4rem)] w-full absolute top-16",
+          "xl:overflow-y-hidden xl:h-screen xl:static xl:top-[unset]"
+        )}
+      >
+        <div className="hidden xl:block">
+          <div className="fixed top-4 right-4 z-50">
+            <UserMenu user={user} />
+          </div>
+        </div>
+        <SForm {...form}>
+          <form method="post" ref={ref} onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex justify-center w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0">
+              {/* Editor - Left Side */}
+              <div className="w-full max-w-full flex-1">
+                <div className="max-w-[860px] h-full m-auto">
+                  <div className="px-4 md:px-12 py-4">
+                    <StepHeader
+                      step={step}
+                      isSaving={isSaving}
+                      hasErrors={stepHasErrors}
+                    >
+                      <fieldset className="mb-8">
+                        {step === "start" && <StartStep />}
+                        {step === "basics" && <BasicsStep />}
+                        {step === "work" && <WorkStep />}
+                        {step === "education" && <EducationStep />}
+                        {step === "skills" && <SkillsStep />}
+                        {step === "interests" && <InterestsStep />}
+                        {step === "certificates" && <CertificatesStep />}
+                        {step === "accomplishments" && <AccomplishmentsStep />}
+                        {step === "summary" && <SummaryStep />}
+                        {step === "tailor" && (
+                          <TailorStep id={id} values={defaultValues} />
+                        )}
+                      </fieldset>
+                      <AutoSave
+                        onSubmit={onSubmit}
+                        defaultValues={submittedData}
+                      />
+                      <div className="flex justify-end items-center gap-1">
+                        <Button
+                          variant="secondary"
+                          type="button"
+                          asChild
+                          className="w-full xs:max-w-fit xs:min-w-[140px]"
+                        >
+                          {previous ? (
+                            <Link to={`?step=${previous}`}>
+                              <ChevronLeft />
+                              <span className="hidden xxs:block">
+                                {DEFAULT_SECTION_TITLES[previous]}
+                              </span>
+                              <span className="block xxs:hidden">Prev</span>
+                            </Link>
+                          ) : (
+                            <Link to={DASHBOARD}>
+                              <Home />
+                              <span>Exit</span>
+                            </Link>
+                          )}
+                        </Button>
+                        <StepJump values={submittedData} />
+                        <Button
+                          type="button"
+                          asChild
+                          className="w-full xs:max-w-fit xs:min-w-[140px]"
+                        >
+                          {next ? (
+                            <Link to={`?step=${next}`}>
+                              <span className="ml-0 mr-2 hidden xxs:block">
+                                {DEFAULT_SECTION_TITLES[next]}
+                              </span>
+                              <span className="block xxs:hidden">Next</span>
+                              <ChevronRight />
+                            </Link>
+                          ) : (
+                            <Link to={DASHBOARD}>
+                              <Home />
+                              <span className="hidden xxs:block">Exit</span>
+                            </Link>
+                          )}
+                        </Button>
+                      </div>
+                    </StepHeader>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Preview - Right Side */}
-            {view === "" && (
-              <>
-                <div
-                  id="right-panel"
-                  className={cn(
-                    "hidden xl:flex w-1/2 3xl:w-[calc(100%-960px)]",
-                    "fixed top-0 bottom-0 right-0",
-                    "items-center justify-center flex-col",
-                    "bg-muted-foreground text-white select-none z-0",
-                    "pt-4"
-                  )}
-                >
+              {/* Preview - Right Side */}
+              {view === "" && (
+                <>
                   <div
+                    id="right-panel"
                     className={cn(
-                      "flex justify-center items-center",
-                      "absolute inset-x-[72px]"
+                      "hidden xl:flex w-1/2 3xl:w-[calc(100%-960px)]",
+                      "fixed top-0 bottom-0 right-0",
+                      "items-center justify-center flex-col",
+                      "bg-muted-foreground text-white select-none z-0",
+                      "pt-4"
                     )}
                   >
-                    <div className="relative">
-                      {/* focus button */}
-                      <SwitchViewOverlay />
+                    <div
+                      className={cn(
+                        "flex justify-center items-center",
+                        "absolute inset-x-[72px]"
+                      )}
+                    >
+                      <div className="relative">
+                        {/* focus button */}
+                        <SwitchViewOverlay />
 
-                      {/* top-bar */}
-                      <div
-                        id="preview-top-bar"
-                        className="absolute left-0 w-full flex items-center justify-between top-[-52px]"
-                      >
-                        <div className="flex items-center gap-2">
-                          <OutputSettings values={submittedData} />
+                        {/* top-bar */}
+                        <div
+                          id="preview-top-bar"
+                          className="absolute left-0 w-full flex items-center justify-between top-[-52px]"
+                        >
+                          <div className="flex items-center gap-2">
+                            <OutputSettings values={submittedData} />
+                          </div>
+                          <div className="flex gap-1">
+                            {downloadPdf}
+                            {exportActions}
+                          </div>
                         </div>
-                        <div className="flex gap-1">
-                          {downloadPdf}
-                          {exportActions}
+
+                        {/* paper  */}
+                        {pdfPaper}
+
+                        {/* bottom-bar  */}
+                        <div className="absolute left-0 right-0 flex flex-row h-16 items-center justify-between bottom-[-60px]">
+                          <AutoSavedFeedback isSaving={isSaving} />
+                          <PdfPages />
+                          <SampleToggle />
                         </div>
-                      </div>
-
-                      {/* paper  */}
-                      {pdfPaper}
-
-                      {/* bottom-bar  */}
-                      <div className="absolute left-0 right-0 flex flex-row h-16 items-center justify-between bottom-[-60px]">
-                        <AutoSavedFeedback isSaving={isSaving} />
-                        <PdfPages />
-                        <SampleToggle />
                       </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
-            {(view === "preview" || step === "finish") && (
-              <div className="fixed z-50 inset-0 bg-muted-foreground dtyMNP">
-                <div className="relative flex items-center justify-between h-16 px-8 py-0 bg-[#0F141E] text-white blggRB">
-                  <div className="flex items-center flex-1 kcpatE">
-                    <BackToEditor />
+                </>
+              )}
+              {(view === "preview" || step === "finish") && (
+                <div className="fixed z-50 inset-0 bg-muted-foreground dtyMNP">
+                  <div className="relative flex items-center justify-between h-16 px-6 py-0 bg-[#0F141E] text-white blggRB">
+                    <div className="flex items-center flex-1 kcpatE">
+                      <BackToEditor />
+                    </div>
+
+                    <div className="kaOuvr relative flex items-center">
+                      {fontSizeAdjust}
+                    </div>
+
+                    <div className="flex items-center justify-end flex-1 gap-1">
+                      {downloadPdf}
+                      {exportActions}
+                    </div>
                   </div>
 
-                  <div className="kaOuvr relative flex items-center">
-                    {fontSizeAdjust}
-                  </div>
-
-                  <div className="flex items-center justify-end flex-1 gap-1">
-                    {downloadPdf}
-                    {exportActions}
+                  <div className="flex-1 overflow-y-auto py-0 px-5">
+                    <div className="relative my-5 mx-auto">{pdfPaper}</div>
                   </div>
                 </div>
-
-                <div className="flex-1 overflow-y-auto py-0 px-5">
-                  <div className="relative my-5 mx-auto">{pdfPaper}</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </form>
-      </SForm>
+              )}
+            </div>
+          </form>
+        </SForm>
+      </div>
     </>
   );
 }
