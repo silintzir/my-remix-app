@@ -11,13 +11,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authenticatedFetch } from "@/lib/strapi.server";
 import type { ResumeValues, StrapiLongResume, Step } from "@/lib/types";
 import "@/styles/builder.css";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  json,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
 import {
   useSearchParams,
   useLoaderData,
-  useSubmit,
   useNavigation,
   Link,
+  useFetcher,
 } from "@remix-run/react";
 import { Form as SForm } from "@/components/ui/form";
 import { AlertCircle, ChevronLeft, ChevronRight, Home } from "lucide-react";
@@ -61,7 +65,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     body,
   });
 
-  return null;
+  return json({ ok: true });
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -79,7 +83,7 @@ const sample = sampleResume();
 
 export default function Builder() {
   const user = useMe();
-  const { state, formMethod } = useNavigation();
+  const { state } = useNavigation();
 
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "";
@@ -100,7 +104,7 @@ export default function Builder() {
     resolver: zodResolver(resumeSchema),
     defaultValues: submittedData,
   });
-  const submit = useSubmit();
+  const { submit, state: fetcherState } = useFetcher({ key: "resume-values" });
 
   const {
     formState: { isSubmitSuccessful, errors },
@@ -131,7 +135,7 @@ export default function Builder() {
     setSubmittedData(defaultValues);
   }, [defaultValues]);
 
-  const isSaving = state === "submitting" && formMethod === "POST";
+  const isSaving = fetcherState === "submitting";
 
   const { previous, next } = getAdjacentSteps(step, submittedData);
 
