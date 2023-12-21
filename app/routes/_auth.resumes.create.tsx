@@ -5,5 +5,5 @@ import { type ActionFunctionArgs, redirect } from "@remix-run/node";
 export async function action({ request }: ActionFunctionArgs) {
   const me = await fetchMe(request);
   const id = await createResume(request, me);
-  return redirect(`/app/resumes/${id}/edit`);
+  return redirect(`/resumes/${id}/edit`);
 }

@@ -40,7 +40,7 @@ export async function importResume(request: Request, values: ResumeValues) {
 export async function getResumes(request: Request) {
   const response = await authenticatedFetch(
     request,
-    "/api/resumes?fields[0]=name&fields[1]=createdAt&fields[2]=updatedAt&fields[3]=document&fields[4]=screenshot",
+    "/api/resumes?fields[0]=name&fields[1]=createdAt&fields[2]=updatedAt&fields[3]=document",
     { method: "GET" }
   );
 

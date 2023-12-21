@@ -1,15 +1,13 @@
-import { Link, useHref } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 
 export function BackToEditor() {
-  const href = useHref("?view=");
+  const navigate = useNavigate();
   return (
-    <Button asChild variant="ghost">
-      <Link to={href}>
-        <ChevronLeft />
-        <span>Back</span>
-      </Link>
+    <Button variant="ghost" onClick={() => navigate(-1)}>
+      <ChevronLeft />
+      <span>Back</span>
     </Button>
   );
 }

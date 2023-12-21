@@ -149,7 +149,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const id = await importResume(request, toStore);
 
-  return redirect(`/app/resumes/${id}/edit`);
+  return redirect(`/resumes/${id}/edit`);
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

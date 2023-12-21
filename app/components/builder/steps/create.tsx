@@ -91,7 +91,7 @@ export function CreateResume({ startOpen = false }: Props) {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <Form method="post" action="/app/resumes/create">
+            <Form method="post" action="/resumes/create">
               <SourceButton
                 title="New resume from scratch"
                 description="Choose a blank template and fill in the fields yourself"
@@ -109,7 +109,7 @@ export function CreateResume({ startOpen = false }: Props) {
         </DialogContent>
       ) : (
         <DialogContent className="max-w-full sm:max-w-lg">
-          <Form method="post" action={`/app/resumes/import`}>
+          <Form method="post" action={"/resumes/import"}>
             <div className="space-y-2">
               <DialogHeader className="text-left">
                 <DialogTitle>Import your resume</DialogTitle>

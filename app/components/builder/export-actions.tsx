@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Download, MoreHorizontal } from "lucide-react";
+import { Download, MoreHorizontal, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -7,32 +6,53 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "@remix-run/react";
+import { Link, useFetcher } from "@remix-run/react";
+import { Button, type ButtonProps } from "../ui/button";
 
-type Props = {
+interface Props extends ButtonProps {
   resumeId: number;
-};
-export function ExportActionsButton({ resumeId }: Props) {
+}
+export function SecondaryActions({ resumeId, ...rest }: Props) {
+  const fetcher = useFetcher({ key: "resume-delete" });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>
+        <Button {...rest}>
           <MoreHorizontal />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
         <DropdownMenuGroup>
-          <DropdownMenuItem className="flex gap-1 items-center" asChild>
-            <Link to={`/app/resumes/${resumeId}/docx`} target="_blank">
+          <DropdownMenuItem asChild>
+            <Link to={`/resumes/${resumeId}/docx`} target="_blank">
               <Download />
               <span>Export to MS Word</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex gap-1 items-center" asChild>
-            <Link to={`/app/resumes/${resumeId}/json`} target="_blank">
+          <DropdownMenuItem asChild>
+            <Link to={`/resumes/${resumeId}/json`} target="_blank">
               <Download />
               <span>Export to JSON</span>
             </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-destructive"
+            onClick={(evt) => {
+              if (
+                confirm(
+                  "Deleting a resume is an action that cannot be undone. Proceed anyway?"
+                )
+              ) {
+                fetcher.submit(
+                  {},
+                  { method: "DELETE", action: `/resumes/${resumeId}/delete` }
+                );
+              }
+              return false;
+            }}
+          >
+            <Trash className="h-4 w-4" />
+            <span className="ml-2">Delete resume</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

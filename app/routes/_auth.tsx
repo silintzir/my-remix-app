@@ -13,7 +13,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const { user } = session.data;
 
   if (!user) {
-    return redirect(LOGIN);
+    throw redirect(LOGIN);
   }
 
   return json(

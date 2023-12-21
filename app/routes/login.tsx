@@ -102,7 +102,6 @@ export async function action({ request }: ActionFunctionArgs) {
       });
     } else {
       const url = `${process.env.STRAPI_HOST}/api/auth/local`;
-      console.log(values);
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify({

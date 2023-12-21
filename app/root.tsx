@@ -67,7 +67,7 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <script src="/vendors/pdf.min.mjs" type="module"></script>
+        <script src="/vendors/pdf.min.mjs" type="module" />
       </head>
       <body>
         <Outlet />

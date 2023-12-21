@@ -2,7 +2,7 @@ import { FontSizeAdjust, PdfPaper } from "@/components/builder";
 import { PdfPages } from "@/components/builder/PdfPages";
 import { AutoSavedFeedback } from "@/components/builder/auto-saved-feedback";
 import { DownloadPdfButton } from "@/components/builder/download-pdf-button";
-import { ExportActionsButton } from "@/components/builder/export-actions";
+import { SecondaryActions } from "@/components/builder/export-actions";
 import { StartStep } from "@/components/builder/steps/start";
 import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
 import { UserMenu } from "@/components/navbar/user-menu";
@@ -158,7 +158,7 @@ export default function Builder() {
   );
   const fontSizeAdjust = <FontSizeAdjust />;
 
-  const exportActions = <ExportActionsButton resumeId={id} />;
+  const exportActions = <SecondaryActions resumeId={id} />;
 
   const pdfPaper = (
     <PdfPaper base64={base64} id={id} fullPage={view === "preview"} />
@@ -170,7 +170,7 @@ export default function Builder() {
       <header className="block xl:hidden h-16 relative z-50 bg-white border-b shadow-lg">
         <div className="fixed top-0 left-0 right-0 h-inherit">
           <div className="flex justify-between items-center px-4 relative h-inherit">
-            <OpenPreview />
+            <OpenPreview resumeId={id} variant="link" className="ml-0 pl-0" />
             <UserMenu user={user} />
           </div>
         </div>
