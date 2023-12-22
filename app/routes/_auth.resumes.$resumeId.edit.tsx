@@ -189,7 +189,7 @@ export default function Builder() {
         </div>
         <SForm {...form}>
           <form method="post" ref={ref} onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex justify-center w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0">
+            <div className="flex justify-center w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0 h-[calc(100dvh-4rem)] xl:h-screen overflow-y-auto">
               {/* Editor - Left Side */}
               <div className="w-full max-w-full flex-1">
                 <div className="max-w-[860px] h-full m-auto">
