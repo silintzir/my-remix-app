@@ -15,3 +15,10 @@ export function getEnv(key: string) {
 
 export const getLanguage = (code: Lang) =>
   code === "en" ? "English" : "Spanish";
+
+export const getReadableDateFromPicker = (date: string) => {
+  if (date.startsWith("00/")) {
+    return date.replace(/^00\//, "");
+  }
+  return date;
+};

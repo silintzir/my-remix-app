@@ -318,7 +318,7 @@ export default function Builder() {
                 </>
               )}
               {(view === "preview" || step === "finish") && (
-                <div className="fixed z-50 inset-0 bg-muted-foreground dtyMNP">
+                <div className="fixed z-50 inset-0 bg-muted-foreground dtyMNP overflow-auto">
                   <div className="relative flex items-center justify-between h-16 px-6 py-0 bg-[#0F141E] text-white blggRB">
                     <div className="flex items-center flex-1 kcpatE">
                       <BackToEditor />

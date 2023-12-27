@@ -154,11 +154,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function getResumeValues(data: any) {
-  const output = defaultResumeValues({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
+  const output = defaultResumeValues(
+    {
+      firstName: "",
+      lastName: "",
+      email: "",
+    },
+    "en"
+  );
 
   set(output, "resume.basics", {
     firstName: get(data, "basics.firstName", ""),

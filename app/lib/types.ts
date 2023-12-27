@@ -34,7 +34,6 @@ export interface StrapiShortResume {
     createdAt: Date;
     updatedAt: Date;
     document: ResumeValues;
-    screenshot: string;
   };
 }
 
@@ -51,7 +50,7 @@ export interface StrapiUser {
   lastName: string | null;
 }
 
-export type Lang = "en" | "es" | "zh";
+export type Lang = "en" | "es";
 
 export interface StrapiLongResume {
   id: number;

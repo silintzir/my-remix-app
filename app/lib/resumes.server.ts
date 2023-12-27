@@ -1,6 +1,7 @@
 import { authenticatedFetch } from "./strapi.server";
 import { get, set } from "lodash-es";
 import type {
+  Lang,
   ResumeValues,
   StrapiLongResume,
   StrapiShortResume,
@@ -9,14 +10,21 @@ import type {
 import merge from "deepmerge";
 import { DEFAULT_RESUME_TITLE, defaultResumeValues } from "./defaults";
 
-export async function createResume(request: Request, me: StrapiUser) {
+interface CreateConfig {
+  language: Lang;
+}
+export async function createResume(
+  request: Request,
+  me: StrapiUser,
+  { language }: CreateConfig
+) {
   const url = "/api/resumes";
   const response = await authenticatedFetch(request, url, {
     method: "POST",
     body: JSON.stringify({
       data: {
         name: DEFAULT_RESUME_TITLE,
-        document: defaultResumeValues(me),
+        document: defaultResumeValues(me, language),
       },
     }),
   });

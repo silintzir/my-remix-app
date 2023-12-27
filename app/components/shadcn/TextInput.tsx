@@ -8,6 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
+import { InputMask } from "../ui/input-mask";
 import { cn } from "@/lib/utils";
 import { TextAlternatives } from "./TextAlternatives";
 import type { FetcherWithComponents } from "@remix-run/react";
@@ -21,6 +22,7 @@ type Props<T extends FieldValues> = {
   placeholder?: string;
   className?: string;
   type?: string;
+  inputMask?: string;
   alternatives?: {
     fetcher: FetcherWithComponents<{ results: string[] }>;
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -37,6 +39,7 @@ export function TextInput<T extends FieldValues>({
   className = "w-full",
   type = "text",
   alternatives,
+  inputMask,
 }: Props<T>) {
   return (
     <FormField
@@ -47,12 +50,21 @@ export function TextInput<T extends FieldValues>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <div className="relative">
-              <Input
-                type={type}
-                placeholder={placeholder}
-                {...field}
-                className={cn({ "pr-12": !!alternatives })}
-              />
+              {inputMask ? (
+                <InputMask
+                  type={type}
+                  mask={inputMask}
+                  {...field}
+                  className=""
+                />
+              ) : (
+                <Input
+                  type={type}
+                  placeholder={placeholder}
+                  {...field}
+                  className={cn({ "pr-12": !!alternatives })}
+                />
+              )}
               {alternatives && (
                 <div className="absolute right-4 top-2.5 opacity-60 hover:opacity-100 text-blue-600">
                   <TextAlternatives

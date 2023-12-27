@@ -88,7 +88,7 @@ export function MonthPicker({
             <Button
               variant={currentValue === year.toString() ? "default" : "outline"}
               onClick={() => {
-                setValue(year.toString());
+                setValue("00/" + year.toString());
                 setOpen(false);
               }}
             >

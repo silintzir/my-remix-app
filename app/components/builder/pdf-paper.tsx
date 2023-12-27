@@ -49,9 +49,11 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
         width = height / US_LETTER_RATIO;
       }
 
+      const zoom = fullPage ? window.devicePixelRatio : 1;
+
       if (ref.current) {
-        ref.current.style.height = `${Math.floor(height)}px`;
-        ref.current.style.width = `${Math.floor(width)}px`;
+        ref.current.style.height = `${Math.floor(height) * zoom}px`;
+        ref.current.style.width = `${Math.floor(width) * zoom}px`;
       }
     };
     updateHeight();
@@ -83,13 +85,17 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
         setNumPages(numPages);
         const page = await pdf.getPage(pageNum > numPages ? 1 : pageNum);
 
-        const viewport = page.getViewport({ scale: 1 });
+        const viewport = page.getViewport({ scale: 1.5 });
+
         ref.current.height = viewport.height;
         ref.current.width = viewport.width;
         const canvasContext = ref.current.getContext("2d");
         if (canvasContext) {
-          const renderContext = { canvasContext, viewport };
-          const renderTask = page.render(renderContext);
+          const renderTask = page.render({
+            canvasContext,
+            viewport,
+            // transform: [2, 0, 0, 2, 0, 0],
+          });
 
           renderTask.promise.then(() => {
             pageRendering.current = false;

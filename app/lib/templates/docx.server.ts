@@ -1,4 +1,13 @@
-import { constr, skillDisplay } from "@/lib/templates/helpers/common";
+import {
+  constr,
+  nonEmptyAccomplishments,
+  nonEmptyCertificates,
+  nonEmptyEducation,
+  nonEmptyInterests,
+  nonEmptySkills,
+  nonEmptyWork,
+  skillDisplay,
+} from "@/lib/templates/helpers/common";
 import type { ResumeValues, Step } from "@/lib/types";
 import {
   AlignmentType,
@@ -13,6 +22,7 @@ import {
 } from "docx";
 import type { FileChild } from "node_modules/docx/build/file/file-child";
 import { map, groupBy } from "lodash-es";
+import { getReadableDateFromPicker } from "../utils";
 
 interface ContentProvider {
   (): FileChild[];
@@ -62,12 +72,13 @@ export class ChicagoDocxTemplate {
         },
       },
     } = this.values;
-    if (!enabled || !accomplishments.length) {
+    const records = nonEmptyAccomplishments(accomplishments);
+    if (!enabled || !records.length) {
       return [];
     }
     return [
       this.sectionTitle(title),
-      ...this.createBullets(map(accomplishments, "name")),
+      ...this.createBullets(map(records, "name")),
     ];
   };
   work: ContentProvider = () => {
@@ -80,11 +91,13 @@ export class ChicagoDocxTemplate {
       },
     } = this.values;
 
-    if (!enabled || !work.length) {
+    const records = nonEmptyWork(work);
+
+    if (!enabled || !records.length) {
       return [];
     }
     // group by employer / location
-    const p1 = map(work, (w) => ({
+    const p1 = map(records, (w) => ({
       ...w,
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));
@@ -103,7 +116,11 @@ export class ChicagoDocxTemplate {
             [new TextRun({ text: position, bold: true, italics: true })],
             [
               new TextRun({
-                text: constr(" - ", startDate, endDate),
+                text: constr(
+                  " - ",
+                  getReadableDateFromPicker(startDate),
+                  getReadableDateFromPicker(endDate)
+                ),
                 italics: true,
               }),
             ]
@@ -125,11 +142,13 @@ export class ChicagoDocxTemplate {
       },
     } = this.values;
 
-    if (!enabled || !education.length) {
+    const records = nonEmptyEducation(education);
+
+    if (!enabled || !records.length) {
       return [];
     }
     // group by employer / location
-    const p1 = map(education, (w) => ({
+    const p1 = map(records, (w) => ({
       ...w,
       group: constr(", ", w.institution, constr(" ", w.city, w.state)),
     }));
@@ -156,7 +175,11 @@ export class ChicagoDocxTemplate {
             ],
             [
               new TextRun({
-                text: constr(" - ", startDate, endDate),
+                text: constr(
+                  " - ",
+                  getReadableDateFromPicker(startDate),
+                  getReadableDateFromPicker(endDate)
+                ),
                 italics: true,
               }),
             ]
@@ -177,12 +200,13 @@ export class ChicagoDocxTemplate {
         },
       },
     } = this.values;
-    if (!enabled || !skills.length) {
+    const records = nonEmptySkills(skills);
+    if (!enabled || !records.length) {
       return [];
     }
     return [
       this.sectionTitle(title),
-      ...this.createBullets(map(skills, skillDisplay)),
+      ...this.createBullets(map(records, skillDisplay)),
     ];
   };
 
@@ -195,18 +219,19 @@ export class ChicagoDocxTemplate {
         },
       },
     } = this.values;
-    if (!enabled || !certificates.length) {
+    const records = nonEmptyCertificates(certificates);
+    if (!enabled || !records.length) {
       return [];
     }
     return [
       this.sectionTitle(title),
-      ...map(certificates, ({ name, date, issuer, url }) => {
+      ...map(records, ({ name, date, issuer, url }) => {
         const firstLine = [];
         if (name.trim().length) {
           firstLine.push(name);
         }
         if (date.trim().length) {
-          firstLine.push(`[${date}]`);
+          firstLine.push(`[${getReadableDateFromPicker(date)}]`);
         }
         const second = constr(" - ", issuer, url);
         const first = firstLine.join(" ");
@@ -231,12 +256,13 @@ export class ChicagoDocxTemplate {
         },
       },
     } = this.values;
-    if (!enabled || !interests.length) {
+    const records = nonEmptyInterests(interests);
+    if (!enabled || !records.length) {
       return [];
     }
     return [
       this.sectionTitle(title),
-      new Paragraph({ text: constr(", ", ...map(interests, "name")) }),
+      new Paragraph({ text: constr(", ", ...map(records, "name")) }),
     ];
   };
   summary: ContentProvider = () => {
@@ -276,10 +302,7 @@ export class ChicagoDocxTemplate {
     );
   }
 
-  private sectionTitle(
-    title: string,
-    heading: HeadingLevel = HeadingLevel.HEADING_2
-  ) {
+  private sectionTitle(title: string, heading: any = HeadingLevel.HEADING_2) {
     return new Paragraph({
       heading,
       children: [new TextRun(title)],

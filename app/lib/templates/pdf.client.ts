@@ -3,6 +3,12 @@ import type { ResumeValues, Step } from "@/lib/types";
 import {
   certificateDisplay,
   constr,
+  nonEmptyAccomplishments,
+  nonEmptyCertificates,
+  nonEmptyEducation,
+  nonEmptyInterests,
+  nonEmptySkills,
+  nonEmptyWork,
   skillDisplay,
 } from "@/lib/templates/helpers/common";
 import {
@@ -12,6 +18,7 @@ import {
 } from "@/lib/templates/helpers/pdf";
 import { map, groupBy } from "lodash-es";
 import { pdfStyles } from "./styles";
+import { getReadableDateFromPicker } from "../utils";
 
 interface ContentProvider {
   (): Content[];
@@ -54,13 +61,19 @@ class ChicagoPdfTemplate {
         },
       },
     } = this.values;
-    if (!enabled || !accomplishments.length) {
+
+    const records = nonEmptyAccomplishments(accomplishments);
+
+    if (!enabled || !records.length) {
       return [];
     }
 
     return [
       getHeaderWithLine(title),
-      { ul: map(accomplishments, (a) => a.name), style: "paragraph" },
+      {
+        ul: map(records, (a) => a.name),
+        style: "paragraph",
+      },
     ];
   };
 
@@ -74,14 +87,16 @@ class ChicagoPdfTemplate {
       },
     } = this.values;
 
-    if (!enabled || !interests.length) {
+    const records = nonEmptyInterests(interests);
+
+    if (!enabled || !records.length) {
       return [];
     }
 
     return [
       getHeaderWithLine(title),
       {
-        text: constr(", ", ...map(interests, (i) => i.name)),
+        text: constr(", ", ...map(records, (i) => i.name)),
         style: "paragraph",
       },
     ];
@@ -97,13 +112,16 @@ class ChicagoPdfTemplate {
       },
     } = this.values;
 
-    if (!enabled || !skills.length) {
+    const records = nonEmptySkills(skills);
+
+    if (!enabled || !records.length) {
       return [];
     }
+
     return [
       getHeaderWithLine(title),
       {
-        ul: map(skills, skillDisplay),
+        ul: map(records, skillDisplay),
         style: "paragraph",
       },
     ];
@@ -119,14 +137,16 @@ class ChicagoPdfTemplate {
       },
     } = this.values;
 
-    if (!enabled || !certificates.length) {
+    const records = nonEmptyCertificates(certificates);
+
+    if (!enabled || !records.length) {
       return [];
     }
 
     return [
       getHeaderWithLine(title),
       {
-        ul: map(certificates, certificateDisplay),
+        ul: map(records, certificateDisplay),
         style: "paragraph",
       },
     ];
@@ -165,12 +185,14 @@ class ChicagoPdfTemplate {
       },
     } = this.values;
 
-    if (!enabled || !education.length) {
+    const records = nonEmptyEducation(education);
+
+    if (!enabled || !records.length) {
       return [];
     }
 
     // group by employer/location
-    const p1 = map(education, (w) => ({
+    const p1 = map(records, (w) => ({
       ...w,
       group: constr(", ", w.institution, constr(" ", w.city, w.state)),
     }));
@@ -192,7 +214,11 @@ class ChicagoPdfTemplate {
               alignment: "left",
             },
             {
-              text: constr(" - ", startDate, endDate),
+              text: constr(
+                " - ",
+                getReadableDateFromPicker(startDate),
+                getReadableDateFromPicker(endDate)
+              ),
               italics: true,
               fontSize: 11,
             }
@@ -230,12 +256,14 @@ class ChicagoPdfTemplate {
       },
     } = this.values;
 
-    if (!enabled || !work.length) {
+    const records = nonEmptyWork(work);
+
+    if (!enabled || !records.length) {
       return [];
     }
 
     // group by employer/location
-    const p1 = map(work, (w) => ({
+    const p1 = map(records, (w) => ({
       ...w,
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));
@@ -251,7 +279,11 @@ class ChicagoPdfTemplate {
           get2ColsSpaceBetween(
             { text: position, style: "heading4", alignment: "left" },
             {
-              text: constr(" - ", startDate, endDate),
+              text: constr(
+                " - ",
+                getReadableDateFromPicker(startDate),
+                getReadableDateFromPicker(endDate)
+              ),
               italics: true,
               fontSize: 11,
             }

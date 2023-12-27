@@ -7,6 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Form, useNavigation } from "@remix-run/react";
@@ -18,6 +20,8 @@ import {
   PlusSquare,
 } from "lucide-react";
 import { useState } from "react";
+import usFlag from "@/images/us-flag.svg";
+import esFlag from "@/images/es-flag.svg";
 
 type ButtonProps = {
   title: string;
@@ -67,6 +71,7 @@ type Props = {
 export function CreateResume({ startOpen = false }: Props) {
   const [paste, setPaste] = useState(false);
   const { state } = useNavigation();
+  const [lang, setLang] = useState("en");
 
   return (
     <Dialog
@@ -85,13 +90,35 @@ export function CreateResume({ startOpen = false }: Props) {
       {paste === false ? (
         <DialogContent className="max-w-full sm:max-w-lg">
           <DialogHeader className="text-left">
-            <DialogTitle>How do you want to proceed?</DialogTitle>
+            <DialogTitle className="text-xl">Add new resume</DialogTitle>
             <DialogDescription>
               You have two options to create your resume:
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
+            <RadioGroup
+              defaultValue={lang}
+              className="flex gap-10 mb-4"
+              onValueChange={(val) => setLang(val)}
+            >
+              <Label className="font-semibold">Pick language</Label>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="en" id="r1" />
+                <Label htmlFor="r1" className="flex gap-1">
+                  <img src={usFlag} height="16" width="16" alt="English" />
+                  <span>English</span>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="es" id="r2" />
+                <Label htmlFor="r2" className="flex gap-1">
+                  <img src={esFlag} height="16" width="16" alt="Spanish" />
+                  <span>Spanish</span>
+                </Label>
+              </div>
+            </RadioGroup>
             <Form method="post" action="/resumes/create">
+              <input type="hidden" name="language" value={lang} />
               <SourceButton
                 title="New resume from scratch"
                 description="Choose a blank template and fill in the fields yourself"

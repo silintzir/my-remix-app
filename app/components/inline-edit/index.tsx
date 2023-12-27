@@ -20,9 +20,8 @@ export function InlineEdit<T extends ResumeValues>({
   name,
   showEditIcon = false,
   className = "",
-  title = "Rename"
+  title = "Rename",
 }: Props<T>) {
-
   const { control } = useFormContext<ResumeValues>();
   const [edit, setEdit] = useState(false);
   const spanRef = useRef<HTMLSpanElement>(null);
@@ -33,17 +32,19 @@ export function InlineEdit<T extends ResumeValues>({
   const handleResize = () => {
     if (spanRef?.current) {
       spanRef.current.textContent = ref.current.value;
-      ref.current.style.width = `${spanRef.current.offsetWidth + 5}px`
+      ref.current.style.width = `${spanRef.current.offsetWidth + 5}px`;
     }
-  }
+  };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => { handleResize() }, [])
+  useEffect(() => {
+    handleResize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const handleClick = useCallback(() => {
     setEdit(true);
     ref.current?.select();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -53,7 +54,10 @@ export function InlineEdit<T extends ResumeValues>({
         control={control}
         render={({ field }) => (
           <div>
-            <span ref={spanRef} className="invisible whitespace-pre absolute left-0" />
+            <span
+              ref={spanRef}
+              className="invisible whitespace-pre absolute left-0"
+            />
             <input
               type="text"
               {...field}

@@ -77,12 +77,6 @@ export function UserMenu({ user }: Props) {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/faq">
-                <HelpCircle />
-                <span>FAQ</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
               <button onClick={logout} className="flex">
                 <LogOut />
                 <span>Logout</span>

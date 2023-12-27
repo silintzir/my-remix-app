@@ -7,6 +7,8 @@ import { Separator } from "../ui/separator";
 import { ClientOnly } from "remix-utils/client-only";
 import { OpenPreview } from "../builder/open-preview";
 import { SecondaryActions } from "../builder/export-actions";
+import usFlag from "@/images/us-flag.svg";
+import esFlag from "@/images/es-flag.svg";
 
 interface Props {
   resumes: StrapiShortResume[];
@@ -31,19 +33,34 @@ export function ResumesList({ resumes }: Props) {
             <div className="flex justify-between w-full items-center">
               <div className="space-y-2">
                 <Link className="link" to={`/resumes/${resume.id}/edit`}>
-                  <h4 className="font-semibold text-lg">
+                  <h4 className="font-semibold text-lg flex gap-1">
                     {get(resume, "attributes.document.meta.title", "")}
                   </h4>
                 </Link>
-                <div className="small muted">
-                  Last updated:{" "}
-                  {formatDistance(
-                    new Date(resume.attributes.updatedAt),
-                    new Date(),
-                    {
-                      addSuffix: true,
-                    }
-                  )}
+                <div className="small muted flex gap-1">
+                  <span>
+                    <img
+                      src={
+                        resume.attributes.document.meta.language === "en"
+                          ? usFlag
+                          : esFlag
+                      }
+                      height="16"
+                      width="16"
+                      alt="Language"
+                    />
+                  </span>
+                  <Separator orientation="vertical" />
+                  <span>
+                    Last updated:{" "}
+                    {formatDistance(
+                      new Date(resume.attributes.updatedAt),
+                      new Date(),
+                      {
+                        addSuffix: true,
+                      }
+                    )}
+                  </span>
                 </div>
               </div>
               <div className="flex gap-1">

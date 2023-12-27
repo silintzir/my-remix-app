@@ -12,8 +12,7 @@ import { v4 as uuid } from "uuid";
 import { SortableHandle, SortableList, SortableItem } from "./sortable";
 import { map, filter } from "lodash-es";
 import { useFetcher } from "@remix-run/react";
-import { transformWork } from "@/lib/jsonresume";
-import { transformEducation } from "@/lib/transformEducation";
+import { transformWork, transformEducation } from "@/lib/jsonresume";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
 import { TextInput } from "@/components/shadcn/TextInput";
 

@@ -20,7 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { getExperienceTitle, getRecordPeriod } from "@/lib/resume";
@@ -33,6 +32,7 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
+import { InputMask } from "@/components/ui/input-mask";
 
 export function WorkStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -140,7 +140,11 @@ export function WorkStep() {
                                 />
                               </FormLabel>
                               <FormControl>
-                                <Input placeholder="MM/YYYY" {...field} />
+                                <InputMask
+                                  placeholder="MM/YYYY"
+                                  {...field}
+                                  mask="99/9999"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -169,7 +173,11 @@ export function WorkStep() {
                                 />
                               </FormLabel>
                               <FormControl>
-                                <Input placeholder="MM/YYYY" {...field} />
+                                <InputMask
+                                  placeholder="MM/YYYY"
+                                  {...field}
+                                  mask="99/9999"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

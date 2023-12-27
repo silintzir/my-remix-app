@@ -3,7 +3,10 @@ import type { ResumeValues } from "./types";
 import { mapValues } from "lodash-es";
 
 export const sampleResume = (): ResumeValues => {
-  const defaults = defaultResumeValues({ firstName: "", lastName: "", email: "" });
+  const defaults = defaultResumeValues(
+    { firstName: "", lastName: "", email: "" },
+    "en"
+  );
   return {
     meta: {
       ...defaults.meta,
@@ -69,7 +72,10 @@ export const sampleResume = (): ResumeValues => {
           state: "IL",
           bullets: [
             { uuid: "", content: "Worked on front-end development" },
-            { uuid: "", content: "Participated in product design brainstorming sessions" },
+            {
+              uuid: "",
+              content: "Participated in product design brainstorming sessions",
+            },
           ],
         },
         {

@@ -3,9 +3,8 @@ import { ContactEmail } from "./templates/ContactTemplate";
 import { ResumeAttachmentEmail } from "./templates/ResumeAttachmentTemplate";
 import nodemailer from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
-
 import aws from "@aws-sdk/client-ses";
-import { ContactData } from "@/components/website/types";
+import type { ContactData } from "@/components/website/types";
 
 const { SES } = aws;
 
@@ -50,7 +49,7 @@ export const sendAttachment = async (
   name: string,
   email: string,
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  data: any,
+  data: any
 ) => {
   const mailOptions: Mail.Options = {
     from: process.env.AWS_SES_FROM,

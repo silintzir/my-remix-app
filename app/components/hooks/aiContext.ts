@@ -4,8 +4,8 @@ import type { ResumeValues, Step } from "@/lib/types";
 import {
   transformSkills,
   transformWork,
+  transformEducation,
 } from "@/lib/jsonresume";
-import { transformEducation } from "@/lib/transformEducation";
 
 type Config = {
   step: Step;

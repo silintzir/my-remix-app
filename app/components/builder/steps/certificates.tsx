@@ -6,7 +6,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { getCertificateTitle } from "@/lib/resume";
 import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -29,7 +28,8 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
-import { cn } from "@/lib/utils";
+import { cn, getReadableDateFromPicker } from "@/lib/utils";
+import { InputMask } from "@/components/ui/input-mask";
 
 export function CertificatesStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -98,7 +98,9 @@ export function CertificatesStep() {
                           {getCertificateTitle(field)}
                         </span>
                         <span className="font-normal">
-                          {field.date || "No date"}
+                          {field.date
+                            ? getReadableDateFromPicker(field.date)
+                            : "No date"}
                         </span>
                       </div>
                     </div>
@@ -141,7 +143,11 @@ export function CertificatesStep() {
                                 />
                               </FormLabel>
                               <FormControl>
-                                <Input placeholder="MM/YYYY" {...field} />
+                                <InputMask
+                                  placeholder="MM/YYYY"
+                                  {...field}
+                                  mask="99/9999"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

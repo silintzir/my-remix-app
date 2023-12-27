@@ -6,7 +6,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   getRecordPeriod,
   getEducationTitle,
@@ -37,6 +36,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { InputMask } from "@/components/ui/input-mask";
 
 export function EducationStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -149,7 +149,11 @@ export function EducationStep() {
                                 />
                               </FormLabel>
                               <FormControl>
-                                <Input placeholder="MM/YYYY" {...field} />
+                                <InputMask
+                                  placeholder="MM/YYYY"
+                                  {...field}
+                                  mask="99/9999"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -178,7 +182,11 @@ export function EducationStep() {
                                 />
                               </FormLabel>
                               <FormControl>
-                                <Input placeholder="MM/YYYY" {...field} />
+                                <InputMask
+                                  placeholder="MM/YYYY"
+                                  {...field}
+                                  mask="99/9999"
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>

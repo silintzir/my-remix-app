@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { CertificateRecord, EducationRecord, WorkRecord } from "./types";
+import { getReadableDateFromPicker } from "./utils";
 
 export const MIN_FONT_SIZE = 8;
 export const DEFAULT_FONT_SIZE = 11;
@@ -168,11 +169,11 @@ export function getRecordPeriod(values: {
 }) {
   const toks = [];
   if (values.startDate?.length) {
-    toks.push(values.startDate);
+    toks.push(getReadableDateFromPicker(values.startDate));
   }
 
   if (values.endDate?.length) {
-    toks.push(values.endDate);
+    toks.push(getReadableDateFromPicker(values.endDate));
   }
   return toks.length ? toks.join(" - ") : "No dates set";
 }

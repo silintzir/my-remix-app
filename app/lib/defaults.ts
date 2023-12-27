@@ -1,4 +1,4 @@
-import type { ResumeValues, Step, StrapiUser } from "./types";
+import type { Lang, ResumeValues, Step, StrapiUser } from "./types";
 
 export const DEFAULT_RESUME_TITLE = "Untitled resume";
 
@@ -73,12 +73,13 @@ export const DEFAULT_STEPS_SETUP = {
 };
 
 export const defaultResumeValues = (
-  user: Pick<StrapiUser, "firstName" | "lastName" | "email">
+  user: Pick<StrapiUser, "firstName" | "lastName" | "email">,
+  language: Lang = "en"
 ): ResumeValues => ({
   meta: {
     title: DEFAULT_RESUME_TITLE,
     paperSize: "LETTER",
-    language: "en",
+    language,
     mode: "standard",
     tailor: { content: "", suggestions: {} },
     fontSize: 12,
