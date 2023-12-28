@@ -63,10 +63,7 @@ export function TextAlternatives({
           {buttonLabel && <span>{buttonLabel}</span>}
         </button>
       </SheetTrigger>
-      <SheetContent
-        className="w-full flex flex-col justify-between overflow-auto"
-        side="left"
-      >
+      <SheetContent className="w-full flex flex-col" side="left">
         <SheetHeader>
           <SheetTitle>
             {original && original.length > 0 ? (
@@ -86,7 +83,7 @@ export function TextAlternatives({
             Pick one of suggestions from the AI.
           </SheetDescription>
         </SheetHeader>
-        <div className="h-full">
+        <div className="flex-grow overflow-y-auto">
           {fetcher.state === "submitting" && (
             <div className="space-y-8">
               {range(5).map((i) => (
@@ -120,7 +117,7 @@ export function TextAlternatives({
             </RadioGroup>
           )}
         </div>
-        <SheetFooter className="flex flex-col gap-2">
+        <SheetFooter className="gap-2">
           <SheetClose disabled={!picked}>
             <Button
               disabled={picked === null}

@@ -67,17 +67,14 @@ export function TextSuggestions({
           {label}
         </Button>
       </SheetTrigger>
-      <SheetContent
-        className="w-full flex flex-col justify-between overflow-auto"
-        side="left"
-      >
+      <SheetContent className="w-full flex flex-col" side="left">
         <SheetHeader>
           <SheetTitle>Suggestions</SheetTitle>
           <SheetDescription>
             Pick one or more suggestions from the AI
           </SheetDescription>
         </SheetHeader>
-        <div className="h-full">
+        <div className="overflow-y-auto flex-grow">
           {fetcher.state === "submitting" && (
             <div className="space-y-8">
               {range(5).map((i) => (
@@ -122,8 +119,8 @@ export function TextSuggestions({
             </ul>
           )}
         </div>
-        <SheetFooter className="flex flex-col gap-2">
-          <SheetClose disabled={picked.length === 0}>
+        <SheetFooter className="gap-2">
+          <SheetClose disabled={picked.length === 0} className="w-full">
             <Button
               disabled={picked.length === 0}
               onClick={insert}
@@ -136,6 +133,7 @@ export function TextSuggestions({
           </SheetClose>
           <Button
             variant="outline"
+            className="w-full"
             size="sm"
             onClick={generate}
             disabled={fetcher.state === "submitting"}
