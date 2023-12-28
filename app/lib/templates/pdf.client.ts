@@ -19,6 +19,7 @@ import {
 import { map, groupBy } from "lodash-es";
 import { pdfStyles } from "./styles";
 import { getReadableDateFromPicker } from "../utils";
+import { DEFAULT_SECTION_TITLES } from "../defaults";
 
 interface ContentProvider {
   (): Content[];
@@ -69,7 +70,9 @@ class ChicagoPdfTemplate {
     }
 
     return [
-      getHeaderWithLine(title),
+      getHeaderWithLine(
+        title.length ? title : DEFAULT_SECTION_TITLES.accomplishments
+      ),
       {
         ul: map(records, (a) => a.name),
         style: "paragraph",
@@ -94,7 +97,9 @@ class ChicagoPdfTemplate {
     }
 
     return [
-      getHeaderWithLine(title),
+      getHeaderWithLine(
+        title.length ? title : DEFAULT_SECTION_TITLES.interests
+      ),
       {
         text: constr(", ", ...map(records, (i) => i.name)),
         style: "paragraph",
@@ -119,7 +124,7 @@ class ChicagoPdfTemplate {
     }
 
     return [
-      getHeaderWithLine(title),
+      getHeaderWithLine(title.length ? title : DEFAULT_SECTION_TITLES.skills),
       {
         ul: map(records, skillDisplay),
         style: "paragraph",
@@ -144,7 +149,9 @@ class ChicagoPdfTemplate {
     }
 
     return [
-      getHeaderWithLine(title),
+      getHeaderWithLine(
+        title.length ? title : DEFAULT_SECTION_TITLES.certificates
+      ),
       {
         ul: map(records, certificateDisplay),
         style: "paragraph",
@@ -169,7 +176,9 @@ class ChicagoPdfTemplate {
       return output;
     }
 
-    output.push(getHeaderWithLine(title));
+    output.push(
+      getHeaderWithLine(title.length ? title : DEFAULT_SECTION_TITLES.summary)
+    );
     output.push({ text: content, style: "paragraph" });
 
     return output;
@@ -238,7 +247,9 @@ class ChicagoPdfTemplate {
     }
 
     return [
-      getHeaderWithLine(title),
+      getHeaderWithLine(
+        title.length ? title : DEFAULT_SECTION_TITLES.education
+      ),
       {
         stack: stacks,
         style: "paragraph",
@@ -303,7 +314,7 @@ class ChicagoPdfTemplate {
     }
 
     return [
-      getHeaderWithLine(title),
+      getHeaderWithLine(title.length ? title : DEFAULT_SECTION_TITLES.work),
       {
         stack: stacks,
         style: "paragraph",

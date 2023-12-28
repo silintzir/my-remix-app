@@ -32,7 +32,7 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
       const rightPanelWidth = fullPage ? iw : iw > 1920 ? iw - 960 : iw / 2;
 
       const maxHeight = fullPage
-        ? window.innerHeight - 120
+        ? window.innerHeight - 160
         : window.innerHeight - 120;
       const maxWidth = fullPage
         ? rightPanelWidth - 40
@@ -49,8 +49,8 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
         width = height / US_LETTER_RATIO;
       }
 
-      const zoom = fullPage ? window.devicePixelRatio : 1;
-      console.log(zoom);
+      // const zoom = fullPage ? window.devicePixelRatio : 1;
+      const zoom = 1;
 
       if (ref.current) {
         ref.current.style.height = `${Math.floor(height) * zoom}px`;

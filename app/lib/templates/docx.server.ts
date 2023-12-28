@@ -23,6 +23,7 @@ import {
 import type { FileChild } from "node_modules/docx/build/file/file-child";
 import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "../utils";
+import { DEFAULT_SECTION_TITLES } from "../defaults";
 
 interface ContentProvider {
   (): FileChild[];
@@ -77,7 +78,9 @@ export class ChicagoDocxTemplate {
       return [];
     }
     return [
-      this.sectionTitle(title),
+      this.sectionTitle(
+        title.length ? title : DEFAULT_SECTION_TITLES.accomplishments
+      ),
       ...this.createBullets(map(records, "name")),
     ];
   };
@@ -105,7 +108,9 @@ export class ChicagoDocxTemplate {
 
     const paragraphs: Paragraph[] = [];
 
-    paragraphs.push(this.sectionTitle(title));
+    paragraphs.push(
+      this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.work)
+    );
 
     for (const group in p2) {
       paragraphs.push(this.sectionTitle(group, HeadingLevel.HEADING_3));
@@ -156,7 +161,9 @@ export class ChicagoDocxTemplate {
 
     const paragraphs: Paragraph[] = [];
 
-    paragraphs.push(this.sectionTitle(title));
+    paragraphs.push(
+      this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.education)
+    );
 
     for (const group in p2) {
       paragraphs.push(this.sectionTitle(group, HeadingLevel.HEADING_3));
@@ -205,7 +212,7 @@ export class ChicagoDocxTemplate {
       return [];
     }
     return [
-      this.sectionTitle(title),
+      this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.skills),
       ...this.createBullets(map(records, skillDisplay)),
     ];
   };
@@ -224,7 +231,9 @@ export class ChicagoDocxTemplate {
       return [];
     }
     return [
-      this.sectionTitle(title),
+      this.sectionTitle(
+        title.length ? title : DEFAULT_SECTION_TITLES.certificates
+      ),
       ...map(records, ({ name, date, issuer, url }) => {
         const firstLine = [];
         if (name.trim().length) {
@@ -261,7 +270,9 @@ export class ChicagoDocxTemplate {
       return [];
     }
     return [
-      this.sectionTitle(title),
+      this.sectionTitle(
+        title.length ? title : DEFAULT_SECTION_TITLES.interests
+      ),
       new Paragraph({ text: constr(", ", ...map(records, "name")) }),
     ];
   };
@@ -281,7 +292,10 @@ export class ChicagoDocxTemplate {
       return [];
     }
 
-    return [this.sectionTitle(title), new Paragraph({ text: content })];
+    return [
+      this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.summary),
+      new Paragraph({ text: content }),
+    ];
   };
 
   create(): FileChild[] {

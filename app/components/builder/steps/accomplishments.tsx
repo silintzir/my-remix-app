@@ -13,6 +13,8 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
+import { SectionRename } from "../section-rename";
+import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 
 export function AccomplishmentsStep() {
   const { control, watch } = useFormContext<ResumeValues>();
@@ -43,93 +45,99 @@ export function AccomplishmentsStep() {
   };
 
   return (
-    <div className="space-y-4">
-      {fields.length === 0 ? (
-        <p className="small">
-          If you do not wish to enter any accomplishments, continue to the next
-          step.
-        </p>
-      ) : (
-        <p className="small">
-          You may keep adding as many accomplishments and reorder as needed.
-        </p>
-      )}
-      {fields.length > 0 && (
-        <SortableList
-          lockAxis="y"
-          onSortEnd={onSortEnd}
-          useDragHandle
-          className="space-y-1"
-        >
-          {fields.map((field, index) => {
-            return (
-              <SortableItem key={field.uuid} index={index} className="flex">
-                <SortableHandle />
-                <TextInput
-                  className="w-full"
-                  control={control}
-                  name={`resume.accomplishments.${index}.name`}
-                  placeholder="Something you are proud of"
-                  alternatives={{
-                    fetcher: enhancer,
-                    context: getContext({
-                      step: "accomplishments",
-                      uuid: field.uuid,
-                    }),
-                    endpoint: "accomplishments",
-                    lang,
-                  }}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="text-destructive"
-                  title="Delete entry"
-                  size="sm"
-                  onClick={() => remove(index)}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </SortableItem>
-            );
-          })}
-        </SortableList>
-      )}
-      <div className="flex gap-1">
-        <Button
-          variant="outline"
-          className="text-blue-600 font-semibold"
-          type="button"
-          size="sm"
-          onClick={() => {
-            const id = uuid();
-            append({
-              uuid: id,
-              name: "",
-            });
-          }}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add accomplishment
-        </Button>
-        <TextSuggestions
-          fetcher={suggester}
-          context={getContext()}
-          append={(texts: string[]) => {
-            const newAccomplishments: AccomplishmentRecord[] = map(
-              texts,
-              (name) => ({
-                uuid: uuid(),
-                name,
-              })
-            );
-            append(newAccomplishments);
-          }}
-          endpoint="accomplishments"
-          lang={lang}
-          label="Suggest accomplishments"
-        />
+    <>
+      <div className="space-y-4">
+        {fields.length === 0 ? (
+          <p className="small">
+            If you do not wish to enter any accomplishments, continue to the
+            next step.
+          </p>
+        ) : (
+          <p className="small">
+            You may keep adding as many accomplishments and reorder as needed.
+          </p>
+        )}
+        {fields.length > 0 && (
+          <SortableList
+            lockAxis="y"
+            onSortEnd={onSortEnd}
+            useDragHandle
+            className="space-y-1"
+          >
+            {fields.map((field, index) => {
+              return (
+                <SortableItem key={field.uuid} index={index} className="flex">
+                  <SortableHandle />
+                  <TextInput
+                    className="w-full"
+                    control={control}
+                    name={`resume.accomplishments.${index}.name`}
+                    placeholder="Something you are proud of"
+                    alternatives={{
+                      fetcher: enhancer,
+                      context: getContext({
+                        step: "accomplishments",
+                        uuid: field.uuid,
+                      }),
+                      endpoint: "accomplishments",
+                      lang,
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="text-destructive"
+                    title="Delete entry"
+                    size="sm"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </SortableItem>
+              );
+            })}
+          </SortableList>
+        )}
+        <div className="flex gap-1">
+          <Button
+            variant="outline"
+            className="text-blue-600 font-semibold"
+            type="button"
+            size="sm"
+            onClick={() => {
+              const id = uuid();
+              append({
+                uuid: id,
+                name: "",
+              });
+            }}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add accomplishment
+          </Button>
+          <TextSuggestions
+            fetcher={suggester}
+            context={getContext()}
+            append={(texts: string[]) => {
+              const newAccomplishments: AccomplishmentRecord[] = map(
+                texts,
+                (name) => ({
+                  uuid: uuid(),
+                  name,
+                })
+              );
+              append(newAccomplishments);
+            }}
+            endpoint="accomplishments"
+            lang={lang}
+            label="Suggest accomplishments"
+          />
+        </div>
       </div>
-    </div>
+      <SectionRename
+        name="meta.steps.accomplishments.title"
+        placeholder={DEFAULT_SECTION_TITLES.accomplishments}
+      />
+    </>
   );
 }

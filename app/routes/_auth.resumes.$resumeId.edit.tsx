@@ -199,7 +199,7 @@ export default function Builder() {
                       isSaving={isSaving}
                       hasErrors={stepHasErrors}
                     >
-                      <fieldset className="mb-8">
+                      <fieldset className="mb-2">
                         {step === "start" && <StartStep />}
                         {step === "basics" && <BasicsStep />}
                         {step === "work" && <WorkStep />}
@@ -334,8 +334,14 @@ export default function Builder() {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-auto h-[calc(100%-4rem)]">
-                    <div className="relative my-5 mx-auto">{pdfPaper}</div>
+                  <div className="flex-1 overflow-auto h-[calc(100%-8rem)]">
+                    <div className="relative my-4 mx-auto">{pdfPaper}</div>
+                  </div>
+
+                  <div className="absolute left-0 right-0 bottom-0 flex flex-row h-16 items-center bg-[#0F141E] justify-between text-white px-4">
+                    <AutoSavedFeedback isSaving={isSaving} />
+                    <PdfPages />
+                    <SampleToggle />
                   </div>
                 </div>
               )}
