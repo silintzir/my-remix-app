@@ -50,6 +50,7 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
       }
 
       const zoom = fullPage ? window.devicePixelRatio : 1;
+      console.log(zoom);
 
       if (ref.current) {
         ref.current.style.height = `${Math.floor(height) * zoom}px`;

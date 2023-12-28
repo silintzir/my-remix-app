@@ -318,9 +318,9 @@ export default function Builder() {
                 </>
               )}
               {(view === "preview" || step === "finish") && (
-                <div className="fixed z-50 inset-0 bg-muted-foreground dtyMNP overflow-auto">
-                  <div className="relative flex items-center justify-between h-16 px-6 py-0 bg-[#0F141E] text-white blggRB">
-                    <div className="flex items-center flex-1 kcpatE">
+                <div className="fixed z-50 inset-0 bg-muted-foreground">
+                  <div className="relative flex items-center justify-between h-16 px-6 py-0 bg-[#0F141E] text-white">
+                    <div className="flex items-center flex-1">
                       <BackToEditor />
                     </div>
 
@@ -334,7 +334,7 @@ export default function Builder() {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto py-0 px-5">
+                  <div className="flex-1 overflow-auto h-[calc(100%-4rem)]">
                     <div className="relative my-5 mx-auto">{pdfPaper}</div>
                   </div>
                 </div>
