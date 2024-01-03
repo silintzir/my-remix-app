@@ -145,54 +145,60 @@ export function TailorStep({ id, values }: Props) {
                           }}
                         >
                           <option value="">Do not use</option>
-                          {work.length > 0 && (
-                            <optgroup label="Work experience">
-                              {work.map((exp) => {
-                                const value = `work::${exp.uuid}`;
-                                return (
-                                  <option
-                                    key={exp.uuid}
-                                    value={value}
-                                    selected={section === value}
-                                  >
-                                    {getExperienceTitle(exp)}
-                                  </option>
-                                );
-                              })}
+                          {values.meta.steps.work.enabled &&
+                            work.length > 0 && (
+                              <optgroup label="Work experience">
+                                {work.map((exp) => {
+                                  const value = `work::${exp.uuid}`;
+                                  return (
+                                    <option
+                                      key={exp.uuid}
+                                      value={value}
+                                      selected={section === value}
+                                    >
+                                      {getExperienceTitle(exp)}
+                                    </option>
+                                  );
+                                })}
+                              </optgroup>
+                            )}
+                          {values.meta.steps.education.enabled &&
+                            education.length > 0 && (
+                              <optgroup label="Education">
+                                {education.map((edu) => {
+                                  const value = `education::${edu.uuid}`;
+                                  return (
+                                    <option
+                                      key={edu.uuid}
+                                      value={value}
+                                      selected={section === value}
+                                    >
+                                      {getEducationTitle(edu)}
+                                    </option>
+                                  );
+                                })}
+                              </optgroup>
+                            )}
+                          {values.meta.steps.skills.enabled && (
+                            <optgroup label="Skills">
+                              <option
+                                value="skills"
+                                selected={section === "skills"}
+                              >
+                                Skills
+                              </option>
                             </optgroup>
                           )}
-                          {education.length > 0 && (
-                            <optgroup label="Education">
-                              {education.map((edu) => {
-                                const value = `education::${edu.uuid}`;
-                                return (
-                                  <option
-                                    key={edu.uuid}
-                                    value={value}
-                                    selected={section === value}
-                                  >
-                                    {getEducationTitle(edu)}
-                                  </option>
-                                );
-                              })}
+                          {values.meta.steps.accomplishments.enabled && (
+                            <optgroup label="Accomplishments">
+                              <option
+                                value="accomplishments"
+                                selected={section === "accomplishments"}
+                              >
+                                Accomplishments
+                              </option>
                             </optgroup>
                           )}
-                          <optgroup label="Skills">
-                            <option
-                              value="skills"
-                              selected={section === "skills"}
-                            >
-                              Skills
-                            </option>
-                          </optgroup>
-                          <optgroup label="Accomplishments">
-                            <option
-                              value="accomplishments"
-                              selected={section === "accomplishments"}
-                            >
-                              Accomplishments
-                            </option>
-                          </optgroup>
                         </select>
                       </div>
                     </div>

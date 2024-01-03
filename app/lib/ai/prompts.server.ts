@@ -34,7 +34,7 @@ export function createPrompt(
   toks.push(inputDescription(step));
   toks.push(inputFormatPrompt());
   toks.push(`${JSON.stringify(context)}. `);
-  toks.push(outputExpectation(step));
+  toks.push(outputExpectation(step, context));
   toks.push(enhancePrompt(enhance));
   toks.push(deliverablePrompt(lang));
   toks.push();
@@ -52,7 +52,7 @@ function inputDescription(step: Step) {
   }
 }
 
-function outputExpectation(step: Step) {
+function outputExpectation(step: Step, context: any) {
   switch (step) {
     case "education":
       return "Suggest 5 sentences of 10-15 words each, avoiding any numbering, that describe some courses/projects that I could add to this education entry in my resume to make it look more professional. ";
@@ -65,6 +65,10 @@ function outputExpectation(step: Step) {
     case "interests":
       return "Suggest 10 interests/hobbies of at most 3 words each, avoiding any numbering, that I could add in the interests/hobbies section of my my resume to make me look more attractive and interesting as a person. ";
     case "summary":
-      return "Suggest 3 paragraphs, written in 3rd person with no verbs, of 30-50 words each, that I can use as the summary section in my resume to make it look more professional, attractive and interesting. ";
+      if (context.asObjective) {
+        return "Suggest 3 paragraphs, written in 3rd person with no verbs, of 30-50 words each, that I can use as the objective section in my resume to make it look more professional, attractive and interesting. ";
+      } else {
+        return "Suggest 3 paragraphs, written in 3rd person with no verbs, of 30-50 words each, that I can use as the summary section in my resume to make it look more professional, attractive and interesting. ";
+      }
   }
 }

@@ -100,9 +100,9 @@ export const resumeSchema = z.object({
     mode: z.enum(["standard", "custom"]),
     tailor: tailorSchema,
     autoSort: z.object({
-      work: z.boolean().optional(),
-      education: z.boolean().optional(),
-      certificates: z.boolean().optional(),
+      work: z.boolean().optional().default(true),
+      education: z.boolean().optional().default(true),
+      certificates: z.boolean().optional().default(true),
     }),
     steps: z.object({
       start: stepConfigSchema,

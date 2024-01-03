@@ -126,7 +126,7 @@ class ChicagoPdfTemplate {
     return [
       getHeaderWithLine(title.length ? title : DEFAULT_SECTION_TITLES.skills),
       {
-        ul: map(records, skillDisplay),
+        text: constr(", ", ...map(records, skillDisplay)),
         style: "paragraph",
       },
     ];

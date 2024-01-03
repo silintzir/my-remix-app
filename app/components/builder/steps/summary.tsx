@@ -61,7 +61,9 @@ export function SummaryStep() {
                 original={summary || ""}
                 buttonLabel="Suggest/Enhance"
                 update={(text: string) => {
-                  setValue("resume.summary.content", text);
+                  setValue("resume.summary.content", text, {
+                    shouldDirty: true,
+                  });
                 }}
                 lang={lang}
               />

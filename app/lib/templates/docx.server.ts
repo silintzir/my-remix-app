@@ -213,7 +213,7 @@ export class ChicagoDocxTemplate {
     }
     return [
       this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.skills),
-      ...this.createBullets(map(records, skillDisplay)),
+      new Paragraph({ text: constr(", ", ...map(records, skillDisplay)) }),
     ];
   };
 

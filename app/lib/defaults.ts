@@ -85,9 +85,9 @@ export const defaultResumeValues = (
     fontSize: 12,
     order: [...DEFAULT_STEPS_ORDER],
     autoSort: {
-      education: false,
-      work: false,
-      certificates: false,
+      education: true,
+      work: true,
+      certificates: true,
     },
     steps: { ...DEFAULT_STEPS_SETUP },
   },
