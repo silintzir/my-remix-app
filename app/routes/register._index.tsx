@@ -23,12 +23,11 @@ export default function Templates() {
   return (
     <div className="space-y-4 mx-auto">
       <h1 className="font-semibold text-lg">Templates</h1>
-      <p className="muted">-- Template carousel should go here --</p>
       <Link
         to={`${REGISTER}/social-profile`}
         className={cn(buttonVariants({ variant: "default" }))}
       >
-        Pick this template
+        Use default template
       </Link>
     </div>
   );

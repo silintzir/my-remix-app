@@ -54,6 +54,7 @@ export function TextInput<T extends FieldValues>({
                 <InputMask
                   type={type}
                   mask={inputMask}
+                  placeholder={placeholder}
                   {...field}
                   className=""
                 />

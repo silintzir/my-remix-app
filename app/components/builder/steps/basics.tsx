@@ -32,9 +32,9 @@ export function BasicsStep() {
         <TextInput
           control={control}
           name="resume.basics.phone"
-          placeholder="e.x. +1 978 555 5555"
+          placeholder="e.x. (555) 555-5555"
           label="Phone"
-          inputMask="+1 (999) 999-9999"
+          inputMask="(999) 999-9999"
         />
       </div>
       <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">

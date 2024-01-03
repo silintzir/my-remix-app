@@ -49,7 +49,7 @@ export function TextSuggestions({
   }, [fetcher, context, endpoint, lang]);
 
   const insert = useCallback(() => {
-    const newBullets = map(picked, (p) => results[p]);
+    const newBullets = map(picked, (p) => results[p].replace(/\.$/, ""));
     append(newBullets);
   }, [picked, append, results]);
 
@@ -111,7 +111,7 @@ export function TextSuggestions({
                           }
                         }}
                       />
-                      {result}
+                      {result ? result.replace(/\.$/, "") : result}
                     </Label>
                   </li>
                 );

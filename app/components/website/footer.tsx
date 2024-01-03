@@ -16,6 +16,8 @@ export function Footer() {
               <Link to="#features">Features</Link>
               <Link to="#solutions">Solutions</Link>
               <Link to="#aboutus">About us</Link>
+              <Link to="/policy">Privacy policy</Link>
+              <Link to="/tos">Terms & Conditions</Link>
               <button type="button" onClick={() => setContactModalOpen(true)}>
                 Contact
               </button>

@@ -1,16 +1,17 @@
-import { Link } from "@remix-run/react";
-import { buttonVariants } from "@/components/ui/button";
+import { Link, useNavigate } from "@remix-run/react";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
 import { GoogleButton } from "@/components/social/google";
 import { FacebookButton } from "@/components/social/facebook";
 import { REGISTER } from "@/lib/routes";
+import { Mail } from "lucide-react";
 
 export const handle = {
   step: 2,
 };
 
 export default function SocialProfile() {
+  const navigate = useNavigate();
   return (
     <div className="space-y-4 max-w-xs mx-auto">
       <h1 className="font-semibold text-lg">Connect your social profile</h1>
@@ -21,21 +22,20 @@ export default function SocialProfile() {
       <div className="flex gap-2 justify-center w-full flex-wrap">
         <FacebookButton />
         <GoogleButton />
+        <Button
+          variant="secondary"
+          className="min-w-[160px] relative"
+          onClick={() => navigate(`${REGISTER}/introduction`)}
+        >
+          <Mail className="w-5 h-5 absolute left-[18px] top-1/2 mt-[-10px]" />
+          <span className="w-full">Email</span>
+        </Button>
       </div>
 
       <Separator className="my-4" />
-      <div className="flex justify-between items-center">
-        <Link
-          to={REGISTER}
-          className={cn(buttonVariants({ variant: "outline" }))}
-        >
+      <div className="flex justify-center items-center">
+        <Link className="link" to={REGISTER}>
           Back
-        </Link>
-        <Link
-          to={`${REGISTER}/introduction`}
-          className={cn(buttonVariants({ variant: "default" }))}
-        >
-          Skip
         </Link>
       </div>
     </div>

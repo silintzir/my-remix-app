@@ -110,7 +110,9 @@ export function TextAlternatives({
                     className="flex items-center space-x-2 p-2 bg-muted rounded-md cursor-pointer"
                   >
                     <RadioGroupItem value={result} id={`r${index}`} />
-                    <Label htmlFor={`r${index}`}>{result}</Label>
+                    <Label htmlFor={`r${index}`}>
+                      {result ? result.replace(/\.$/, "") : result}
+                    </Label>
                   </div>
                 );
               })}
@@ -121,7 +123,7 @@ export function TextAlternatives({
           <SheetClose disabled={!picked}>
             <Button
               disabled={picked === null}
-              onClick={() => update(picked || original)}
+              onClick={() => update(picked?.replace(/\.$/, "") || original)}
               size="sm"
               className="w-full"
             >
