@@ -71,6 +71,32 @@ export async function action({ request }: ActionFunctionArgs) {
           },
         ],
       },
+      {
+        name: "Ban of England",
+        position: "Web Engineer",
+        city: "Palo Alto",
+        state: "CA",
+        startDate: "12/2007",
+        endDate: "03/2010",
+        bullets: [
+          {
+            content: "Assisted in the development of this product",
+          },
+        ],
+      },
+      {
+        name: "ACS Courier",
+        position: "Developer",
+        city: "Palo Alto",
+        state: "CA",
+        startDate: "12/2007",
+        endDate: "03/2010",
+        bullets: [
+          {
+            content: "Assisted in the development of this product",
+          },
+        ],
+      },
     ],
     education: [
       {
@@ -133,7 +159,7 @@ export async function action({ request }: ActionFunctionArgs) {
   toks.push("The following text is your unstructured input: ");
   toks.push(resumeText);
   toks.push(
-    "You must convert this input to the JSONresume.org format and return that back as a JSON object just like the one I provided you above. Wherever dates appear try to use the MM/YYYY format if possible or YYYY format if month is not available. Here is the your input text:"
+    "You must convert this input to the JSONresume.org format and return that back as a JSON object just like the one I provided you above. The work and education sections may contain several entries and you should parse them all. Wherever dates appear try to use the MM/YYYY format if possible or YYYY format if month is not available. Here is the your input text:"
   );
   const response = await bot.send(toks.join(""));
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
