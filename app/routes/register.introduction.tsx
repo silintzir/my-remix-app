@@ -132,7 +132,7 @@ export default function Introduction() {
             />
             <div className="flex justify-between items-center">
               <Link
-                to={`${REGISTER}/social-profile`}
+                to={`${REGISTER}`}
                 className={cn(buttonVariants({ variant: "outline" }))}
               >
                 Back

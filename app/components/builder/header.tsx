@@ -2,7 +2,7 @@ import { Stepper } from "@/components/builder/stepper-2";
 import { InlineEdit } from "@/components/inline-edit";
 import { DEFAULT_RESUME_TITLE, DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { getEnabledSteps } from "@/lib/steps";
-import type { ResumeValues, Step } from "@/lib/types";
+import type { Lang, ResumeValues, Step } from "@/lib/types";
 import { useSearchParams } from "@remix-run/react";
 import { AlertCircle } from "lucide-react";
 import { useFormContext } from "react-hook-form";
@@ -10,14 +10,23 @@ import { ClientOnly } from "remix-utils/client-only";
 import { AutoSavedFeedback } from "./auto-saved-feedback";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import usFlag from "@/images/us-flag.svg";
+import esFlag from "@/images/es-flag.svg";
 
 type Props = {
   step: Step;
   isSaving: boolean;
   hasErrors: boolean;
   children: ReactNode;
+  language: Lang;
 };
-export function StepHeader({ step, isSaving, hasErrors, children }: Props) {
+export function StepHeader({
+  step,
+  isSaving,
+  hasErrors,
+  children,
+  language,
+}: Props) {
   const { watch } = useFormContext<ResumeValues>();
   const steps = getEnabledSteps(watch("meta.steps"));
   const [searchParams] = useSearchParams();
@@ -28,16 +37,26 @@ export function StepHeader({ step, isSaving, hasErrors, children }: Props) {
   return (
     <>
       <h2 className="text-xl font-semibold flex flex-col items-center gap-2 w-auto mb-2">
-        <ClientOnly fallback={<span>{DEFAULT_RESUME_TITLE}</span>}>
-          {() => (
-            <InlineEdit
-              showEditIcon
-              defaultValue={DEFAULT_RESUME_TITLE}
-              name="meta.title"
-              title="Edit resume title"
+        <div className="flex gap-2 items-center">
+          <span>
+            <img
+              src={language === "en" ? usFlag : esFlag}
+              height="16"
+              width="16"
+              alt="Language"
             />
-          )}
-        </ClientOnly>
+          </span>
+          <ClientOnly fallback={<span>{DEFAULT_RESUME_TITLE}</span>}>
+            {() => (
+              <InlineEdit
+                showEditIcon
+                defaultValue={DEFAULT_RESUME_TITLE}
+                name="meta.title"
+                title="Edit resume title"
+              />
+            )}
+          </ClientOnly>
+        </div>
 
         <div className="flex justify-center">
           {hasErrors ? (

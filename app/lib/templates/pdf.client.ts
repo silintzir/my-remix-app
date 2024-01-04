@@ -354,24 +354,24 @@ export default function getDefinition(
           watermark: { text: "Sample resume", fontSize: 60 },
         }
       : {}),
-    header: {
-      marginTop: 2,
-      columns: [
-        {
-          text: new Date().toUTCString(),
-          alignment: "left",
-          marginLeft: 8,
-          fontSize: 8,
-        },
-        {
-          text: "https://resumerunner.ai",
-          link: "https://resumerunner.ai",
-          alignment: "right",
-          fontSize: 8,
-          marginRight: 8,
-        },
-      ],
-    },
+    // header: {
+    //   marginTop: 2,
+    //   columns: [
+    //     {
+    //       text: new Date().toUTCString(),
+    //       alignment: "left",
+    //       marginLeft: 8,
+    //       fontSize: 8,
+    //     },
+    //     {
+    //       text: "https://resumerunner.ai",
+    //       link: "https://resumerunner.ai",
+    //       alignment: "right",
+    //       fontSize: 8,
+    //       marginRight: 8,
+    //     },
+    //   ],
+    // },
     footer: (currentPage, pageCount) => ({
       text: `${currentPage.toString()} of ${pageCount.toString()}`,
       alignment: "center",

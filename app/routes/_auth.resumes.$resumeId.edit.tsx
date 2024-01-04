@@ -55,6 +55,7 @@ import { OutputSettings } from "@/components/builder/output-settings";
 import { DASHBOARD } from "@/lib/routes";
 import { Overlay } from "@/components/builder/overlay";
 import { StepHeader } from "@/components/builder/header";
+import { TranslateModal } from "@/components/builder/translate-modal";
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const fd = await request.formData();
@@ -189,17 +190,19 @@ export default function Builder() {
         </div>
         <SForm {...form}>
           <form method="post" ref={ref} onSubmit={form.handleSubmit(onSubmit)}>
+            <TranslateModal />
             <div className="flex justify-center w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0 h-[calc(100dvh-4rem)] xl:h-screen overflow-y-auto">
               {/* Editor - Left Side */}
               <div className="w-full max-w-full flex-1">
                 <div className="max-w-[860px] h-full m-auto">
                   <div className="px-4 md:px-12 py-4">
                     <StepHeader
+                      language={submittedData.meta.language}
                       step={step}
                       isSaving={isSaving}
                       hasErrors={stepHasErrors}
                     >
-                      <fieldset className="mb-2">
+                      <fieldset className="mb-4">
                         {step === "start" && <StartStep />}
                         {step === "basics" && <BasicsStep />}
                         {step === "work" && <WorkStep />}

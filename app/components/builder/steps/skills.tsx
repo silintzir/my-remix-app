@@ -15,8 +15,6 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
-import { SectionRename } from "../section-rename";
-import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 
 export function SkillsStep() {
   const { control, watch } = useFormContext<ResumeValues>();
@@ -45,100 +43,94 @@ export function SkillsStep() {
   };
 
   return (
-    <>
-      <div className="space-y-4">
-        {fields.length === 0 ? (
-          <p className="small">
-            If you do not wish to enter any skills, continue to the next step.
-          </p>
-        ) : (
-          <p className="small">
-            You may keep adding as many skills and reorder as needed.
-          </p>
-        )}
-        {fields.length > 0 && (
-          <SortableList
-            lockAxis="y"
-            onSortEnd={onSortEnd}
-            useDragHandle
-            className="space-y-1"
-          >
-            {fields.map((field, index) => {
-              return (
-                <SortableItem key={field.uuid} index={index} className="flex">
-                  <SortableHandle />
-                  <TextInput
-                    className="w-full"
-                    control={control}
-                    name={`resume.skills.${index}.name`}
-                    placeholder="Skill name"
-                    alternatives={{
-                      fetcher: enhancer,
-                      context: getContext({ step: "skills", uuid: field.uuid }),
-                      endpoint: "skills",
-                      lang,
-                    }}
-                  />
-                  <SelectInput
-                    className="w-64"
-                    control={control}
-                    name={`resume.skills.${index}.level`}
-                    options={getSkillLevelOptions()}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="text-destructive"
-                    title="Delete entry"
-                    size="sm"
-                    onClick={() => remove(index)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </SortableItem>
-              );
-            })}
-          </SortableList>
-        )}
-        <div className="flex gap-1">
-          <Button
-            variant="outline"
-            className="text-blue-600 font-semibold"
-            type="button"
-            size="sm"
-            onClick={() => {
-              const id = uuid();
-              append({
-                uuid: id,
-                name: "",
-                level: "no_mention",
-              });
-            }}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Add skill
-          </Button>
-          <TextSuggestions
-            fetcher={suggester}
-            context={getContext()}
-            append={(texts: string[]) => {
-              const newSkills: SkillRecord[] = map(texts, (name) => ({
-                uuid: uuid(),
-                name,
-                level: "no_mention",
-              }));
-              append(newSkills);
-            }}
-            endpoint="skills"
-            label="Suggest skills"
-            lang={lang}
-          />
-        </div>
+    <div className="space-y-4">
+      {fields.length === 0 ? (
+        <p className="small">
+          If you do not wish to enter any skills, continue to the next step.
+        </p>
+      ) : (
+        <p className="small">
+          You may keep adding as many skills and reorder as needed.
+        </p>
+      )}
+      {fields.length > 0 && (
+        <SortableList
+          lockAxis="y"
+          onSortEnd={onSortEnd}
+          useDragHandle
+          className="space-y-1"
+        >
+          {fields.map((field, index) => {
+            return (
+              <SortableItem key={field.uuid} index={index} className="flex">
+                <SortableHandle />
+                <TextInput
+                  className="w-full"
+                  control={control}
+                  name={`resume.skills.${index}.name`}
+                  placeholder="Skill name"
+                  alternatives={{
+                    fetcher: enhancer,
+                    context: getContext({ step: "skills", uuid: field.uuid }),
+                    endpoint: "skills",
+                    lang,
+                  }}
+                />
+                <SelectInput
+                  className="w-64"
+                  control={control}
+                  name={`resume.skills.${index}.level`}
+                  options={getSkillLevelOptions()}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-destructive"
+                  title="Delete entry"
+                  size="sm"
+                  onClick={() => remove(index)}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </SortableItem>
+            );
+          })}
+        </SortableList>
+      )}
+      <div className="flex gap-1">
+        <Button
+          variant="outline"
+          className="text-blue-600 font-semibold"
+          type="button"
+          size="sm"
+          onClick={() => {
+            const id = uuid();
+            append({
+              uuid: id,
+              name: "",
+              level: "no_mention",
+            });
+          }}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Add skill
+        </Button>
+        <TextSuggestions
+          fetcher={suggester}
+          context={getContext()}
+          append={(texts: string[]) => {
+            const newSkills: SkillRecord[] = map(texts, (name) => ({
+              uuid: uuid(),
+              name,
+              level: "no_mention",
+            }));
+            append(newSkills);
+          }}
+          endpoint="skills"
+          label="Suggest skills"
+          lang={lang}
+        />
       </div>
-      <SectionRename
-        name="meta.steps.skills.title"
-        placeholder={DEFAULT_SECTION_TITLES.skills}
-      />
-    </>
+    </div>
   );
 }

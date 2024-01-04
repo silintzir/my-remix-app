@@ -10,14 +10,34 @@ import { FontSizeAdjust } from ".";
 import { useFormContext } from "react-hook-form";
 import type { ResumeValues } from "@/lib/types";
 import { SelectInput } from "../shadcn/SelectInput";
-import { cn } from "@/lib/utils";
-import { Slider } from "../ui/slider";
+import { useFetcher } from "@remix-run/react";
+import { useEffect, useState } from "react";
 
 interface Props {
   values: ResumeValues;
 }
 export function OutputSettings({ values }: Props) {
-  const { control } = useFormContext<ResumeValues>();
+  const { control, getValues } = useFormContext<ResumeValues>();
+  const [open, setOpen] = useState<string | false>(false);
+
+  const translator = useFetcher({ key: "translate" });
+
+  useEffect(() => {
+    if (open) {
+      const ans = confirm("Translate the resume text to the target language?");
+      if (ans) {
+        const fd = new FormData();
+        fd.append("values", JSON.stringify(getValues()));
+        fd.append("target", open);
+        translator.submit(fd, {
+          method: "POST",
+          action: `/ai/translate`,
+        });
+      }
+      setOpen(false);
+    }
+  }, [open, setOpen, getValues, translator]);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -26,41 +46,28 @@ export function OutputSettings({ values }: Props) {
           <span>Settings</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
-        <div className="grid gap-4">
-          <div className="space-y-2">
-            <h4 className="font-medium leading-none">Resume print settings</h4>
-            <p className="text-sm text-muted-foreground">
-              Configure the look and feel of the resume.
-            </p>
-          </div>
-          <div className="grid gap-2">
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="maxWidth">Paper size</Label>
-              <SelectInput
-                control={control}
-                options={[
-                  { label: "A4", value: "A4" },
-                  { label: "US Letter", value: "LETTER" },
-                ]}
-                name="meta.paperSize"
-              />
-            </div>
-            <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="width">Font size</Label>
-              <FontSizeAdjust />
-              <strong>{values.meta.fontSize}pt</strong>
-            </div>
-            <div className="flex items-center gap-4">
-              <Label htmlFor="maxWidth">Vertical margin</Label>
-              <Slider
-                defaultValue={[50]}
-                max={100}
-                step={1}
-                className={cn("w-full")}
-              />
-            </div>
-          </div>
+      <PopoverContent className="w-80 space-y-4">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="maxWidth">Language</Label>
+          <SelectInput
+            className="w-full"
+            control={control}
+            options={[
+              { label: "English", value: "en" },
+              { label: "Spanish", value: "es" },
+            ]}
+            onChange={(value) => {
+              setTimeout(() => {
+                setOpen(value);
+              }, 1000);
+            }}
+            name="meta.language"
+          />
+        </div>
+        <div className="grid grid-cols-3 items-center gap-4">
+          <Label htmlFor="width">Font size</Label>
+          <FontSizeAdjust />
+          <strong>{values.meta.fontSize}pt</strong>
         </div>
       </PopoverContent>
     </Popover>

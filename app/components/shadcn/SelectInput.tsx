@@ -24,6 +24,7 @@ type Props<T extends FieldValues> = {
   label?: ReactNode;
   placeholder?: string;
   className?: string;
+  onChange?: (value: string) => void;
 };
 
 export function SelectInput<T extends FieldValues>({
@@ -34,6 +35,7 @@ export function SelectInput<T extends FieldValues>({
   label,
   placeholder,
   className = "w-full",
+  onChange,
 }: Props<T>) {
   return (
     <FormField
@@ -42,7 +44,15 @@ export function SelectInput<T extends FieldValues>({
       render={({ field }) => (
         <FormItem className={className}>
           {label && <FormLabel>{label}</FormLabel>}
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={(value) => {
+              field.onChange(value);
+              if (onChange) {
+                onChange(value);
+              }
+            }}
+            defaultValue={field.value}
+          >
             <FormControl>
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />
