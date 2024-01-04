@@ -1,6 +1,5 @@
-import { Link, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { GoogleButton } from "@/components/social/google";
 import { FacebookButton } from "@/components/social/facebook";
 import { REGISTER } from "@/lib/routes";
@@ -30,13 +29,6 @@ export default function SocialProfile() {
           <Mail className="w-5 h-5 absolute left-[18px] top-1/2 mt-[-10px]" />
           <span className="w-full">Email</span>
         </Button>
-      </div>
-
-      <Separator className="my-4" />
-      <div className="flex justify-center items-center">
-        <Link className="link" to={REGISTER}>
-          Back
-        </Link>
       </div>
     </div>
   );
