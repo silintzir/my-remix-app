@@ -8,10 +8,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { DialogTrigger } from "@radix-ui/react-dialog";
-import { Form, useNavigation } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import {
   ArrowRight,
   Import,
@@ -20,8 +19,7 @@ import {
   PlusSquare,
 } from "lucide-react";
 import { useState } from "react";
-import usFlag from "@/images/us-flag.svg";
-import esFlag from "@/images/es-flag.svg";
+import { Input } from "@/components/ui/input";
 
 type ButtonProps = {
   title: string;
@@ -69,15 +67,19 @@ type Props = {
   startOpen: boolean;
 };
 export function CreateResume({ startOpen = false }: Props) {
-  const [paste, setPaste] = useState(false);
+  const [mode, setMode] = useState<"manual" | "text" | "upload" | undefined>();
+
   const { state } = useNavigation();
-  const [lang, setLang] = useState("en");
+
+  const data = useActionData<{ error?: string }>();
+
+  const error = data?.error;
 
   return (
     <Dialog
       defaultOpen={startOpen}
       onOpenChange={(open) => {
-        if (open === false) setPaste(false);
+        if (open === false) setMode(undefined);
       }}
     >
       <DialogTrigger asChild>
@@ -87,64 +89,94 @@ export function CreateResume({ startOpen = false }: Props) {
         </Button>
       </DialogTrigger>
 
-      {paste === false ? (
+      {!mode && (
         <DialogContent className="max-w-full sm:max-w-lg">
           <DialogHeader className="text-left">
-            <DialogTitle className="text-xl">Add new resume</DialogTitle>
+            <DialogTitle className="text-xl">New resume</DialogTitle>
             <DialogDescription>
-              You have two options to create your resume:
+              Please select one of the following options:
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
-            <RadioGroup
-              defaultValue={lang}
-              className="flex gap-10 mb-4"
-              onValueChange={(val) => setLang(val)}
-            >
-              <Label className="font-semibold">Pick language</Label>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="en" id="r1" />
-                <Label htmlFor="r1" className="flex gap-1">
-                  <img src={usFlag} height="16" width="16" alt="English" />
-                  <span>English</span>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="es" id="r2" />
-                <Label htmlFor="r2" className="flex gap-1">
-                  <img src={esFlag} height="16" width="16" alt="Spanish" />
-                  <span>Spanish</span>
-                </Label>
-              </div>
-            </RadioGroup>
-            <Form method="post" action="/resumes/create">
-              <input type="hidden" name="language" value={lang} />
+            <Form method="post" action="?intent=manual">
               <SourceButton
-                title="New resume from scratch"
-                description="Choose a blank template and fill in the fields yourself"
+                title="Start empty and build it"
+                description="Use the wizard to build your resume from scratch"
                 type="submit"
-                loading={state === "submitting"}
+                loading={state === "submitting" || state === "loading"}
               />
             </Form>
             <SourceButton
-              title="Improve existing resume"
-              description="Import your existing resume text and build on it"
+              title="Import existing from text"
+              description="Copy your resume text and improve it"
               type="button"
-              onClick={() => setPaste(true)}
+              onClick={() => setMode("text")}
+            />
+            <SourceButton
+              title="Import existing from file"
+              description="Upload your resume file and improve it"
+              type="button"
+              onClick={() => setMode("upload")}
             />
           </div>
         </DialogContent>
-      ) : (
+      )}
+      {mode === "text" && (
         <DialogContent className="max-w-full sm:max-w-lg">
-          <Form method="post" action={"/resumes/import"}>
+          <Form method="post" action="?intent=text">
             <div className="space-y-2">
               <DialogHeader className="text-left">
                 <DialogTitle>Import your resume</DialogTitle>
                 <DialogDescription>
-                  Paste the text of your resume below.
+                  Past the text of your resume below.
                 </DialogDescription>
               </DialogHeader>
-              <Textarea rows={10} name="resumeText" />
+              <Textarea rows={10} name="text" />
+              {error && <p className="text-red-600 text-sm">{error}</p>}
+              <DialogFooter>
+                <DialogTrigger asChild>
+                  <Button type="button" variant="outline">
+                    Cancel
+                  </Button>
+                </DialogTrigger>
+                <Button type="submit" disabled={state === "submitting"}>
+                  {state === "submitting" ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Import className="w-4 h-4 mr-2" />
+                      <span>Import</span>
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </div>
+          </Form>
+        </DialogContent>
+      )}
+      {mode === "upload" && (
+        <DialogContent className="max-w-full sm:max-w-lg">
+          <Form
+            method="post"
+            action="?intent=upload"
+            encType="multipart/form-data"
+          >
+            <div className="space-y-2">
+              <DialogHeader className="text-left">
+                <DialogTitle>Upload your resume</DialogTitle>
+                <DialogDescription>
+                  Browse your computer for your resume.{" "}
+                  <strong>Only PDF files can be imported.</strong>
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="picture">Resume</Label>
+                <Input id="picture" name="file" type="file" />
+                {error && <p className="text-red-600 text-sm">{error}</p>}
+              </div>
               <DialogFooter>
                 <DialogTrigger asChild>
                   <Button type="button" variant="outline">

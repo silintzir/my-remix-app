@@ -172,7 +172,7 @@ class ChicagoPdfTemplate {
     } = this.values;
     const output: Content[] = [];
 
-    if (!enabled || !content.trim().length) {
+    if (!enabled || !content || !content.trim().length) {
       return output;
     }
 

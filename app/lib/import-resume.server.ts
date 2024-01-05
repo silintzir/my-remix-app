@@ -1,5 +1,4 @@
 import { NoMemory, extractJson as MyExtractJson } from "@/lib/ai/bot.server";
-import { type ActionFunctionArgs, redirect } from "@remix-run/node";
 import { get, map, set } from "lodash-es";
 import chalk from "chalk";
 import type {
@@ -14,18 +13,9 @@ import type {
 } from "@/lib/types";
 import { extractJson } from "crack-json";
 import { v4 } from "uuid";
-import { importResume } from "@/lib/resumes.server";
 import { defaultResumeValues } from "@/lib/defaults";
-import { DASHBOARD } from "@/lib/routes";
 
-export async function action({ request }: ActionFunctionArgs) {
-  const posted = Object.fromEntries(await request.formData());
-
-  const resumeText = get(posted, "resumeText", "") as string;
-  if (resumeText.trim().length === 0) {
-    return redirect(DASHBOARD);
-  }
-
+export async function parseText(text: string) {
   const bot = new NoMemory(0.2);
   const toks = [];
 
@@ -157,7 +147,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }\r\r`);
 
   toks.push("The following text is your unstructured input: ");
-  toks.push(resumeText);
+  toks.push(text);
   toks.push(
     "You must convert this input to the JSONresume.org format and return that back as a JSON object just like the one I provided you above. The work and education sections may contain several entries and you should parse them all. Wherever dates appear try to use the MM/YYYY format if possible or YYYY format if month is not available. Here is the your input text:"
   );
@@ -171,11 +161,7 @@ export async function action({ request }: ActionFunctionArgs) {
     extracted = extractJson(response)[0];
   }
 
-  const toStore = getResumeValues(extracted);
-
-  const id = await importResume(request, toStore);
-
-  return redirect(`/resumes/${id}/edit`);
+  return getResumeValues(extracted);
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
