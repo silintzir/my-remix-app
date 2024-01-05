@@ -152,7 +152,7 @@ export default function Builder() {
   const downloadPdf = (
     <DownloadPdfButton
       isSample={sampleMode}
-      values={step === "start" ? sampleResume() : defaultValues}
+      values={defaultValues}
       fontSize={submittedData.meta.fontSize}
     />
   );
