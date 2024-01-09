@@ -33,23 +33,23 @@ export const DEFAULT_SECTIONT_TITLES_ES: Record<Step, string> = {
 export const DEFAULT_STEPS: Step[] = [
   "start",
   "basics",
+  "summary",
   "work",
   "education",
   "skills",
   "interests",
-  "summary",
   "finish",
 ];
 
 export const DEFAULT_STEPS_ORDER: Step[] = [
   "basics",
+  "summary",
   "work",
   "education",
   "skills",
   "certificates",
   "accomplishments",
   "interests",
-  "summary",
 ];
 
 export const DEFAULT_STEPS_SETUP = {

@@ -84,15 +84,10 @@ export function StartStep() {
 
       {mode === "custom" && (
         <div className="space-y-2 text-xs sm:text-sm">
-          <SortableList
-            lockAxis="y"
-            onSortEnd={onSortEnd}
-            useDragHandle
-            className="space-y-3"
-          >
-            {order.map((step, index) => (
-              <SortableItem index={index} key={step}>
-                <SortableHandle />
+          {["basics", "summary"].map((step, index) => {
+            return (
+              <div className="w-full flex items-center gap-2" key={step}>
+                <div className="w-4">&nbsp;</div>
                 <FormField
                   key={step}
                   control={control}
@@ -116,8 +111,45 @@ export function StartStep() {
                   name={`meta.steps.${step}.title`}
                   placeholder={DEFAULT_SECTION_TITLES[step]}
                 />
-              </SortableItem>
-            ))}
+              </div>
+            );
+          })}
+          <SortableList
+            lockAxis="y"
+            onSortEnd={onSortEnd}
+            useDragHandle
+            className="space-y-3"
+          >
+            {order
+              .filter((o) => ["basics", "summary"].includes(o) === false)
+              .map((step, index) => (
+                <SortableItem index={index} key={step}>
+                  <SortableHandle />
+                  <FormField
+                    key={step}
+                    control={control}
+                    name={`meta.steps.${step}.enabled`}
+                    render={({ field }) => (
+                      <FormItem className="flex items-center gap-16 space-y-0">
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            disabled={nonConfigurableSteps.includes(step)}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <TextInput
+                    className="flex-grow"
+                    control={control}
+                    name={`meta.steps.${step}.title`}
+                    placeholder={DEFAULT_SECTION_TITLES[step]}
+                  />
+                </SortableItem>
+              ))}
           </SortableList>
         </div>
       )}

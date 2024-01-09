@@ -1,5 +1,4 @@
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { OpenAI } from "langchain/llms/openai";
+import { OpenAI } from "@langchain/openai";
 import chalk from "chalk";
 import type { Step } from "@/lib/types";
 import { sample } from "./sample.server";
@@ -51,11 +50,6 @@ export function randomResponse(type: Step, mode: "one" | "multi" = "one") {
 
   return result;
 }
-
-export const model = new ChatOpenAI({
-  openAIApiKey: process.env.OPENAI_API_KEY,
-  temperature: 0.8,
-});
 
 export class NoMemory {
   private _chain: OpenAI;
