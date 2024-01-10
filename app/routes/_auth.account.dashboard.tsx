@@ -14,7 +14,7 @@ import {
 import { useLoaderData } from "@remix-run/react";
 import { getToast } from "remix-toast";
 import { ResumesList } from "@/components/resumes/list";
-import { fetchMe } from "@/lib/strapi.server";
+import { authenticatedFetch, fetchMe } from "@/lib/strapi.server";
 import { parseText } from "@/lib/import-resume.server";
 import { parseFile, s3UploadHandler } from "@/lib/upload-resume.server";
 
@@ -33,9 +33,9 @@ export async function action({ request }: ActionFunctionArgs) {
   const intent = sp.get("intent");
   const me = await fetchMe(request);
 
+  const fd = await request.formData();
   let id: number;
   if (intent === "text") {
-    const fd = await request.formData();
     const text = trim((fd.get("text") as string) || "");
     if (!text || !text.length) {
       return json({ error: "Field is required" });
@@ -44,6 +44,32 @@ export async function action({ request }: ActionFunctionArgs) {
     id = await importResume(request, toStore);
   } else if (intent === "manual") {
     id = await createResume(request, me, { language: "en" });
+  } else if (intent === "rename") {
+    id = fd.get("id") as unknown as number;
+    let newTitle = fd.get("title") as string;
+
+    if (trim(newTitle).length === 0) {
+      newTitle = "Untitled resume";
+    }
+
+    const resume = await authenticatedFetch(request, `/api/resumes/${id}`, {
+      method: "GET",
+    });
+    const document = get(
+      resume,
+      "data.attributes.document",
+      {}
+    ) as ResumeValues;
+    document.meta.title = newTitle;
+
+    await authenticatedFetch(request, `/api/resumes/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        data: { document },
+      }),
+    });
+
+    return null;
   } else {
     try {
       const fd = await unstable_parseMultipartFormData(

@@ -37,7 +37,7 @@ export function SecondaryActions({ resumeId, ...rest }: Props) {
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-destructive"
-            onClick={(evt) => {
+            onClick={() => {
               if (
                 confirm(
                   "Deleting a resume is an action that cannot be undone. Proceed anyway?"

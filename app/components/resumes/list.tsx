@@ -9,6 +9,7 @@ import { OpenPreview } from "../builder/open-preview";
 import { SecondaryActions } from "../builder/export-actions";
 import usFlag from "@/images/us-flag.svg";
 import esFlag from "@/images/es-flag.svg";
+import { RenameResume } from "./rename";
 
 interface Props {
   resumes: StrapiShortResume[];
@@ -32,11 +33,17 @@ export function ResumesList({ resumes }: Props) {
           >
             <div className="flex justify-between w-full items-center">
               <div className="space-y-2">
-                <Link className="link" to={`/resumes/${resume.id}/edit`}>
-                  <h4 className="font-semibold text-lg flex gap-1">
-                    {get(resume, "attributes.document.meta.title", "")}
-                  </h4>
-                </Link>
+                <div className="flex gap-1 items-center">
+                  <Link className="link" to={`/resumes/${resume.id}/edit`}>
+                    <h4 className="font-semibold text-lg flex gap-1">
+                      {get(resume, "attributes.document.meta.title", "")}
+                    </h4>
+                  </Link>
+                  <RenameResume
+                    id={resume.id}
+                    title={get(resume, "attributes.document.meta.title")}
+                  />
+                </div>
                 <div className="small muted flex gap-1">
                   <span>
                     <img
