@@ -9,6 +9,7 @@ import {
   type LoaderFunctionArgs,
   redirect,
   unstable_parseMultipartFormData,
+  type MetaFunction,
 } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getToast } from "remix-toast";
@@ -16,6 +17,10 @@ import { ResumesList } from "@/components/resumes/list";
 import { fetchMe } from "@/lib/strapi.server";
 import { parseText } from "@/lib/import-resume.server";
 import { parseFile, s3UploadHandler } from "@/lib/upload-resume.server";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Account :: Dashboard" }];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { toast, headers } = await getToast(request);

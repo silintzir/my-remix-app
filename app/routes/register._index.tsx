@@ -1,4 +1,4 @@
-import { useNavigate } from "@remix-run/react";
+import { type MetaFunction, useNavigate } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { GoogleButton } from "@/components/social/google";
 import { FacebookButton } from "@/components/social/facebook";
@@ -7,6 +7,10 @@ import { Mail } from "lucide-react";
 
 export const handle = {
   step: 1,
+};
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Register" }];
 };
 
 export default function SocialProfile() {

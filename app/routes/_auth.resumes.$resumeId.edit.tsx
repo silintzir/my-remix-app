@@ -15,6 +15,7 @@ import {
   json,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
+  type MetaFunction,
 } from "@remix-run/node";
 import {
   useSearchParams,
@@ -55,6 +56,10 @@ import { OutputSettings } from "@/components/builder/output-settings";
 import { DASHBOARD } from "@/lib/routes";
 import { Overlay } from "@/components/builder/overlay";
 import { StepHeader } from "@/components/builder/header";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Resume :: Edit" }];
+};
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const fd = await request.formData();

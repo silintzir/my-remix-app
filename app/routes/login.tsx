@@ -20,6 +20,7 @@ import {
   redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
+  MetaFunction,
 } from "@remix-run/node";
 import {
   Form as RemixForm,
@@ -79,6 +80,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   });
 }
+export const meta: MetaFunction = () => {
+  return [{ title: "Login" }];
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const raw = (await inputFromForm(request)) as unknown as LoginValues;

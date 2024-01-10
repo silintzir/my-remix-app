@@ -13,6 +13,7 @@ import {
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   redirect,
+  type MetaFunction,
 } from "@remix-run/node";
 import {
   CHANGE_PASSWORD_INTENT,
@@ -27,6 +28,10 @@ import { getToast, jsonWithSuccess } from "remix-toast";
 import { useLoaderData } from "@remix-run/react";
 import { useMyToast } from "@/components/hooks/useMyToast";
 import { DeleteAccountForm } from "@/components/account/delete-account";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Account :: Settings" }];
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));

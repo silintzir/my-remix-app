@@ -54,6 +54,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       NODE_ENV: process.env.NODE_ENV,
       STRAPI_HOST: process.env.STRAPI_HOST,
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+      GA_TRACKING_ID: process.env.GA_TRACKING_ID,
     },
   });
 }
@@ -68,6 +69,25 @@ export default function App() {
         <Meta />
         <Links />
         <script src="/vendors/pdf.min.mjs" type="module" />
+        <script
+          async
+          src={`https://www.googletagmanager.com/gtm.js?id=${data.ENV.GA_TRACKING_ID}`}
+        />
+        <script
+          async
+          id="gtag-init"
+          dangerouslySetInnerHTML={{
+            __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', '${data.ENV.GA_TRACKING_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+          }}
+        />
       </head>
       <body>
         <Outlet />
