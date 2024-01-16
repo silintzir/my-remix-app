@@ -33,7 +33,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
 import { InputMask } from "@/components/ui/input-mask";
-import { autoSortWork } from "@/lib/templates/helpers/common";
+import { convertDate } from "@/lib/templates/helpers/common";
 
 export function WorkStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -56,8 +56,6 @@ export function WorkStep() {
 
   const autoSort = watch("meta.autoSort.work");
 
-  const sorted = autoSort ? autoSortWork(fields) : fields;
-
   return (
     <div className="space-y-4">
       {fields.length === 0 ? (
@@ -78,7 +76,7 @@ export function WorkStep() {
         value={open}
       >
         <Accordion value={open} type="single" className="space-y-1" collapsible>
-          {sorted.map((field, index) => {
+          {fields.map((field, index) => {
             return (
               <SortableItem
                 index={index}
@@ -130,6 +128,45 @@ export function WorkStep() {
                                 <MonthPicker
                                   currentValue={field.value}
                                   setValue={(expr: string) => {
+                                    if (autoSort) {
+                                      for (let i = 0; i < fields.length; i++) {
+                                        if (i < index) {
+                                          // convert dates
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA > dateB) {
+                                            setValue(
+                                              `resume.work.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        } else if (i > index) {
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA < dateB) {
+                                            setValue(
+                                              `resume.work.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        }
+                                      }
+                                    }
+
                                     setValue(
                                       `resume.work.${index}.startDate`,
                                       expr,
@@ -145,6 +182,54 @@ export function WorkStep() {
                                   placeholder="MM/YYYY"
                                   {...field}
                                   mask="99/9999"
+                                  onChange={(evt) => {
+                                    const expr = evt.currentTarget.value;
+                                    if (autoSort) {
+                                      for (let i = 0; i < fields.length; i++) {
+                                        if (i < index) {
+                                          // convert dates
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA > dateB) {
+                                            setValue(
+                                              `resume.work.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        } else if (i > index) {
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA < dateB) {
+                                            setValue(
+                                              `resume.work.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        }
+                                      }
+                                    }
+                                    setValue(
+                                      `resume.work.${index}.startDate`,
+                                      expr,
+                                      {
+                                        shouldDirty: true,
+                                      }
+                                    );
+                                  }}
                                 />
                               </FormControl>
                               <FormMessage />

@@ -37,7 +37,7 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { InputMask } from "@/components/ui/input-mask";
-import { autoSortEducation } from "@/lib/templates/helpers/common";
+import { convertDate } from "@/lib/templates/helpers/common";
 
 export function EducationStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -60,8 +60,6 @@ export function EducationStep() {
 
   const autoSort = watch("meta.autoSort.education");
 
-  const sorted = autoSort ? autoSortEducation(fields) : fields;
-
   return (
     <div className="space-y-4">
       {fields.length === 0 ? (
@@ -80,7 +78,7 @@ export function EducationStep() {
         value={open}
       >
         <Accordion value={open} type="single" className="space-y-1" collapsible>
-          {sorted.map((field, index) => {
+          {fields.map((field, index) => {
             return (
               <SortableItem
                 index={index}
@@ -139,6 +137,44 @@ export function EducationStep() {
                                 <MonthPicker
                                   currentValue={field.value}
                                   setValue={(expr: string) => {
+                                    if (autoSort) {
+                                      for (let i = 0; i < fields.length; i++) {
+                                        if (i < index) {
+                                          // convert dates
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA > dateB) {
+                                            setValue(
+                                              `resume.education.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        } else if (i > index) {
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA < dateB) {
+                                            setValue(
+                                              `resume.education.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        }
+                                      }
+                                    }
                                     setValue(
                                       `resume.education.${index}.startDate`,
                                       expr,
@@ -154,6 +190,54 @@ export function EducationStep() {
                                   placeholder="MM/YYYY"
                                   {...field}
                                   mask="99/9999"
+                                  onChange={(evt) => {
+                                    const expr = evt.currentTarget.value;
+                                    if (autoSort) {
+                                      for (let i = 0; i < fields.length; i++) {
+                                        if (i < index) {
+                                          // convert dates
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA > dateB) {
+                                            setValue(
+                                              `resume.education.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        } else if (i > index) {
+                                          const dateA = convertDate(
+                                            fields[i].startDate
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA < dateB) {
+                                            setValue(
+                                              `resume.education.${index}.startDate`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        }
+                                      }
+                                    }
+                                    setValue(
+                                      `resume.education.${index}.startDate`,
+                                      expr,
+                                      {
+                                        shouldDirty: true,
+                                      }
+                                    );
+                                  }}
                                 />
                               </FormControl>
                               <FormMessage />

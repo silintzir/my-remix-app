@@ -29,7 +29,7 @@ import {
 } from "@/components/builder/sortable";
 import { cn, getReadableDateFromPicker } from "@/lib/utils";
 import { InputMask } from "@/components/ui/input-mask";
-import { autoSortCertificates } from "@/lib/templates/helpers/common";
+import { convertDate } from "@/lib/templates/helpers/common";
 
 export function CertificatesStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -52,8 +52,6 @@ export function CertificatesStep() {
 
   const autoSort = watch("meta.autoSort.certificates");
 
-  const sorted = autoSort ? autoSortCertificates(fields) : fields;
-
   return (
     <div className="space-y-4">
       {fields.length === 0 ? (
@@ -73,7 +71,7 @@ export function CertificatesStep() {
         value={open}
       >
         <Accordion value={open} type="single" className="space-y-1" collapsible>
-          {sorted.map((field, index) => {
+          {fields.map((field, index) => {
             return (
               <SortableItem
                 index={Number(field.uuid)}
@@ -132,6 +130,44 @@ export function CertificatesStep() {
                                 <MonthPicker
                                   currentValue={field.value}
                                   setValue={(expr: string) => {
+                                    if (autoSort) {
+                                      for (let i = 0; i < fields.length; i++) {
+                                        if (i < index) {
+                                          // convert dates
+                                          const dateA = convertDate(
+                                            fields[i].date
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA > dateB) {
+                                            setValue(
+                                              `resume.certificates.${index}.date`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        } else if (i > index) {
+                                          const dateA = convertDate(
+                                            fields[i].date
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA < dateB) {
+                                            setValue(
+                                              `resume.certificates.${index}.date`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        }
+                                      }
+                                    }
                                     setValue(
                                       `resume.certificates.${index}.date`,
                                       expr,
@@ -147,6 +183,54 @@ export function CertificatesStep() {
                                   placeholder="MM/YYYY"
                                   {...field}
                                   mask="99/9999"
+                                  onChange={(evt) => {
+                                    const expr = evt.currentTarget.value;
+                                    if (autoSort) {
+                                      for (let i = 0; i < fields.length; i++) {
+                                        if (i < index) {
+                                          // convert dates
+                                          const dateA = convertDate(
+                                            fields[i].date
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA > dateB) {
+                                            setValue(
+                                              `resume.certificates.${index}.date`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        } else if (i > index) {
+                                          const dateA = convertDate(
+                                            fields[i].date
+                                          );
+                                          const dateB = convertDate(expr);
+                                          if (dateA < dateB) {
+                                            setValue(
+                                              `resume.certificates.${index}.date`,
+                                              expr,
+                                              {
+                                                shouldDirty: true,
+                                              }
+                                            );
+                                            swap(i, index);
+                                            return;
+                                          }
+                                        }
+                                      }
+                                    }
+                                    setValue(
+                                      `resume.certificates.${index}.date`,
+                                      expr,
+                                      {
+                                        shouldDirty: true,
+                                      }
+                                    );
+                                  }}
                                 />
                               </FormControl>
                               <FormMessage />
