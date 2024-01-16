@@ -1,4 +1,7 @@
 import {
+  autoSortCertificates,
+  autoSortEducation,
+  autoSortWork,
   constr,
   nonEmptyAccomplishments,
   nonEmptyCertificates,
@@ -88,6 +91,7 @@ export class ChicagoDocxTemplate {
     const {
       resume: { work },
       meta: {
+        autoSort: { work: autoSort },
         steps: {
           work: { title, enabled },
         },
@@ -96,11 +100,13 @@ export class ChicagoDocxTemplate {
 
     const records = nonEmptyWork(work);
 
-    if (!enabled || !records.length) {
+    const sorted = autoSort ? autoSortWork(records) : records;
+
+    if (!enabled || !sorted.length) {
       return [];
     }
     // group by employer / location
-    const p1 = map(records, (w) => ({
+    const p1 = map(sorted, (w) => ({
       ...w,
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));
@@ -141,6 +147,7 @@ export class ChicagoDocxTemplate {
     const {
       resume: { education },
       meta: {
+        autoSort: { education: autoSort },
         steps: {
           education: { title, enabled },
         },
@@ -148,12 +155,13 @@ export class ChicagoDocxTemplate {
     } = this.values;
 
     const records = nonEmptyEducation(education);
+    const sorted = autoSort ? autoSortEducation(records) : records;
 
-    if (!enabled || !records.length) {
+    if (!enabled || !sorted.length) {
       return [];
     }
     // group by employer / location
-    const p1 = map(records, (w) => ({
+    const p1 = map(sorted, (w) => ({
       ...w,
       group: constr(", ", w.institution, constr(" ", w.city, w.state)),
     }));
@@ -221,20 +229,23 @@ export class ChicagoDocxTemplate {
     const {
       resume: { certificates },
       meta: {
+        autoSort: { certificates: autoSort },
         steps: {
           certificates: { title, enabled },
         },
       },
     } = this.values;
     const records = nonEmptyCertificates(certificates);
-    if (!enabled || !records.length) {
+    const sorted = autoSort ? autoSortCertificates(records) : records;
+
+    if (!enabled || !sorted.length) {
       return [];
     }
     return [
       this.sectionTitle(
         title.length ? title : DEFAULT_SECTION_TITLES.certificates
       ),
-      ...map(records, ({ name, date, issuer, url }) => {
+      ...map(sorted, ({ name, date, issuer, url }) => {
         const firstLine = [];
         if (name.trim().length) {
           firstLine.push(name);

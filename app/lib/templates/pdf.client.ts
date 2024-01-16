@@ -1,6 +1,9 @@
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { ResumeValues, Step } from "@/lib/types";
 import {
+  autoSortCertificates,
+  autoSortEducation,
+  autoSortWork,
   certificateDisplay,
   constr,
   nonEmptyAccomplishments,
@@ -136,6 +139,7 @@ class ChicagoPdfTemplate {
     const {
       resume: { certificates },
       meta: {
+        autoSort: { certificates: autoSort },
         steps: {
           certificates: { title, enabled },
         },
@@ -143,8 +147,9 @@ class ChicagoPdfTemplate {
     } = this.values;
 
     const records = nonEmptyCertificates(certificates);
+    const sorted = autoSort ? autoSortCertificates(records) : records;
 
-    if (!enabled || !records.length) {
+    if (!enabled || !sorted.length) {
       return [];
     }
 
@@ -153,7 +158,7 @@ class ChicagoPdfTemplate {
         title.length ? title : DEFAULT_SECTION_TITLES.certificates
       ),
       {
-        ul: map(records, certificateDisplay),
+        ul: map(sorted, certificateDisplay),
         style: "paragraph",
       },
     ];
@@ -188,6 +193,7 @@ class ChicagoPdfTemplate {
     const {
       resume: { education },
       meta: {
+        autoSort: { education: autoSort },
         steps: {
           education: { title, enabled },
         },
@@ -195,13 +201,14 @@ class ChicagoPdfTemplate {
     } = this.values;
 
     const records = nonEmptyEducation(education);
+    const sorted = autoSort ? autoSortEducation(records) : records;
 
-    if (!enabled || !records.length) {
+    if (!enabled || !sorted.length) {
       return [];
     }
 
     // group by employer/location
-    const p1 = map(records, (w) => ({
+    const p1 = map(sorted, (w) => ({
       ...w,
       group: constr(", ", w.institution, constr(" ", w.city, w.state)),
     }));
@@ -261,6 +268,7 @@ class ChicagoPdfTemplate {
     const {
       resume: { work },
       meta: {
+        autoSort: { work: autoSort },
         steps: {
           work: { title, enabled },
         },
@@ -269,12 +277,14 @@ class ChicagoPdfTemplate {
 
     const records = nonEmptyWork(work);
 
-    if (!enabled || !records.length) {
+    const sorted = autoSort ? autoSortWork(records) : records;
+
+    if (!enabled || !sorted.length) {
       return [];
     }
 
     // group by employer/location
-    const p1 = map(records, (w) => ({
+    const p1 = map(sorted, (w) => ({
       ...w,
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));

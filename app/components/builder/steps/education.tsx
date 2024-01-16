@@ -14,7 +14,7 @@ import {
 import type { ResumeValues } from "@/lib/types";
 import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { map, orderBy } from "lodash-es";
+import { map } from "lodash-es";
 import { v4 as uuid } from "uuid";
 import { MonthPicker } from "@/components/month-picker";
 import { Bullets } from "../bullets";
@@ -37,6 +37,7 @@ import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { InputMask } from "@/components/ui/input-mask";
+import { autoSortEducation } from "@/lib/templates/helpers/common";
 
 export function EducationStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -59,7 +60,7 @@ export function EducationStep() {
 
   const autoSort = watch("meta.autoSort.education");
 
-  const sorted = autoSort ? orderBy(fields, ["endDate"]) : fields;
+  const sorted = autoSort ? autoSortEducation(fields) : fields;
 
   return (
     <div className="space-y-4">

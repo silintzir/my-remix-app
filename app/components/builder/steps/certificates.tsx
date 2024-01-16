@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/accordion";
 import type { ResumeValues } from "@/lib/types";
 import { Switch } from "@/components/ui/switch";
-import { orderBy } from "lodash-es";
 import { useState } from "react";
 import {
   SortableHandle,
@@ -30,6 +29,7 @@ import {
 } from "@/components/builder/sortable";
 import { cn, getReadableDateFromPicker } from "@/lib/utils";
 import { InputMask } from "@/components/ui/input-mask";
+import { autoSortCertificates } from "@/lib/templates/helpers/common";
 
 export function CertificatesStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -52,7 +52,7 @@ export function CertificatesStep() {
 
   const autoSort = watch("meta.autoSort.certificates");
 
-  const sorted = autoSort ? orderBy(fields, ["date"]) : fields;
+  const sorted = autoSort ? autoSortCertificates(fields) : fields;
 
   return (
     <div className="space-y-4">
@@ -76,7 +76,7 @@ export function CertificatesStep() {
           {sorted.map((field, index) => {
             return (
               <SortableItem
-                index={index}
+                index={Number(field.uuid)}
                 key={field.uuid}
                 value={field.uuid}
                 className="flex"

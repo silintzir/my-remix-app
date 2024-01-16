@@ -7,7 +7,7 @@ import type {
   WorkRecord,
 } from "@/lib/types";
 import { getReadableDateFromPicker } from "@/lib/utils";
-import { filter } from "lodash-es";
+import { filter, orderBy } from "lodash-es";
 
 export function constr(delimiter: string, ...strings: string[]): string {
   return strings.filter((str) => str !== "").join(delimiter);
@@ -66,4 +66,22 @@ export const nonEmptyAccomplishments = (records: AccomplishmentRecord[]) => {
 
 export const nonEmptyInterests = (records: InterestRecord[]) => {
   return filter(records, (c) => c.name.trim().length > 0);
+};
+
+export const autoSortCertificates = (fields: CertificateRecord[]) => {
+  const withDate = filter(fields, (f) => f.date.trim().length > 0);
+  const withoutDate = filter(fields, (f) => f.date.trim().length === 0);
+  return [...orderBy(withDate, ["date", "desc"]), ...withoutDate];
+};
+
+export const autoSortWork = (fields: WorkRecord[]) => {
+  const withDate = filter(fields, (f) => f.startDate.trim().length > 0);
+  const withoutDate = filter(fields, (f) => f.startDate.trim().length === 0);
+  return [...orderBy(withDate, ["date", "desc"]), ...withoutDate];
+};
+
+export const autoSortEducation = (fields: EducationRecord[]) => {
+  const withDate = filter(fields, (f) => f.startDate.trim().length > 0);
+  const withoutDate = filter(fields, (f) => f.startDate.trim().length === 0);
+  return [...orderBy(withDate, ["date", "desc"]), ...withoutDate];
 };
