@@ -20,7 +20,7 @@ import {
   redirect,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-  MetaFunction,
+  type MetaFunction,
 } from "@remix-run/node";
 import {
   Form as RemixForm,
@@ -39,7 +39,7 @@ import { WizardFooter } from "@/components/footers/wizard";
 import { requiredString } from "@/lib/validation";
 import { z } from "zod";
 import { GoogleButton } from "@/components/social/google";
-import { FacebookButton } from "@/components/social/facebook";
+// import { FacebookButton } from "@/components/social/facebook";
 import { useTranslation } from "react-i18next";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TextInput } from "@/components/shadcn/TextInput";
@@ -81,7 +81,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 }
 export const meta: MetaFunction = () => {
-  return [{ title: "Login" }];
+  return [{ title: " Login" }];
 };
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -302,7 +302,7 @@ export default function Signin() {
                 <div className="muted">We are happy to see you back!</div>
               </div>
               <div className="flex gap-2 flex-col w-56">
-                <FacebookButton />
+                {/* <FacebookButton /> */}
                 <GoogleButton />
                 <RemixForm className="w-full">
                   <Button

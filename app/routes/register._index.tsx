@@ -1,7 +1,7 @@
 import { type MetaFunction, useNavigate } from "@remix-run/react";
 import { Button } from "@/components/ui/button";
 import { GoogleButton } from "@/components/social/google";
-import { FacebookButton } from "@/components/social/facebook";
+// import { FacebookButton } from "@/components/social/facebook";
 import { REGISTER } from "@/lib/routes";
 import { Mail } from "lucide-react";
 
@@ -23,7 +23,7 @@ export default function SocialProfile() {
       </p>
 
       <div className="flex gap-2 justify-center w-full flex-wrap">
-        <FacebookButton />
+        {/* <FacebookButton /> */}
         <GoogleButton />
         <Button
           variant="secondary"
