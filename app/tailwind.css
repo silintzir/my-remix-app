@@ -206,3 +206,10 @@ a > .lucide + span {
   opacity: 1; /* Fully opaque when visible */
   pointer-events: auto; /* Allows click events when visible */
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker__input-container .react-datepicker__calendar-icon {
+  top: 5px;
+}

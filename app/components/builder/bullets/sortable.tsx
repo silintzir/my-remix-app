@@ -1,4 +1,4 @@
-import { GripVertical } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import type { ReactNode } from "react";
 import {
   SortableContainer,
@@ -12,7 +12,7 @@ export const SortableList = SortableContainer(
   }
 ) as any;
 export const SortableHandle = Handle(() => (
-  <GripVertical className="w-9 h-6" />
+  <ArrowUpDown className="w-4 h-4" />
 )) as any;
 export const SortableItem = SortableElement(
   ({ children }: { children: ReactNode }) => {

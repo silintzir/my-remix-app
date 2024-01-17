@@ -18,6 +18,10 @@ type Props = {
   hasErrors: boolean;
   children: ReactNode;
   resumeId: number;
+  showStepper?: boolean;
+  showStatus?: boolean;
+  titleMode?: "resume" | "step";
+  editable?: boolean;
 };
 export function StepHeader({
   step,
@@ -25,6 +29,10 @@ export function StepHeader({
   hasErrors,
   children,
   resumeId,
+  showStepper = true,
+  showStatus = true,
+  titleMode = "resume",
+  editable = true,
 }: Props) {
   const { watch } = useFormContext<ResumeValues>();
   const steps = getEnabledSteps(watch("meta.steps"));
@@ -36,38 +44,68 @@ export function StepHeader({
   return (
     <>
       <h2 className="text-xl font-semibold flex flex-col items-center gap-2 w-auto mb-2">
-        <div className="flex gap-2 items-center">
-          <TranslateModal resumeId={resumeId} />
-          <ClientOnly fallback={<span>{DEFAULT_RESUME_TITLE}</span>}>
-            {() => (
-              <InlineEdit
-                showEditIcon
-                defaultValue={DEFAULT_RESUME_TITLE}
-                name="meta.title"
-                title="Edit resume title"
-              />
-            )}
-          </ClientOnly>
-        </div>
-
-        <div className="flex justify-center">
-          {hasErrors ? (
-            <span className="text-destructive flex items-center small">
-              <AlertCircle className="w-4 h-4 mr-2" />
-              Fix errors to proceed
-            </span>
+        <div
+          className="flex gap-2 items-center"
+          style={{ width: titleMode === "resume" ? "" : "100%" }}
+        >
+          {titleMode === "resume" ? (
+            <>
+              <TranslateModal resumeId={resumeId} />
+              <ClientOnly fallback={<span>{DEFAULT_RESUME_TITLE}</span>}>
+                {() =>
+                  editable ? (
+                    <InlineEdit
+                      showEditIcon
+                      defaultValue={DEFAULT_RESUME_TITLE}
+                      name="meta.title"
+                      title="Edit resume title"
+                    />
+                  ) : (
+                    <span>{DEFAULT_RESUME_TITLE}</span>
+                  )
+                }
+              </ClientOnly>
+            </>
           ) : (
-            <div className={cn({ muted: !isSaving })}>
-              <AutoSavedFeedback isSaving={isSaving} />
-            </div>
+            <ClientOnly fallback={<span>{DEFAULT_SECTION_TITLES[step]}</span>}>
+              {() =>
+                editable ? (
+                  <InlineEdit
+                    showEditIcon
+                    defaultValue={DEFAULT_SECTION_TITLES[step]}
+                    name={`meta.steps.${step}.title`}
+                    title="Edit section title"
+                  />
+                ) : (
+                  <span>{DEFAULT_SECTION_TITLES[step]}</span>
+                )
+              }
+            </ClientOnly>
           )}
         </div>
+
+        {showStatus && (
+          <div className="flex justify-center">
+            {hasErrors ? (
+              <span className="text-destructive flex items-center small">
+                <AlertCircle className="w-4 h-4 mr-2" />
+                Fix errors to proceed
+              </span>
+            ) : (
+              <div className={cn({ muted: !isSaving })}>
+                <AutoSavedFeedback isSaving={isSaving} />
+              </div>
+            )}
+          </div>
+        )}
       </h2>
-      <Stepper
-        title={DEFAULT_SECTION_TITLES[step]}
-        steps={steps}
-        current={currentIndex}
-      />
+      {showStepper && (
+        <Stepper
+          title={DEFAULT_SECTION_TITLES[step]}
+          steps={steps}
+          current={currentIndex}
+        />
+      )}
       {children}
     </>
   );

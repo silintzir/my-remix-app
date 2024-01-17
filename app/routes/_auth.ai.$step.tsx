@@ -5,6 +5,10 @@ import { json, type ActionFunctionArgs } from "@remix-run/node";
 import { get } from "lodash-es";
 import chalk from "chalk";
 
+export const config = {
+  maxDuration: 120,
+};
+
 export async function action({ request, params }: ActionFunctionArgs) {
   const posted = Object.fromEntries(await request.formData()) as {
     context: string;

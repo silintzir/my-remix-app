@@ -4,6 +4,10 @@ import { useFormContext } from "react-hook-form";
 import { usePlacesWidget } from "react-google-autocomplete";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Drama } from "lucide-react";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Switch } from "@/components/ui/switch";
 
 export function BasicsStep() {
   const { control, setValue, getValues } = useFormContext<ResumeValues>();
@@ -32,6 +36,32 @@ export function BasicsStep() {
 
   return (
     <div className="space-y-2">
+      <Alert className="bg-blue-100">
+        <Drama className="h-4 w-4" />
+        <AlertTitle>Recruiter mode</AlertTitle>
+        <AlertDescription>
+          <div className="flex justify-between items-center">
+            <span>
+              You may mask the basics info and show the Marathon Staffing
+              company info instead.
+            </span>
+            <FormField
+              control={control}
+              name="meta.maskBasics"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg">
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </AlertDescription>
+      </Alert>
       <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
         <TextInput
           control={control}
@@ -59,7 +89,6 @@ export function BasicsStep() {
           name="resume.basics.phone"
           placeholder="e.x. (555) 555-5555"
           label="Phone"
-          inputMask="(999) 999-9999"
         />
       </div>
       <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">

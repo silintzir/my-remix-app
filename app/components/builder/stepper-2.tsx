@@ -2,6 +2,12 @@ import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { Progress } from "@/components/ui/progress";
 import type { Step } from "@/lib/types";
 import { Link } from "@remix-run/react";
+import {
+  TooltipProvider,
+  TooltipTrigger,
+  TooltipContent,
+  Tooltip,
+} from "../ui/tooltip";
 
 interface Props {
   title: string;
@@ -36,37 +42,64 @@ export function Stepper({ title, current, steps }: Props) {
           return (
             <li key={name}>
               {status === "complete" ? (
-                <Link
-                  to={`?step=${step}`}
-                  className="block h-2.5 w-2.5 rounded-full bg-primary hover:bg-indigo-900"
-                >
-                  <span className="sr-only">{name}</span>
-                </Link>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Link
+                        to={`?step=${step}`}
+                        className="block h-2.5 w-2.5 rounded-full bg-primary hover:bg-indigo-900"
+                      >
+                        <span className="sr-only">{name}</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{name}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               ) : status === "current" ? (
-                <Link
-                  to={`?step=${step}`}
-                  className="relative flex items-center justify-center"
-                  aria-current="step"
-                >
-                  <span
-                    className="absolute flex h-6 w-6 p-px"
-                    aria-hidden="true"
-                  >
-                    <span className="h-full w-full rounded-full bg-indigo-200" />
-                  </span>
-                  <span
-                    className="relative block h-2.5 w-2.5 rounded-full bg-primary"
-                    aria-hidden="true"
-                  />
-                  <span className="sr-only">{name}</span>
-                </Link>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Link
+                        to={`?step=${step}`}
+                        className="relative flex items-center justify-center"
+                        aria-current="step"
+                      >
+                        <span
+                          className="absolute flex h-6 w-6 p-px"
+                          aria-hidden="true"
+                        >
+                          <span className="h-full w-full rounded-full bg-indigo-200" />
+                        </span>
+                        <span
+                          className="relative block h-2.5 w-2.5 rounded-full bg-primary"
+                          aria-hidden="true"
+                        />
+                        <span className="sr-only">{name}</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{name}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               ) : (
-                <Link
-                  to={`?step=${step}`}
-                  className="block h-2.5 w-2.5 rounded-full bg-gray-300 hover:bg-gray-500"
-                >
-                  <span className="sr-only">{name}</span>
-                </Link>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Link
+                        to={`?step=${step}`}
+                        className="block h-2.5 w-2.5 rounded-full bg-gray-300 hover:bg-gray-500"
+                      >
+                        <span className="sr-only">{name}</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{name}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
             </li>
           );

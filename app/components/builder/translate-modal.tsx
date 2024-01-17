@@ -71,8 +71,15 @@ export function TranslateModal({ resumeId }: Props) {
               className="mr-2"
             />
             {state === "submitting"
-              ? "Translating..."
+              ? "Translating...This may take a while."
               : `Translate to ${target}`}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+          >
+            Close
           </Button>
         </DialogFooter>
       </DialogContent>

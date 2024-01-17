@@ -165,6 +165,7 @@ export const sampleResume = (): ResumeValues => {
       ],
       summary: {
         asObjective: false,
+        objectiveTarget: "",
         content:
           "Accomplished Programmer with extensive experience from junior to senior roles at notable tech companies. Bachelor's in Computer Science and a Master's in Software Engineering. Proven track record in leading product development, managing teams, and contributing to open-source projects. Skilled in front-end and software architecture",
       },

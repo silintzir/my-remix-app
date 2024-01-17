@@ -4,7 +4,7 @@ import { AutoSavedFeedback } from "@/components/builder/auto-saved-feedback";
 import { DownloadPdfButton } from "@/components/builder/download-pdf-button";
 import { SecondaryActions } from "@/components/builder/export-actions";
 import { StartStep } from "@/components/builder/steps/start";
-import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
+// import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
 import { UserMenu } from "@/components/navbar/user-menu";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -56,6 +56,7 @@ import { OutputSettings } from "@/components/builder/output-settings";
 import { DASHBOARD } from "@/lib/routes";
 import { Overlay } from "@/components/builder/overlay";
 import { StepHeader } from "@/components/builder/header";
+import { PreviewStep } from "@/components/builder/steps/preview";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Resume :: Edit" }];
@@ -152,6 +153,7 @@ export default function Builder() {
     values: sampleMode ? sample : defaultValues,
     isSample: sampleMode,
     fontSize: submittedData.meta.fontSize,
+    template: submittedData.meta.template || "chicago",
   });
 
   const downloadPdf = (
@@ -159,6 +161,7 @@ export default function Builder() {
       isSample={sampleMode}
       values={defaultValues}
       fontSize={submittedData.meta.fontSize}
+      template={submittedData.meta.template || "chicago"}
     />
   );
   const fontSizeAdjust = <FontSizeAdjust />;
@@ -184,7 +187,7 @@ export default function Builder() {
         className={cn(
           "bg-muted",
           "overflow-y-auto h-[calc(100dvh-4rem)] w-full absolute top-16",
-          "xl:overflow-y-hidden xl:h-screen xl:static xl:top-[unset]"
+          "xl:overflow-y-hidden xl:h-screen xl:top-[unset]"
         )}
       >
         <div className="hidden xl:block">
@@ -218,6 +221,7 @@ export default function Builder() {
                         {step === "tailor" && (
                           <TailorStep id={id} values={defaultValues} />
                         )}
+                        {step === "preview" && <PreviewStep />}
                       </fieldset>
                       <AutoSave
                         onSubmit={onSubmit}
@@ -293,7 +297,7 @@ export default function Builder() {
                     >
                       <div className="relative">
                         {/* focus button */}
-                        <SwitchViewOverlay />
+                        {/* <SwitchViewOverlay /> */}
 
                         {/* top-bar */}
                         <div

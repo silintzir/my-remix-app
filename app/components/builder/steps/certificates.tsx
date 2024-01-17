@@ -4,13 +4,11 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { getCertificateTitle } from "@/lib/resume";
 import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
-import { MonthPicker } from "@/components/month-picker";
 import { Separator } from "@/components/ui/separator";
 import { TextInput } from "@/components/shadcn/TextInput";
 import {
@@ -28,8 +26,8 @@ import {
   SortableList,
 } from "@/components/builder/sortable";
 import { cn, getReadableDateFromPicker } from "@/lib/utils";
-import { InputMask } from "@/components/ui/input-mask";
 import { convertDate } from "@/lib/templates/helpers/common";
+import { DatePicker } from "@/components/shadcn/MyDatePicker";
 
 export function CertificatesStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -51,6 +49,38 @@ export function CertificatesStep() {
   };
 
   const autoSort = watch("meta.autoSort.certificates");
+
+  const sortFn = (index: number, expr: string, autoSort: boolean) => {
+    if (autoSort) {
+      for (let i = 0; i < fields.length; i++) {
+        if (i < index) {
+          // convert dates
+          const dateA = convertDate(fields[i].date);
+          const dateB = convertDate(expr);
+          if (dateA < dateB) {
+            setValue(`resume.certificates.${index}.date`, expr, {
+              shouldDirty: true,
+            });
+            swap(i, index);
+            return;
+          }
+        } else if (i > index) {
+          const dateA = convertDate(fields[i].date);
+          const dateB = convertDate(expr);
+          if (dateA > dateB) {
+            setValue(`resume.certificates.${index}.date`, expr, {
+              shouldDirty: true,
+            });
+            swap(i, index);
+            return;
+          }
+        }
+      }
+    }
+    setValue(`resume.certificates.${index}.date`, expr, {
+      shouldDirty: true,
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -108,139 +138,30 @@ export function CertificatesStep() {
                       <TextInput
                         control={control}
                         name={`resume.certificates.${index}.name`}
-                        placeholder="e.x. "
+                        placeholder="e.x. AWS Cloud Practitioner Level 1"
                         label="Certificate"
                       />
                       <TextInput
                         control={control}
                         name={`resume.certificates.${index}.issuer`}
-                        placeholder="e.x. Business management"
+                        placeholder="e.x. Amazon Web Services"
                         label="Issuing authority"
                       />
                     </div>
                     <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
                       <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
-                        <FormField
+                        <DatePicker
                           control={control}
                           name={`resume.certificates.${index}.date`}
-                          render={({ field }) => (
-                            <FormItem className="w-full">
-                              <FormLabel className="inline-flex gap-2 items-center">
-                                <span>Date</span>
-                                <MonthPicker
-                                  currentValue={field.value}
-                                  setValue={(expr: string) => {
-                                    if (autoSort) {
-                                      for (let i = 0; i < fields.length; i++) {
-                                        if (i < index) {
-                                          // convert dates
-                                          const dateA = convertDate(
-                                            fields[i].date
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA > dateB) {
-                                            setValue(
-                                              `resume.certificates.${index}.date`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        } else if (i > index) {
-                                          const dateA = convertDate(
-                                            fields[i].date
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA < dateB) {
-                                            setValue(
-                                              `resume.certificates.${index}.date`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        }
-                                      }
-                                    }
-                                    setValue(
-                                      `resume.certificates.${index}.date`,
-                                      expr,
-                                      {
-                                        shouldDirty: true,
-                                      }
-                                    );
-                                  }}
-                                />
-                              </FormLabel>
-                              <FormControl>
-                                <InputMask
-                                  placeholder="MM/YYYY"
-                                  {...field}
-                                  mask="99/9999"
-                                  onChange={(evt) => {
-                                    const expr = evt.currentTarget.value;
-                                    if (autoSort) {
-                                      for (let i = 0; i < fields.length; i++) {
-                                        if (i < index) {
-                                          // convert dates
-                                          const dateA = convertDate(
-                                            fields[i].date
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA > dateB) {
-                                            setValue(
-                                              `resume.certificates.${index}.date`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        } else if (i > index) {
-                                          const dateA = convertDate(
-                                            fields[i].date
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA < dateB) {
-                                            setValue(
-                                              `resume.certificates.${index}.date`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        }
-                                      }
-                                    }
-                                    setValue(
-                                      `resume.certificates.${index}.date`,
-                                      expr,
-                                      {
-                                        shouldDirty: true,
-                                      }
-                                    );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
+                          label="Date"
+                          onChange={(expr) => {
+                            sortFn(index, expr, autoSort);
+                          }}
                         />
                         <TextInput
                           control={control}
                           name={`resume.certificates.${index}.url`}
-                          placeholder="e.x. Business management"
+                          placeholder="e.x. https://aws.com"
                           label="URL/Website"
                         />
                       </div>
@@ -299,7 +220,14 @@ export function CertificatesStep() {
                 <Switch
                   disabled={fields.length < 2}
                   checked={field.value}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    if (checked) {
+                      if (fields.length) {
+                        sortFn(0, fields[0].date, true);
+                      }
+                    }
+                  }}
                 />
               </FormControl>
             </FormItem>

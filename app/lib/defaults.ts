@@ -13,6 +13,7 @@ export const DEFAULT_SECTION_TITLES: Record<Step, string> = {
   interests: "Interests",
   summary: "Summary",
   tailor: "Job tailor",
+  preview: "Preview",
   finish: "Finish",
 };
 
@@ -27,6 +28,7 @@ export const DEFAULT_SECTIONT_TITLES_ES: Record<Step, string> = {
   interests: "Intereses",
   summary: "Resumen",
   tailor: "Job tailor",
+  preview: "Avance",
   finish: "Finalizar",
 };
 
@@ -38,6 +40,7 @@ export const DEFAULT_STEPS: Step[] = [
   "education",
   "skills",
   "interests",
+  "preview",
   "finish",
 ];
 
@@ -69,6 +72,7 @@ export const DEFAULT_STEPS_SETUP = {
   interests: { title: DEFAULT_SECTION_TITLES.interests, enabled: false },
   summary: { title: DEFAULT_SECTION_TITLES.summary, enabled: true },
   tailor: { title: DEFAULT_SECTION_TITLES.tailor, enabled: true },
+  preview: { title: DEFAULT_SECTION_TITLES.preview, enabled: true },
   finish: { title: DEFAULT_SECTION_TITLES.finish, enabled: true },
 };
 
@@ -78,7 +82,9 @@ export const defaultResumeValues = (
 ): ResumeValues => ({
   meta: {
     title: DEFAULT_RESUME_TITLE,
+    maskBasics: false,
     paperSize: "LETTER",
+    template: "chicago",
     language,
     mode: "standard",
     tailor: { content: "", suggestions: {} },
@@ -110,6 +116,7 @@ export const defaultResumeValues = (
     accomplishments: [],
     summary: {
       asObjective: false,
+      objectiveTarget: "",
       content: "",
     },
   },

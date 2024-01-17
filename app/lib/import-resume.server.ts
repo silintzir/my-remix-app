@@ -176,19 +176,19 @@ export function getResumeValues(data: any) {
   );
 
   set(output, "resume.basics", {
-    firstName: get(data, "basics.firstName", ""),
-    lastName: get(data, "basics.lastName", ""),
-    email: get(data, "basics.email", ""),
-    phone: get(data, "basics.phone", ""),
+    firstName: get(data, "basics.firstName", "") || "",
+    lastName: get(data, "basics.lastName", "") || "",
+    email: get(data, "basics.email", "") || "",
+    phone: get(data, "basics.phone", "") || "",
     location: {
-      address: get(data, "basics.location.address", ""),
+      address: get(data, "basics.location.address", "") || "",
     },
-    url: get(data, "basics.url", ""),
+    url: get(data, "basics.url", "") || "",
   } satisfies BasicsValues);
 
   set(output, "resume.summary", {
     asObjective: false,
-    content: get(data, "summary.content"),
+    content: get(data, "summary.content", "") || "",
   } satisfies SummaryValues);
 
   set(
@@ -199,12 +199,12 @@ export function getResumeValues(data: any) {
       (w) =>
         ({
           uuid: v4(),
-          name: get(w, "name", ""),
-          position: get(w, "position", ""),
-          city: get(w, "city", ""),
-          state: get(w, "state", ""),
-          startDate: get(w, "startDate", ""),
-          endDate: get(w, "endDate", ""),
+          name: get(w, "name", "") || "",
+          position: get(w, "position", "") || "",
+          city: get(w, "city", "") || "",
+          state: get(w, "state", "") || "",
+          startDate: get(w, "startDate", "") || "",
+          endDate: get(w, "endDate", "") || "",
           bullets: map(get(w, "bullets", []), (b) => ({
             uuid: v4(),
             content: get(b, "content", ""),
@@ -221,14 +221,14 @@ export function getResumeValues(data: any) {
       (w) =>
         ({
           uuid: v4(),
-          institution: get(w, "institution", ""),
-          studyType: get(w, "studyType", ""),
-          area: get(w, "area", ""),
-          status: get(w, "status", "no_mention"),
-          city: get(w, "city", ""),
-          state: get(w, "state", ""),
-          startDate: get(w, "startDate", ""),
-          endDate: get(w, "endDate", ""),
+          institution: get(w, "institution", "") || "",
+          studyType: get(w, "studyType", "") || "",
+          area: get(w, "area", "") || "",
+          status: get(w, "status", "no_mention") || "",
+          city: get(w, "city", "") || "",
+          state: get(w, "state", "") || "",
+          startDate: get(w, "startDate", "") || "",
+          endDate: get(w, "endDate", "") || "",
           bullets: map(get(w, "bullets", []), (b) => ({
             uuid: v4(),
             content: get(b, "content", ""),
@@ -245,18 +245,17 @@ export function getResumeValues(data: any) {
       (c) =>
         ({
           uuid: v4(),
-          name: get(c, "name", ""),
-          issuer: get(c, "issuer", ""),
-          url: get(c, "url", ""),
-          date: get(c, "date", ""),
+          name: get(c, "name", "") || "",
+          issuer: get(c, "issuer", "") || "",
+          url: get(c, "url", "") || "",
+          date: get(c, "date", "") || "",
         } satisfies CertificateRecord)
     )
   );
 
   set(output, "meta.mode", "custom");
-  if (output.resume.certificates.length) {
-    output.meta.steps.certificates.enabled = true;
-  }
+  output.meta.steps.certificates.enabled =
+    output.resume.certificates.length > 0;
 
   set(
     output,
@@ -266,10 +265,11 @@ export function getResumeValues(data: any) {
       (c) =>
         ({
           uuid: v4(),
-          name: get(c, "name", ""),
+          name: get(c, "name", "") || "",
         } satisfies InterestRecord)
     )
   );
+  output.meta.steps.interests.enabled = output.resume.interests.length > 0;
 
   set(
     output,
@@ -279,11 +279,12 @@ export function getResumeValues(data: any) {
       (s) =>
         ({
           uuid: v4(),
-          name: get(s, "name", ""),
-          level: get(s, "level", ""),
+          name: get(s, "name", "") || "",
+          level: get(s, "level", "") || "",
         } satisfies SkillRecord)
     )
   );
+  output.meta.steps.skills.enabled = output.resume.skills.length > 0;
 
   set(
     output,
@@ -293,14 +294,12 @@ export function getResumeValues(data: any) {
       (c) =>
         ({
           uuid: v4(),
-          name: get(c, "name", ""),
+          name: get(c, "name", "") || "",
         } satisfies AccomplishmentRecord)
     )
   );
-
-  if (output.resume.accomplishments.length) {
-    output.meta.steps.accomplishments.enabled = true;
-  }
+  output.meta.steps.accomplishments.enabled =
+    output.resume.accomplishments.length > 0;
 
   return output;
 }

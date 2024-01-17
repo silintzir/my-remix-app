@@ -3,85 +3,186 @@ import type { StyleDictionary } from "pdfmake/interfaces";
 
 type StyleParams = {
   fontSize: number;
-}
+};
 
 export const pdfStyles = {
   chicago: ({ fontSize }: StyleParams): StyleDictionary => ({
     paragraph: {
-      fontSize,
+      fontSize: 10,
     },
     heading1: {
-      fontSize: fontSize + 3,
+      fontSize: 18,
       bold: true,
       alignment: "center",
-      lineHeight: 1.2,
     },
     subheading1: {
-      fontSize,
+      fontSize: 11,
       alignment: "center",
-      lineHeight: 1.2,
+    },
+    subheading2: {
+      // Section title
+      fontSize: 11,
+      alignment: "center",
+      italics: true,
     },
     heading2: {
+      // Company name
       bold: true,
-      fontSize: fontSize + 2,
-      lineHeight: 1.2,
+      fontSize: 13,
     },
     heading3: {
-      fontSize,
-      decoration: "underline",
-      lineHeight: 1.2,
+      // Job title and period
+      fontSize: 12,
+      bold: true,
+      marginBottom: 20,
+    },
+    heading4: {
+      fontSize: 11,
+      italics: true,
+    },
+  }),
+  executive: ({ fontSize }: StyleParams): StyleDictionary => ({
+    paragraph: {
+      fontSize: 10,
+      alignment: "center",
+    },
+    heading1: {
+      fontSize: 18,
+      bold: true,
+      alignment: "center",
+    },
+    subheading1: {
+      fontSize: 11,
+      alignment: "center",
+    },
+    subheading2: {
+      // Section title
+      fontSize: 11,
+      alignment: "center",
+      italics: true,
+    },
+    heading2: {
+      // Company name
+      bold: true,
+      alignment: "center",
+      fontSize: 13,
+    },
+    heading3: {
+      // Job title and period
+      fontSize: 12,
       bold: true,
     },
     heading4: {
-      fontSize,
-      bold: true,
+      fontSize: 11,
       italics: true,
     },
-  })
-}
+  }),
+  andreas: ({ fontSize }: StyleParams): StyleDictionary => ({
+    paragraph: {
+      fontSize: 10,
+      alignment: "center",
+    },
+    heading1: {
+      fontSize: 18,
+      bold: true,
+      alignment: "center",
+    },
+    subheading1: {
+      fontSize: 11,
+      alignment: "center",
+    },
+    subheading2: {
+      // Section title
+      fontSize: 11,
+      alignment: "center",
+      italics: true,
+    },
+    heading2: {
+      // Company name
+      bold: true,
+      alignment: "center",
+      fontSize: 13,
+    },
+    heading3: {
+      // Job title and period
+      fontSize: 12,
+      bold: true,
+    },
+    heading4: {
+      fontSize: 11,
+      italics: true,
+    },
+  }),
+};
 
 export const docxStyles = {
   chicago: (_config: StyleParams): IStylesOptions => ({
     default: {
+      document: {
+        run: {
+          size: "10pt",
+          font: "serif",
+        },
+      },
       heading1: {
         run: {
-          size: 28,
+          font: {
+            name: "serif",
+          },
+          size: 36,
           bold: true,
-          color: '#000000',
+          color: "#000000",
         },
         paragraph: {
           spacing: {
             before: 0,
-            after: 0
-          }
-        }
+            after: 0,
+          },
+        },
       },
       heading2: {
         run: {
           size: 26,
+          allCaps: true,
+          font: "serif",
           bold: true,
-          color: '#000000'
         },
         paragraph: {
           thematicBreak: true,
           spacing: {
-            after: 0
-          }
-        }
+            after: 0,
+          },
+        },
       },
       heading3: {
         run: {
-          size: 22,
+          font: {
+            name: "serif",
+          },
+          size: 24,
           bold: true,
-          color: '#000000'
         },
         paragraph: {
           spacing: {
-            after: 0
-          }
-        }
-      }
-    }
-
-  })
-}
+            after: 150,
+            before: 0,
+          },
+        },
+      },
+      heading4: {
+        run: {
+          font: {
+            name: "serif",
+          },
+          size: 22,
+        },
+        paragraph: {
+          spacing: {
+            after: 0,
+            before: 0,
+          },
+        },
+      },
+    },
+  }),
+};

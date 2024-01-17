@@ -11,6 +11,7 @@ import { TextareaInput } from "@/components/shadcn/TextareaInput";
 import { useFetcher } from "@remix-run/react";
 import { useAiContext } from "@/components/hooks/aiContext";
 import { TextAlternatives } from "@/components/shadcn/TextAlternatives";
+import { TextInput } from "@/components/shadcn/TextInput";
 
 export function SummaryStep() {
   const { control, watch, setValue } = useFormContext<ResumeValues>();
@@ -22,6 +23,7 @@ export function SummaryStep() {
 
   const summary = watch("resume.summary.content");
   const asObjective = watch("resume.summary.asObjective");
+  const objectiveTarget = watch("resume.summary.objectiveTarget");
 
   return (
     <div className="space-y-4">
@@ -41,17 +43,33 @@ export function SummaryStep() {
           </FormItem>
         )}
       />
+      {asObjective ? (
+        <TextInput
+          control={control}
+          name="resume.summary.objectiveTarget"
+          placeholder="e.x. Get hired by Marathon Staffing"
+          label="What is your target job"
+        />
+      ) : (
+        <TextInput
+          control={control}
+          name="meta.steps.summary.title"
+          placeholder="e.x. Senior Accountant"
+          label="Title of your summary section"
+        />
+      )}
+
       <TextareaInput
         control={control}
         rows={7}
         name="resume.summary.content"
         label={
           <div className="flex justify-between items-center">
-            <span>Summary</span>
+            <span>Content</span>
             <TextAlternatives
               fetcher={enhancer}
               endpoint="summary"
-              context={{ ...getContext(), asObjective }}
+              context={{ ...getContext(), asObjective, objectiveTarget }}
               original={summary || ""}
               buttonLabel="Suggest/Enhance"
               update={(text: string) => {

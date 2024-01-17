@@ -37,6 +37,7 @@ export class ChicagoDocxTemplate {
 
   basics: ContentProvider = () => {
     const {
+      meta: { maskBasics },
       resume: {
         basics: {
           location: { address },
@@ -48,21 +49,47 @@ export class ChicagoDocxTemplate {
         },
       },
     } = this.values;
-    return [
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        heading: HeadingLevel.HEADING_1,
-        children: [new TextRun(constr(" ", firstName, lastName))],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        children: [new TextRun(constr(" | ", phone, email, url))],
-      }),
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        children: [new TextRun(address)],
-      }),
-    ] satisfies FileChild[];
+    return maskBasics
+      ? [
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            children: [new TextRun(constr(" ", firstName, lastName))],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [new TextRun({ text: "Marathon Staffing" })],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: "Confidential document, not for distribution without prior permission.",
+                italics: true,
+              }),
+            ],
+          }),
+        ]
+      : ([
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            heading: HeadingLevel.HEADING_1,
+            children: [new TextRun(constr(" ", firstName, lastName))],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [new TextRun({ text: address })],
+          }),
+          new Paragraph({
+            alignment: AlignmentType.CENTER,
+            children: [
+              new TextRun({
+                text: constr(" | ", phone, email, url),
+                italics: true,
+              }),
+            ],
+          }),
+        ] satisfies FileChild[]);
   };
   accomplishments: ContentProvider = () => {
     const {
@@ -113,12 +140,31 @@ export class ChicagoDocxTemplate {
     );
 
     for (const group in p2) {
-      paragraphs.push(this.sectionTitle(group, HeadingLevel.HEADING_3));
+      paragraphs.push(
+        this.twoColumns(
+          [
+            new TextRun({
+              text: p2[group][0].name,
+            }),
+          ],
+          [
+            new TextRun({
+              text: constr(
+                ", ",
+                getReadableDateFromPicker(p2[group][0].city),
+                getReadableDateFromPicker(p2[group][0].state)
+              ),
+            }),
+          ],
+          HeadingLevel.HEADING_3,
+          HeadingLevel.HEADING_3
+        )
+      );
 
       for (const { position, startDate, endDate, bullets } of p2[group]) {
         paragraphs.push(
           this.twoColumns(
-            [new TextRun({ text: position, bold: true, italics: true })],
+            [new TextRun({ text: position, italics: true })],
             [
               new TextRun({
                 text: constr(
@@ -126,9 +172,10 @@ export class ChicagoDocxTemplate {
                   getReadableDateFromPicker(startDate),
                   getReadableDateFromPicker(endDate)
                 ),
-                italics: true,
               }),
-            ]
+            ],
+            HeadingLevel.HEADING_4,
+            HeadingLevel.HEADING_4
           )
         );
         paragraphs.push(...this.createBullets(map(bullets, "content")));
@@ -166,7 +213,28 @@ export class ChicagoDocxTemplate {
     );
 
     for (const group in p2) {
-      paragraphs.push(this.sectionTitle(group, HeadingLevel.HEADING_3));
+      paragraphs.push(
+        this.twoColumns(
+          [
+            new TextRun({
+              text: p2[group][0].institution,
+              bold: true,
+            }),
+          ],
+          [
+            new TextRun({
+              text: constr(
+                ", ",
+                getReadableDateFromPicker(p2[group][0].city),
+                getReadableDateFromPicker(p2[group][0].state)
+              ),
+              bold: true,
+            }),
+          ],
+          HeadingLevel.HEADING_3,
+          HeadingLevel.HEADING_3
+        )
+      );
 
       for (const { area, studyType, startDate, endDate, bullets } of p2[
         group
@@ -176,7 +244,6 @@ export class ChicagoDocxTemplate {
             [
               new TextRun({
                 text: constr(", ", area, studyType),
-                bold: true,
                 italics: true,
               }),
             ],
@@ -187,9 +254,10 @@ export class ChicagoDocxTemplate {
                   getReadableDateFromPicker(startDate),
                   getReadableDateFromPicker(endDate)
                 ),
-                italics: true,
               }),
-            ]
+            ],
+            HeadingLevel.HEADING_4,
+            HeadingLevel.HEADING_4
           )
         );
         paragraphs.push(...this.createBullets(map(bullets, "content")));
@@ -289,7 +357,7 @@ export class ChicagoDocxTemplate {
       },
     } = this.values;
 
-    if (!enabled || !content.trim().length) {
+    if (!enabled || !content || !content.trim().length) {
       return [];
     }
 
@@ -317,14 +385,19 @@ export class ChicagoDocxTemplate {
     );
   }
 
-  private sectionTitle(title: string, heading: any = HeadingLevel.HEADING_2) {
+  private sectionTitle(title: string) {
     return new Paragraph({
-      heading,
+      heading: HeadingLevel.HEADING_2,
       children: [new TextRun(title)],
     });
   }
 
-  private twoColumns(left: TextRun[], right: TextRun[]) {
+  private twoColumns(
+    left: TextRun[],
+    right: TextRun[],
+    hLeft?: any,
+    hRight?: any
+  ) {
     return new Table({
       columnWidths: [5400, 5400],
       margins: {
@@ -358,6 +431,7 @@ export class ChicagoDocxTemplate {
             new TableCell({
               children: [
                 new Paragraph({
+                  ...(hLeft ? { heading: hLeft } : {}),
                   children: left,
                 }),
               ],
@@ -369,6 +443,7 @@ export class ChicagoDocxTemplate {
               },
               children: [
                 new Paragraph({
+                  ...(hRight ? { heading: hRight } : {}),
                   alignment: AlignmentType.RIGHT,
                   children: right,
                 }),

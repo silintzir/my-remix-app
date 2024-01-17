@@ -29,7 +29,9 @@ export const accomplishmentSchema = z.object({
 
 export const summarySchema = z.object({
   asObjective: z.boolean(),
-  content: z.string(),
+  objectiveTarget: z.string().optional(),
+  title: z.string().optional(),
+  content: z.string().optional(),
 });
 
 export const adapterSuggestionSchema = z.object({
@@ -93,12 +95,14 @@ export const stepConfigSchema = z.object({
 export const resumeSchema = z.object({
   meta: z.object({
     order: z.array(z.string()),
+    maskBasics: z.boolean().optional().default(false),
     title: z.string(),
     paperSize: z.enum(["A4", "LETTER"]),
     fontSize: z.number(),
     language: z.enum(["en", "es"]),
     mode: z.enum(["standard", "custom"]),
     tailor: tailorSchema,
+    template: z.enum(["chicago", "executive", "andreas"]),
     autoSort: z.object({
       work: z.boolean().optional().default(true),
       education: z.boolean().optional().default(true),
@@ -115,6 +119,7 @@ export const resumeSchema = z.object({
       accomplishments: stepConfigSchema,
       summary: stepConfigSchema,
       tailor: stepConfigSchema,
+      preview: stepConfigSchema,
       finish: stepConfigSchema,
     }),
   }),

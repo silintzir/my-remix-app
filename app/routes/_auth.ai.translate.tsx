@@ -1,9 +1,8 @@
 import { NoMemory } from "@/lib/ai/bot.server";
 import { authenticatedFetch } from "@/lib/strapi.server";
-import { StrapiLongResume } from "@/lib/types";
+import type { ResumeValues, StrapiLongResume } from "@/lib/types";
 import { json, type ActionFunctionArgs } from "@remix-run/node";
 import chalk from "chalk";
-import { get } from "lodash-es";
 
 export async function action({ request }: ActionFunctionArgs) {
   const { id, target } = Object.fromEntries(
@@ -28,9 +27,6 @@ export async function action({ request }: ActionFunctionArgs) {
       resume: any;
       steps: any;
     };
-    console.log(response);
-
-    // record.data.attributes.document.meta.steps = response.
 
     await authenticatedFetch(request, `/api/resumes/${id}`, {
       method: "PUT",
@@ -40,9 +36,11 @@ export async function action({ request }: ActionFunctionArgs) {
             ...document,
             resume: response.resume,
             meta: {
+              ...document.meta,
+              language: target === "Spanish" ? "es" : "en",
               steps: response.steps,
             },
-          },
+          } satisfies ResumeValues,
         },
       }),
     });

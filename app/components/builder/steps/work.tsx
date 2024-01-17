@@ -3,7 +3,6 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
-import { MonthPicker } from "@/components/month-picker";
 import { SelectInput } from "@/components/shadcn/SelectInput";
 import { TextInput } from "@/components/shadcn/TextInput";
 import {
@@ -18,7 +17,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -32,8 +30,8 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
-import { InputMask } from "@/components/ui/input-mask";
 import { convertDate } from "@/lib/templates/helpers/common";
+import { DatePicker } from "@/components/shadcn/MyDatePicker";
 
 export function WorkStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -55,6 +53,39 @@ export function WorkStep() {
   };
 
   const autoSort = watch("meta.autoSort.work");
+
+  const sortFn = (index: number, expr: string, autoSort: boolean) => {
+    if (autoSort) {
+      for (let i = 0; i < fields.length; i++) {
+        if (i < index) {
+          // convert dates
+          const dateA = convertDate(fields[i].endDate);
+          const dateB = convertDate(expr);
+          if (dateA < dateB) {
+            setValue(`resume.work.${index}.endDate`, expr, {
+              shouldDirty: true,
+            });
+            swap(i, index);
+            return;
+          }
+        } else if (i > index) {
+          const dateA = convertDate(fields[i].endDate);
+          const dateB = convertDate(expr);
+          if (dateA > dateB) {
+            setValue(`resume.work.${index}.endDate`, expr, {
+              shouldDirty: true,
+            });
+            swap(i, index);
+            return;
+          }
+        }
+      }
+    }
+
+    setValue(`resume.work.${index}.endDate`, expr, {
+      shouldDirty: true,
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -116,179 +147,45 @@ export function WorkStep() {
                         label="Job title/Position"
                       />
                     </div>
-                    <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
-                      <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
-                        <FormField
-                          control={control}
-                          name={`resume.work.${index}.startDate`}
-                          render={({ field }) => (
-                            <FormItem className="w-full">
-                              <FormLabel className="inline-flex gap-2 items-center">
-                                <span>Start date</span>
-                                <MonthPicker
-                                  currentValue={field.value}
-                                  setValue={(expr: string) => {
-                                    if (autoSort) {
-                                      for (let i = 0; i < fields.length; i++) {
-                                        if (i < index) {
-                                          // convert dates
-                                          const dateA = convertDate(
-                                            fields[i].startDate
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA > dateB) {
-                                            setValue(
-                                              `resume.work.${index}.startDate`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        } else if (i > index) {
-                                          const dateA = convertDate(
-                                            fields[i].startDate
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA < dateB) {
-                                            setValue(
-                                              `resume.work.${index}.startDate`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        }
-                                      }
-                                    }
-
-                                    setValue(
-                                      `resume.work.${index}.startDate`,
-                                      expr,
-                                      {
-                                        shouldDirty: true,
-                                      }
-                                    );
-                                  }}
-                                />
-                              </FormLabel>
-                              <FormControl>
-                                <InputMask
-                                  placeholder="MM/YYYY"
-                                  {...field}
-                                  mask="99/9999"
-                                  onChange={(evt) => {
-                                    const expr = evt.currentTarget.value;
-                                    if (autoSort) {
-                                      for (let i = 0; i < fields.length; i++) {
-                                        if (i < index) {
-                                          // convert dates
-                                          const dateA = convertDate(
-                                            fields[i].startDate
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA > dateB) {
-                                            setValue(
-                                              `resume.work.${index}.startDate`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        } else if (i > index) {
-                                          const dateA = convertDate(
-                                            fields[i].startDate
-                                          );
-                                          const dateB = convertDate(expr);
-                                          if (dateA < dateB) {
-                                            setValue(
-                                              `resume.work.${index}.startDate`,
-                                              expr,
-                                              {
-                                                shouldDirty: true,
-                                              }
-                                            );
-                                            swap(i, index);
-                                            return;
-                                          }
-                                        }
-                                      }
-                                    }
-                                    setValue(
-                                      `resume.work.${index}.startDate`,
-                                      expr,
-                                      {
-                                        shouldDirty: true,
-                                      }
-                                    );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={control}
-                          name={`resume.work.${index}.endDate`}
-                          render={({ field }) => (
-                            <FormItem className="w-full">
-                              <FormLabel className="inline-flex gap-2 items-center">
-                                <span>End date</span>
-                                <MonthPicker
-                                  currentValue={field.value}
-                                  setValue={(expr: string) => {
-                                    setValue(
-                                      `resume.work.${index}.endDate`,
-                                      expr,
-                                      {
-                                        shouldDirty: true,
-                                      }
-                                    );
-                                  }}
-                                  toPresent
-                                  toPresentText="Currently work here"
-                                />
-                              </FormLabel>
-                              <FormControl>
-                                <InputMask
-                                  placeholder="MM/YYYY"
-                                  {...field}
-                                  mask="99/9999"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="flex gap-2 w-full sm:flex-8">
-                        <TextInput
-                          control={control}
-                          name={`resume.work.${index}.city`}
-                          placeholder="e.x. Miami"
-                          label="City"
-                        />
-                        <SelectInput
-                          className="w-48"
-                          options={map(usStateCodes, (s) => ({
-                            label: s,
-                            value: s,
-                          }))}
-                          control={control}
-                          name={`resume.work.${index}.state`}
-                          label="State"
-                          placeholder="Select state"
-                        />
-                      </div>
+                    <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
+                      <DatePicker
+                        control={control}
+                        name={`resume.work.${index}.startDate`}
+                        label="Start date"
+                        onChange={(expr: string) => {
+                          setValue(`resume.work.${index}.startDate`, expr, {
+                            shouldDirty: true,
+                          });
+                        }}
+                      />
+                      <DatePicker
+                        control={control}
+                        name={`resume.work.${index}.endDate`}
+                        label="End date"
+                        showToPresent
+                        onChange={(expr: string) => {
+                          sortFn(index, expr, autoSort);
+                        }}
+                      />
+                    </div>
+                    <div className="flex gap-2 w-full sm:flex-8">
+                      <TextInput
+                        control={control}
+                        name={`resume.work.${index}.city`}
+                        placeholder="e.x. Miami"
+                        label="City"
+                      />
+                      <SelectInput
+                        className="w-48"
+                        options={map(usStateCodes, (s) => ({
+                          label: s,
+                          value: s,
+                        }))}
+                        control={control}
+                        name={`resume.work.${index}.state`}
+                        label="State"
+                        placeholder="Select state"
+                      />
                     </div>
                     <Separator />
                     {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
@@ -347,7 +244,14 @@ export function WorkStep() {
                 <Switch
                   disabled={fields.length < 2}
                   checked={field.value}
-                  onCheckedChange={field.onChange}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    if (checked) {
+                      if (fields.length) {
+                        sortFn(0, fields[0].endDate, true);
+                      }
+                    }
+                  }}
                 />
               </FormControl>
             </FormItem>

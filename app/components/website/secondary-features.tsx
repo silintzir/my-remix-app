@@ -12,7 +12,7 @@ import clsx from "clsx";
 export function SecondaryFeatures() {
   return (
     <section
-      id="secondary-features"
+      id="solutions"
       aria-label="Features for simplifying everyday business tasks"
       className="pb-12 pt-12 sm:pb-20 sm:pt-32 lg:pb-32"
     >

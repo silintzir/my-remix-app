@@ -61,9 +61,6 @@ const uploadStreamToS3 = async (
     { expiresIn: 15 * 60 }
   );
 
-  // return key;
-  //
-
   return url;
 };
 
@@ -173,7 +170,7 @@ export async function parseFile(fileUrl: string) {
           studyType: ti.length ? ac : "",
           area: ti.length ? ti : ac,
           startDate: sd ? transformFullDate(sd) : "",
-          endDate: ed ? transformFullDate(ed) : "",
+          endDate: ed ? transformFullDate(ed) : "Present",
           city: get(e, "location.city", "") || "",
           state: re && statesMap[re] ? statesMap[re] : re,
           status: ed ? "graduated" : "ongoing",
@@ -201,7 +198,7 @@ export async function parseFile(fileUrl: string) {
           uuid: v4(),
           name: get(e, "company", "") || "",
           startDate: sd ? transformFullDate(sd) : "",
-          endDate: ed ? transformFullDate(ed) : "",
+          endDate: ed ? transformFullDate(ed) : "Present",
           position: get(e, "title", "") || "",
           city: get(e, "location.city", "") || "",
           state: re && statesMap[re] ? statesMap[re] : re,

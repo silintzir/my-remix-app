@@ -2,7 +2,7 @@ import { Download } from "lucide-react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
 import getDefinition from "@/lib/templates/pdf.client";
-import type { ResumeValues } from "@/lib/types";
+import type { ResumeValues, Template } from "@/lib/types";
 import filenamify from "filenamify";
 
 import pdfMake from "pdfmake/build/pdfmake.js";
@@ -15,18 +15,20 @@ type Props = {
   values: ResumeValues;
   isSample?: boolean;
   fontSize?: number;
+  template?: Template;
 };
 export function DownloadPdfButton({
   values,
   isSample = false,
   fontSize = DEFAULT_FONT_SIZE,
+  template = "chicago",
 }: Props) {
   const create = useCallback(() => {
-    const def = getDefinition(values, { isSample, fontSize });
+    const def = getDefinition(values, { isSample, fontSize, template });
     pdfMake
       .createPdf(def)
       .download(filenamify(`${values.meta.title} [resumerunner.io].pdf`));
-  }, [values, isSample, fontSize]);
+  }, [values, isSample, fontSize, template]);
 
   return (
     <Button onClick={create}>

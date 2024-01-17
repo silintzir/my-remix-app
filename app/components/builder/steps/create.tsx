@@ -112,12 +112,12 @@ export function CreateResume({ startOpen = false }: Props) {
               type="button"
               onClick={() => setMode("text")}
             />
-            <SourceButton
-              title="Import existing from file"
-              description="Upload your resume file and improve it"
-              type="button"
-              onClick={() => setMode("upload")}
-            />
+            {/* <SourceButton */}
+            {/*   title="Import existing from file" */}
+            {/*   description="Upload your resume file and improve it" */}
+            {/*   type="button" */}
+            {/*   onClick={() => setMode("upload")} */}
+            {/* /> */}
           </div>
         </DialogContent>
       )}

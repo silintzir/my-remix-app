@@ -58,7 +58,7 @@ export class NoMemory {
     this._chain = new OpenAI({
       modelName: "gpt-4",
       openAIApiKey: process.env.OPENAI_API_KEY,
-      maxTokens: 2400,
+      maxTokens: 4096,
       temperature,
     });
   }

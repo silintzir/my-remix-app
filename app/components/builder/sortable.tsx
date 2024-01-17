@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { GripVertical } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import type { ReactNode } from "react";
 import {
   SortableContainer,
@@ -19,7 +19,7 @@ export const SortableList = SortableContainer(
 ) as any;
 export const SortableHandle = Handle(() => (
   <button title="Drag to reorder">
-    <GripVertical className="w-6 h-6" />
+    <ArrowUpDown className="w-6 h-6" />
   </button>
 ));
 export const SortableItem = SortableElement(

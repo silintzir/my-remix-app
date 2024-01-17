@@ -1,5 +1,5 @@
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
-import type { ResumeValues, Step } from "@/lib/types";
+import type { ResumeValues, Step, Template } from "@/lib/types";
 import {
   certificateDisplay,
   constr,
@@ -33,6 +33,7 @@ class ChicagoPdfTemplate {
 
   basics = (): Content[] => {
     const {
+      meta: { maskBasics },
       resume: {
         basics: {
           location: { address },
@@ -46,9 +47,19 @@ class ChicagoPdfTemplate {
     } = this.values;
 
     const output: Content = [];
-    pine(output, constr(" ", firstName, lastName), "heading1");
-    pine(output, constr(" | ", phone, email, url), "subheading1");
-    pine(output, address, "subheading1");
+    if (maskBasics) {
+      pine(output, constr(" ", firstName, lastName), "heading1");
+      pine(output, "Marathon Staffing", "subheading1");
+      pine(
+        output,
+        "Confidential document, not for distribution without prior permission.",
+        "subheading2"
+      );
+    } else {
+      pine(output, constr(" ", firstName, lastName), "heading1");
+      pine(output, address, "subheading1");
+      pine(output, constr(" | ", phone, email, url), "subheading2");
+    }
 
     return output;
   };
@@ -162,7 +173,7 @@ class ChicagoPdfTemplate {
   summary = (): Content[] => {
     const {
       resume: {
-        summary: { content },
+        summary: { content, asObjective },
       },
       meta: {
         steps: {
@@ -177,7 +188,13 @@ class ChicagoPdfTemplate {
     }
 
     output.push(
-      getHeaderWithLine(title.length ? title : DEFAULT_SECTION_TITLES.summary)
+      getHeaderWithLine(
+        title.length
+          ? asObjective
+            ? "Objective"
+            : title
+          : DEFAULT_SECTION_TITLES.summary
+      )
     );
     output.push({ text: content, style: "paragraph" });
 
@@ -210,7 +227,21 @@ class ChicagoPdfTemplate {
     const stacks = [];
     for (const group in p2) {
       const stack = [];
-      stack.push({ text: group, style: "heading3" });
+      stack.push(
+        get2ColsSpaceBetween(
+          {
+            text: p2[group][0].institution,
+            style: "heading3",
+            alignment: "left",
+          },
+          {
+            text: constr(", ", p2[group][0].city, p2[group][0].state),
+            style: "heading3",
+            alignment: "right",
+          },
+          10
+        )
+      );
 
       for (const { area, studyType, startDate, endDate, bullets } of p2[
         group
@@ -228,8 +259,6 @@ class ChicagoPdfTemplate {
                 getReadableDateFromPicker(startDate),
                 getReadableDateFromPicker(endDate)
               ),
-              italics: true,
-              fontSize: 11,
             }
           )
         );
@@ -283,7 +312,21 @@ class ChicagoPdfTemplate {
     const stacks = [];
     for (const group in p2) {
       const stack = [];
-      stack.push({ text: group, style: "heading3" });
+      stack.push(
+        get2ColsSpaceBetween(
+          {
+            text: p2[group][0].name,
+            style: "heading3",
+            alignment: "left",
+          },
+          {
+            text: constr(", ", p2[group][0].city, p2[group][0].state),
+            style: "heading3",
+            alignment: "right",
+          },
+          2
+        )
+      );
 
       for (const { position, startDate, endDate, bullets } of p2[group]) {
         stack.push(
@@ -295,8 +338,6 @@ class ChicagoPdfTemplate {
                 getReadableDateFromPicker(startDate),
                 getReadableDateFromPicker(endDate)
               ),
-              italics: true,
-              fontSize: 11,
             }
           )
         );
@@ -334,17 +375,777 @@ class ChicagoPdfTemplate {
   }
 }
 
+class ExecutivePdfTemplate extends ChicagoPdfTemplate {
+  summary = (): Content[] => {
+    const {
+      resume: {
+        summary: { content, asObjective },
+      },
+      meta: {
+        steps: {
+          summary: { title, enabled },
+        },
+      },
+    } = this.values;
+    const output: Content[] = [];
+
+    if (!enabled || !content || !content.trim().length) {
+      return output;
+    }
+
+    output.push({
+      text: (title.length
+        ? asObjective
+          ? "Objective"
+          : "Summary"
+        : DEFAULT_SECTION_TITLES.summary
+      ).toUpperCase(),
+      style: "heading2",
+    });
+    output.push({ text: content, style: "paragraph", marginBottom: 12 });
+
+    return output;
+  };
+  work: ContentProvider = () => {
+    const {
+      resume: { work },
+      meta: {
+        steps: {
+          work: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyWork(work);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    // group by employer/location
+    const p1 = map(records, (w) => ({
+      ...w,
+      group: constr(", ", w.name, constr(" ", w.city, w.state)),
+    }));
+    const p2 = groupBy(p1, "group");
+
+    const stacks = [];
+    for (const group in p2) {
+      const stack = [];
+      stacks.push({
+        text: constr(
+          ", ",
+          p2[group][0].name,
+          constr(", ", p2[group][0].city, p2[group][0].state)
+        ),
+        style: "heading3",
+      } satisfies Content);
+
+      for (const { position, startDate, endDate, bullets } of p2[group]) {
+        stacks.push({
+          text: [
+            { text: position, bold: true },
+            { text: ", " },
+            {
+              text: constr(
+                " - ",
+                getReadableDateFromPicker(startDate),
+                getReadableDateFromPicker(endDate)
+              ),
+            },
+          ],
+        });
+        stack.push(
+          map(bullets, (b) => {
+            return {
+              text: b.content,
+            };
+          })
+        );
+      }
+
+      stacks.push({
+        stack,
+        marginBottom: 8,
+      });
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.work
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      {
+        stack: stacks,
+        style: "paragraph",
+      },
+    ];
+  };
+  education: ContentProvider = () => {
+    const {
+      resume: { education },
+      meta: {
+        steps: {
+          education: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyEducation(education);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    // group by employer/location
+    const p1 = map(records, (w) => ({
+      ...w,
+      group: constr(", ", w.institution, constr(" ", w.city, w.state)),
+    }));
+    const p2 = groupBy(p1, "group");
+
+    const stacks = [];
+    for (const group in p2) {
+      const stack = [];
+      stacks.push({
+        text: constr(
+          ", ",
+          p2[group][0].institution,
+          constr(", ", p2[group][0].city, p2[group][0].state)
+        ),
+        style: "heading3",
+      } satisfies Content);
+
+      for (const { area, studyType, startDate, endDate, bullets } of p2[
+        group
+      ]) {
+        stacks.push({
+          text: [
+            { text: constr(", ", area, studyType), bold: true },
+            { text: ", " },
+            {
+              text: constr(
+                " - ",
+                getReadableDateFromPicker(startDate),
+                getReadableDateFromPicker(endDate)
+              ),
+            },
+          ],
+        });
+        stack.push(
+          map(bullets, (b) => {
+            return {
+              text: b.content,
+            };
+          })
+        );
+      }
+
+      stacks.push({
+        stack,
+        marginBottom: 8,
+      });
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.education
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      {
+        stack: stacks,
+        style: "paragraph",
+      },
+    ];
+  };
+  skills: ContentProvider = () => {
+    const {
+      resume: { skills },
+      meta: {
+        steps: {
+          skills: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptySkills(skills);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.skills
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      {
+        text: constr(", ", ...map(records, skillDisplay)),
+        style: "paragraph",
+        marginBottom: 12,
+      },
+    ];
+  };
+  certificates: ContentProvider = () => {
+    const {
+      resume: { certificates },
+      meta: {
+        steps: {
+          certificates: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyCertificates(certificates);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.certificates
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      ...map(records, (r) => {
+        return { text: certificateDisplay(r, " - "), style: "paragraph" };
+      }),
+    ];
+  };
+  accomplishments = (): Content[] => {
+    const {
+      resume: { accomplishments },
+      meta: {
+        steps: {
+          accomplishments: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyAccomplishments(accomplishments);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.accomplishments
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+        marginTop: 12,
+      },
+      ...map(records, (r) => ({
+        text: r.name,
+        style: "paragraph",
+      })),
+    ];
+  };
+
+  interests = (): Content[] => {
+    const {
+      resume: { interests },
+      meta: {
+        steps: {
+          interests: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyInterests(interests);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.interests
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+        marginTop: 12,
+      },
+      {
+        text: constr(", ", ...map(records, (i) => i.name)),
+        style: "paragraph",
+      },
+    ];
+  };
+  basics = (): Content[] => {
+    const {
+      resume: {
+        basics: {
+          location: { address },
+          firstName,
+          lastName,
+          email,
+          phone,
+          url,
+        },
+      },
+    } = this.values;
+
+    return [
+      {
+        text: constr(" ", firstName, lastName),
+        style: "heading1",
+      },
+      {
+        marginTop: 6,
+        marginBottom: 12,
+        table: {
+          widths: ["*"],
+          body: [
+            [
+              {
+                alignment: "justify",
+                columns: [
+                  { text: address, alignment: "left", width: "35%" },
+                  { text: "", alignment: "center", width: "30%" },
+                  {
+                    text: constr(" | ", phone, email, url),
+                    alignment: "right",
+                    width: "35%",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        layout: {
+          paddingLeft: () => 0,
+          paddingRight: () => 0,
+          paddingTop: () => 0,
+          paddingBottom: () => 4,
+          hLineWidth: (i) => (i === 1 ? 1 : 0),
+          vLineWidth: () => 0,
+        },
+      },
+    ];
+  };
+}
+
+class AndreasPdfTemplate extends ChicagoPdfTemplate {
+  summary = (): Content[] => {
+    const {
+      resume: {
+        summary: { content, asObjective },
+      },
+      meta: {
+        steps: {
+          summary: { title, enabled },
+        },
+      },
+    } = this.values;
+    const output: Content[] = [];
+
+    if (!enabled || !content || !content.trim().length) {
+      return output;
+    }
+
+    output.push({
+      text: (title.length
+        ? asObjective
+          ? "Objective"
+          : "Summary"
+        : DEFAULT_SECTION_TITLES.summary
+      ).toUpperCase(),
+      style: "heading2",
+    });
+    output.push({ text: content, style: "paragraph", marginBottom: 12 });
+
+    return output;
+  };
+  work: ContentProvider = () => {
+    const {
+      resume: { work },
+      meta: {
+        steps: {
+          work: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyWork(work);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    // group by employer/location
+    const p1 = map(records, (w) => ({
+      ...w,
+      group: constr(", ", w.name, constr(" ", w.city, w.state)),
+    }));
+    const p2 = groupBy(p1, "group");
+
+    const stacks = [];
+    for (const group in p2) {
+      const stack = [];
+      stacks.push({
+        text: constr(
+          ", ",
+          p2[group][0].name,
+          constr(", ", p2[group][0].city, p2[group][0].state)
+        ),
+        style: "heading3",
+      } satisfies Content);
+
+      for (const { position, startDate, endDate, bullets } of p2[group]) {
+        stacks.push({
+          text: [
+            { text: position, bold: true },
+            { text: ", " },
+            {
+              text: constr(
+                " - ",
+                getReadableDateFromPicker(startDate),
+                getReadableDateFromPicker(endDate)
+              ),
+            },
+          ],
+        });
+        stack.push(
+          map(bullets, (b) => {
+            return {
+              text: b.content,
+            };
+          })
+        );
+      }
+
+      stacks.push({
+        stack,
+        marginBottom: 8,
+      });
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.work
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      {
+        stack: stacks,
+        style: "paragraph",
+      },
+    ];
+  };
+  education: ContentProvider = () => {
+    const {
+      resume: { education },
+      meta: {
+        steps: {
+          education: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyEducation(education);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    // group by employer/location
+    const p1 = map(records, (w) => ({
+      ...w,
+      group: constr(", ", w.institution, constr(" ", w.city, w.state)),
+    }));
+    const p2 = groupBy(p1, "group");
+
+    const stacks = [];
+    for (const group in p2) {
+      const stack = [];
+      stacks.push({
+        text: constr(
+          ", ",
+          p2[group][0].institution,
+          constr(", ", p2[group][0].city, p2[group][0].state)
+        ),
+        style: "heading3",
+      } satisfies Content);
+
+      for (const { area, studyType, startDate, endDate, bullets } of p2[
+        group
+      ]) {
+        stacks.push({
+          text: [
+            { text: constr(", ", area, studyType), bold: true },
+            { text: ", " },
+            {
+              text: constr(
+                " - ",
+                getReadableDateFromPicker(startDate),
+                getReadableDateFromPicker(endDate)
+              ),
+            },
+          ],
+        });
+        stack.push(
+          map(bullets, (b) => {
+            return {
+              text: b.content,
+            };
+          })
+        );
+      }
+
+      stacks.push({
+        stack,
+        marginBottom: 8,
+      });
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.education
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      {
+        stack: stacks,
+        style: "paragraph",
+      },
+    ];
+  };
+  skills: ContentProvider = () => {
+    const {
+      resume: { skills },
+      meta: {
+        steps: {
+          skills: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptySkills(skills);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.skills
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      {
+        text: constr(", ", ...map(records, skillDisplay)),
+        style: "paragraph",
+        marginBottom: 12,
+      },
+    ];
+  };
+  certificates: ContentProvider = () => {
+    const {
+      resume: { certificates },
+      meta: {
+        steps: {
+          certificates: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyCertificates(certificates);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.certificates
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+      },
+      ...map(records, (r) => {
+        return { text: certificateDisplay(r, " - "), style: "paragraph" };
+      }),
+    ];
+  };
+  accomplishments = (): Content[] => {
+    const {
+      resume: { accomplishments },
+      meta: {
+        steps: {
+          accomplishments: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyAccomplishments(accomplishments);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.accomplishments
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+        marginTop: 12,
+      },
+      ...map(records, (r) => ({
+        text: r.name,
+        style: "paragraph",
+      })),
+    ];
+  };
+
+  interests = (): Content[] => {
+    const {
+      resume: { interests },
+      meta: {
+        steps: {
+          interests: { title, enabled },
+        },
+      },
+    } = this.values;
+
+    const records = nonEmptyInterests(interests);
+
+    if (!enabled || !records.length) {
+      return [];
+    }
+
+    return [
+      {
+        text: (title.length
+          ? title
+          : DEFAULT_SECTION_TITLES.interests
+        ).toUpperCase(),
+        style: "heading2",
+        marginBottom: 4,
+        marginTop: 12,
+      },
+      {
+        text: constr(", ", ...map(records, (i) => i.name)),
+        style: "paragraph",
+      },
+    ];
+  };
+  basics = (): Content[] => {
+    const {
+      resume: {
+        basics: {
+          location: { address },
+          firstName,
+          lastName,
+          email,
+          phone,
+          url,
+        },
+      },
+    } = this.values;
+
+    return [
+      {
+        text: constr(" ", firstName, lastName),
+        style: "heading1",
+      },
+      {
+        marginTop: 6,
+        marginBottom: 12,
+        table: {
+          widths: ["*"],
+          body: [
+            [
+              {
+                alignment: "justify",
+                columns: [
+                  { text: address, alignment: "left", width: "35%" },
+                  { text: "", alignment: "center", width: "30%" },
+                  {
+                    text: constr(" | ", phone, email, url),
+                    alignment: "right",
+                    width: "35%",
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+        layout: {
+          paddingLeft: () => 0,
+          paddingRight: () => 0,
+          paddingTop: () => 0,
+          paddingBottom: () => 4,
+          hLineWidth: (i) => (i === 1 ? 1 : 0),
+          vLineWidth: () => 0,
+        },
+      },
+    ];
+  };
+}
+
 type DefConf = {
   isSample?: boolean;
   fontSize?: number;
+  template?: Template;
 };
 
 export default function getDefinition(
   data: ResumeValues,
-  { isSample = false, fontSize = 11 }: DefConf
+  { isSample = false, fontSize = 11, template = "chicago" }: DefConf
 ): TDocumentDefinitions {
-  const styles = pdfStyles.chicago({ fontSize });
-  const struct = new ChicagoPdfTemplate(data);
+  const styles =
+    template === "chicago"
+      ? pdfStyles.chicago({ fontSize })
+      : template === "andreas"
+      ? pdfStyles.andreas({ fontSize })
+      : pdfStyles.executive({ fontSize });
+  let struct: any;
+  switch (template) {
+    case "executive":
+      struct = new ExecutivePdfTemplate(data);
+      break;
+    case "andreas":
+      struct = new AndreasPdfTemplate(data);
+      break;
+    default:
+      struct = new ChicagoPdfTemplate(data);
+  }
 
   return {
     styles,

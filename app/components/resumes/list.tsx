@@ -26,61 +26,64 @@ export function ResumesList({ resumes }: Props) {
       </div>
       <Separator className="my-4 bg-gray-300" />
       <div className="flex flex-col gap-2">
-        {resumes.map((resume) => (
-          <div
-            key={resume.id}
-            className="border-muted bg-white border-2 rounded-md p-4 flex justify-between items-center shadow-lg"
-          >
-            <div className="flex justify-between w-full items-center">
-              <div className="space-y-2">
-                <div className="flex gap-1 items-center">
-                  <Link className="link" to={`/resumes/${resume.id}/edit`}>
-                    <h4 className="font-semibold text-lg flex gap-1">
-                      {get(resume, "attributes.document.meta.title", "")}
-                    </h4>
-                  </Link>
-                  <RenameResume
-                    id={resume.id}
-                    title={get(resume, "attributes.document.meta.title")}
+        {resumes.map((resume) => {
+          const language = get(
+            resume,
+            "attributes.document.meta.language",
+            "en"
+          );
+          const updatedAt = get(resume, "attributes.updatedAt", new Date());
+          return (
+            <div
+              key={resume.id}
+              className="border-muted bg-white border-2 rounded-md p-4 flex justify-between items-center shadow-lg"
+            >
+              <div className="flex justify-between w-full items-center">
+                <div className="space-y-2">
+                  <div className="flex gap-1 items-center">
+                    <Link
+                      className="link"
+                      to={`/resumes/${resume.id}/edit?step=preview`}
+                    >
+                      <h4 className="font-semibold text-lg flex gap-1">
+                        {get(resume, "attributes.document.meta.title", "")}
+                      </h4>
+                    </Link>
+                    <RenameResume
+                      id={resume.id}
+                      title={get(resume, "attributes.document.meta.title")}
+                    />
+                  </div>
+                  <div className="small muted flex gap-1">
+                    <span>
+                      <img
+                        src={language === "en" ? usFlag : esFlag}
+                        height="16"
+                        width="16"
+                        alt="Language"
+                      />
+                    </span>
+                    <Separator orientation="vertical" />
+                    <span>
+                      Last updated:{" "}
+                      {formatDistance(new Date(updatedAt), new Date(), {
+                        addSuffix: true,
+                      })}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <OpenPreview resumeId={resume.id} size="sm" variant="ghost" />
+                  <SecondaryActions
+                    resumeId={resume.id}
+                    size="sm"
+                    variant="ghost"
                   />
                 </div>
-                <div className="small muted flex gap-1">
-                  <span>
-                    <img
-                      src={
-                        resume.attributes.document.meta.language === "en"
-                          ? usFlag
-                          : esFlag
-                      }
-                      height="16"
-                      width="16"
-                      alt="Language"
-                    />
-                  </span>
-                  <Separator orientation="vertical" />
-                  <span>
-                    Last updated:{" "}
-                    {formatDistance(
-                      new Date(resume.attributes.updatedAt),
-                      new Date(),
-                      {
-                        addSuffix: true,
-                      }
-                    )}
-                  </span>
-                </div>
-              </div>
-              <div className="flex gap-1">
-                <OpenPreview resumeId={resume.id} size="sm" variant="ghost" />
-                <SecondaryActions
-                  resumeId={resume.id}
-                  size="sm"
-                  variant="ghost"
-                />
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

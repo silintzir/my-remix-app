@@ -2,14 +2,14 @@ import type { Content } from "pdfmake/interfaces";
 
 export function getHeaderWithLine(text: string): Content {
   return {
-    marginTop: 8,
-    marginBottom: 4,
+    marginTop: 12,
+    marginBottom: 6,
     table: {
       widths: ["*"],
       body: [
         [
           {
-            text,
+            text: text.toUpperCase(),
             style: "heading2",
           },
         ],
@@ -26,12 +26,15 @@ export function getHeaderWithLine(text: string): Content {
   };
 }
 
-export function get2ColsSpaceBetween(left: Content, right: Content) {
+export function get2ColsSpaceBetween(left: Content, right: Content, mb = 0) {
   return [
     {
       alignment: "justify",
-      columns: [left, { text: right, alignment: "right" }],
-      marginTop: 2,
+      columns: [
+        { text: left, alignment: "left", width: "65%" },
+        { text: right, alignment: "right" },
+      ],
+      marginBottom: mb,
     },
   ] satisfies Content;
 }
@@ -45,4 +48,3 @@ export function pine(arr: Content[], text: string, style: string) {
     style,
   });
 }
-

@@ -22,6 +22,17 @@ function deliverablePrompt(lang: Lang) {
   )}  that correspond to your suggestions.`;
 }
 
+function countWordsOr(sentence: string, ifEmpty = "10-15") {
+  if (sentence && sentence.length) {
+    // Split the sentence into words based on spaces
+    const words = sentence.split(/\s+/);
+    // Return the number of words
+    return words.filter(Boolean).length; // This also filters out any empty strings that might result from consecutive spaces
+  } else {
+    return ifEmpty;
+  }
+}
+
 export function createPrompt(
   step: Step,
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -34,7 +45,7 @@ export function createPrompt(
   toks.push(inputDescription(step));
   toks.push(inputFormatPrompt());
   toks.push(`${JSON.stringify(context)}. `);
-  toks.push(outputExpectation(step, context));
+  toks.push(outputExpectation(step, context, enhance));
   toks.push(enhancePrompt(enhance));
   toks.push(deliverablePrompt(lang));
   toks.push();
@@ -52,21 +63,38 @@ function inputDescription(step: Step) {
   }
 }
 
-function outputExpectation(step: Step, context: any) {
+function outputExpectation(step: Step, context: any, enhance: string) {
   switch (step) {
     case "education":
-      return "Suggest 5 sentences of 10-15 words each, avoiding any numbering, that describe some courses/projects that I could add to this education entry in my resume to make it look more professional. ";
+      return `Suggest 5 sentences of ${countWordsOr(
+        enhance
+      )} words each, avoiding any numbers or percentages, that describe some courses/projects that I could add to this education entry in my resume to make it look more professional. `;
     case "work":
-      return "Suggest 5 sentences of 10-15 words each, avoiding any numbering, that describe some highlights that I could add to this job position in my resume to make it look more professional. ";
+      return `Suggest 5 sentences of ${countWordsOr(
+        enhance
+      )} words each, avoiding any numbers or percentages, that describe some highlights that I could add to this job position in my resume to make it look more professional. `;
     case "skills":
-      return "Suggest 10 skills of at most 3 words each, avoiding any numbering, that I could add in the skills section of my my resume to make it look more professional. ";
+      return `Suggest 10 skills of at most ${countWordsOr(
+        enhance,
+        "3"
+      )} words each, avoiding any numbers or percentages, that I could add in the skills section of my my resume to make it look more professional. `;
     case "accomplishments":
-      return "Suggest 10 sentences of 10-14 words each, avoiding any numbering, that I could add as accomplishments/highlights in my resume to make it look more professional. ";
+      return `Suggest 10 sentences of ${countWordsOr(
+        enhance
+      )} words each, avoiding any numbers or percentages, that I could add as accomplishments/highlights in my resume to make it look more professional. `;
     case "interests":
-      return "Suggest 10 interests/hobbies of at most 3 words each, avoiding any numbering, that I could add in the interests/hobbies section of my my resume to make me look more attractive and interesting as a person. ";
+      return `Suggest 10 interests/hobbies of at most ${countWordsOr(
+        enhance,
+        "3"
+      )} words each, that I could add in the interests/hobbies section of my my resume to make me look more attractive and interesting as a person. `;
     case "summary":
       if (context.asObjective) {
-        return "Suggest 3 paragraphs, written in 3rd person with no verbs, of 30-50 words each, that I can use as the objective section in my resume to make it look more professional, attractive and interesting. ";
+        let output =
+          "Suggest 3 paragraphs, written in first person using no verbs, of 30-50 words each, that I can use as the objective section in my resume to make it look more professional, attractive and interesting. ";
+        if (context.objectiveTarget && context.objectiveTarget.length) {
+          output += ` My objective target can be described as follows: '${context.objectiveTarget}'. `;
+        }
+        return output;
       } else {
         return "Suggest 3 paragraphs, written in 3rd person with no verbs, of 30-50 words each, that I can use as the summary section in my resume to make it look more professional, attractive and interesting. ";
       }

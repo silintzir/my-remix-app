@@ -1,0 +1,115 @@
+{
+  "data": {
+    "resume": {
+      "basics": {
+        "firstName": "Dekara",
+        "lastName": "Heath",
+        "email": "dekaraheath5_ccs@indeedemail.com",
+        "location": { "address": "Johnston, SC 29832" },
+        "phone": "Show phone number",
+        "url": ""
+      },
+      "work": [
+        {
+          "name": "Amick Farms",
+          "position": "Meat Trimmer",
+          "city": "Batesburg-Leesville",
+          "state": "SC",
+          "startDate": "12/2022",
+          "endDate": "01/2024",
+          "bullets": [{ "content": "Line meat to be trimmed" }]
+        },
+        {
+          "name": "Generac Power Systems",
+          "position": "Assembler",
+          "city": "Trenton",
+          "state": "SC",
+          "startDate": "11/2021",
+          "endDate": "06/2022",
+          "bullets": [
+            {
+              "content": "Assemble engine parts for generator motors, and move material throughout the warehouse"
+            }
+          ]
+        },
+        {
+          "name": "US Foods",
+          "position": "Order Selector",
+          "city": "Lexington",
+          "state": "SC",
+          "startDate": "08/2019",
+          "endDate": "04/2020",
+          "bullets": [
+            { "content": "Select grocery for schools, resturants, and etc." }
+          ]
+        }
+      ],
+      "education": [
+        {
+          "institution": "None",
+          "studyType": "",
+          "area": "",
+          "city": "",
+          "state": "",
+          "startDate": "",
+          "endDate": "",
+          "status": "",
+          "bullets": []
+        }
+      ],
+      "skills": [
+        { "name": "Order Picker", "level": "beginner" },
+        { "name": "Forklift", "level": "beginner" },
+        { "name": "Order Picking", "level": "beginner" },
+        { "name": "Shipping & Receiving", "level": "beginner" },
+        { "name": "Packaging", "level": "beginner" },
+        { "name": "Manufacturing", "level": "beginner" },
+        { "name": "Machining", "level": "beginner" },
+        { "name": "Quality Control", "level": "beginner" },
+        { "name": "Assembly", "level": "beginner" },
+        { "name": "Warehouse Experience", "level": "beginner" },
+        { "name": "Materials Handling", "level": "beginner" },
+        { "name": "Warehouse Distribution Experience", "level": "beginner" },
+        { "name": "Quality Inspection", "level": "beginner" },
+        { "name": "Load & Unload", "level": "beginner" },
+        { "name": "5S", "level": "beginner" },
+        { "name": "Pallet Jack", "level": "beginner" },
+        { "name": "RF Scanner", "level": "beginner" },
+        { "name": "Assembly", "level": "beginner" },
+        { "name": "Load & unload", "level": "beginner" },
+        { "name": "5S", "level": "beginner" },
+        { "name": "Floor care", "level": "beginner" },
+        { "name": "Hospitality", "level": "beginner" },
+        { "name": "Bartending", "level": "beginner" },
+        { "name": "Customer service", "level": "beginner" },
+        { "name": "Restaurant experience", "level": "beginner" },
+        { "name": "Organizational skills", "level": "beginner" },
+        { "name": "Quality control", "level": "beginner" },
+        { "name": "Security", "level": "beginner" },
+        { "name": "Grocery store", "level": "beginner" },
+        { "name": "Warehouse experience", "level": "beginner" },
+        { "name": "English", "level": "beginner" },
+        { "name": "Mechanical knowledge", "level": "beginner" },
+        { "name": "OSHA", "level": "beginner" },
+        { "name": "Shipping & receiving", "level": "beginner" },
+        { "name": "Order picking", "level": "beginner" }
+      ],
+      "certificates": [
+        { "name": "Forklift Certification", "issuer": "", "date": "08/2020" },
+        { "name": "Pallet Jack Certification", "issuer": "", "date": "08/2020" }
+      ],
+      "interests": [{ "name": "Gardening" }],
+      "accomplishments": [
+        { "name": "Line meat to be trimmed" },
+        {
+          "name": "Assemble engine parts for generator motors, and move material throughout the warehouse"
+        },
+        { "name": "Select grocery for schools, resturants, and etc." }
+      ],
+      "summary": {
+        "content": "Highly skilled and motivated individual with experience in various roles including Meat Trimmer, Assembler, and Order Selector. Proficient in order picking, forklift operation, shipping & receiving, packaging, and quality control. Possesses strong organizational skills and mechanical knowledge. Holds certifications in Forklift and Pallet Jack operation. Seeking a challenging position to leverage my skills and contribute to a dynamic team."
+      }
+    }
+  },
+  "meta": {}
+}

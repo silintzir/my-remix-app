@@ -22,8 +22,13 @@ import {
 import { TextInput } from "@/components/shadcn/TextInput";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Settings2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-export function StartStep() {
+type Props = {
+  singlePage?: boolean;
+};
+
+export function StartStep({ singlePage = false }: Props) {
   const { control, watch, setValue } = useFormContext<ResumeValues>();
 
   const order = watch("meta.order") as Step[];
@@ -76,18 +81,42 @@ export function StartStep() {
           </Button>
         )}
       </h4>
-      <p className="muted">
-        Continue with the defaults or configure which sections to include, their
-        order and title inside your resume. You may come back to this step at
-        any time and make changes.
-      </p>
+      {singlePage === false && (
+        <p className="muted">
+          Continue with the defaults or configure the sections in your resume.
+        </p>
+      )}
 
       {mode === "custom" && (
         <div className="space-y-2 text-xs sm:text-sm">
-          {["basics", "summary"].map((step, index) => {
-            return (
-              <div className="w-full flex items-center gap-2" key={step}>
-                <div className="w-4">&nbsp;</div>
+          <ul>
+            {singlePage === false && (
+              <li>Use the text inputs to change the title of each section.</li>
+            )}
+            <li>Use the switches to activate or deactivate a section.</li>
+            <li>
+              Use the up/down arrow icons to drag and change the order the
+              sections display in your resume.
+            </li>
+          </ul>
+          {singlePage == false && (
+            <p>You may come back at any time to make changes.</p>
+          )}
+          <br />
+          <SortableList
+            lockAxis="y"
+            onSortEnd={onSortEnd}
+            useDragHandle
+            className="space-y-3"
+          >
+            {order.map((step, index) => (
+              <SortableItem index={index} key={step}>
+                {step !== "basics" && step !== "summary" ? (
+                  <SortableHandle />
+                ) : (
+                  <div className="w-4" />
+                )}
+
                 <FormField
                   key={step}
                   control={control}
@@ -105,51 +134,23 @@ export function StartStep() {
                     </FormItem>
                   )}
                 />
-                <TextInput
-                  className="flex-grow"
-                  control={control}
-                  name={`meta.steps.${step}.title`}
-                  placeholder={DEFAULT_SECTION_TITLES[step]}
-                />
-              </div>
-            );
-          })}
-          <SortableList
-            lockAxis="y"
-            onSortEnd={onSortEnd}
-            useDragHandle
-            className="space-y-3"
-          >
-            {order
-              .filter((o) => ["basics", "summary"].includes(o) === false)
-              .map((step, index) => (
-                <SortableItem index={index} key={step}>
-                  <SortableHandle />
-                  <FormField
-                    key={step}
-                    control={control}
-                    name={`meta.steps.${step}.enabled`}
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-16 space-y-0">
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            disabled={nonConfigurableSteps.includes(step)}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                {step !== "basics" && step !== "summary" ? (
                   <TextInput
                     className="flex-grow"
                     control={control}
                     name={`meta.steps.${step}.title`}
                     placeholder={DEFAULT_SECTION_TITLES[step]}
                   />
-                </SortableItem>
-              ))}
+                ) : (
+                  <Input
+                    readOnly
+                    disabled
+                    className="flex-grow"
+                    defaultValue={DEFAULT_SECTION_TITLES[step]}
+                  />
+                )}
+              </SortableItem>
+            ))}
           </SortableList>
         </div>
       )}

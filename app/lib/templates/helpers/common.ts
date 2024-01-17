@@ -14,16 +14,17 @@ export function constr(delimiter: string, ...strings: string[]): string {
 }
 
 export function skillDisplay({ name, level }: SkillRecord) {
-  const lv = level !== "no_mention" ? constr("", "(", level, ")") : "";
+  const lv =
+    level.length > 0 && level !== "no_mention"
+      ? constr("", "(", level, ")")
+      : "";
   return constr(" ", name, lv);
 }
 
-export function certificateDisplay({
-  name,
-  issuer,
-  date,
-  url,
-}: CertificateRecord) {
+export function certificateDisplay(
+  { name, issuer, date, url }: CertificateRecord,
+  delimiter = "\n"
+) {
   const firstLine = [];
   if (name.trim().length) {
     firstLine.push(name);
@@ -32,7 +33,7 @@ export function certificateDisplay({
     firstLine.push(`[${getReadableDateFromPicker(date)}]`);
   }
   const secondLine = constr(" - ", issuer, url);
-  return constr("\n", firstLine.join(" "), secondLine);
+  return constr(delimiter, firstLine.join(" "), secondLine);
 }
 
 export const nonEmptyCertificates = (records: CertificateRecord[]) => {

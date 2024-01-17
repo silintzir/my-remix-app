@@ -69,6 +69,20 @@ export function OutputSettings({ values }: Props) {
           <FontSizeAdjust />
           <strong>{values.meta.fontSize}pt</strong>
         </div>
+        <div className="grid grid-cols-3 items-center gap-4">
+          <Label htmlFor="width">Template</Label>
+          <SelectInput
+            className="w-full"
+            control={control}
+            options={[
+              { label: "Chicago", value: "chicago" },
+              { label: "Admin executive", value: "executive" },
+              { label: "Andreas WIP", value: "andreas" },
+            ]}
+            name="meta.template"
+          />
+          <strong>{values.meta.fontSize}pt</strong>
+        </div>
       </PopoverContent>
     </Popover>
   );

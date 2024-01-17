@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useFetcher } from "@remix-run/react";
 import { useCallback } from "react";
-import { Loader2, Wand } from "lucide-react";
+import { CheckIcon, Loader2, Wand } from "lucide-react";
 import { get, useFormContext } from "react-hook-form";
 import type {
   AdapterSuggestion,
@@ -127,11 +127,18 @@ export function TailorStep({ id, values }: Props) {
                     <div className="cursor-pointer bg-base-300 flex justify-start items-center gap-2 py-2 rounded-md">
                       <div
                         className={cn(
-                          "flex-grow small flex gap-2 items-center text-primary",
-                          section !== "" ? "line-through text-[#009900]" : ""
+                          "flex-grow small flex gap-2 items-center text-primary"
+
                           // selected ? "text-[#009900]" : ""
                         )}
                       >
+                        {section !== "" && (
+                          <span className="flex font-bold text-[#009900]">
+                            [&nbsp;
+                            <CheckIcon className="h-4 w-4 mr-0.5" />
+                            Added&nbsp;]
+                          </span>
+                        )}
                         {bullet}
                       </div>
                       <div>
