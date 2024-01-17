@@ -121,10 +121,6 @@ export function ErrorBoundary() {
   if (error instanceof Error) {
     return (
       <main>
-        <NavBar>
-          <Logo />
-          <ReturnToWebsite />
-        </NavBar>
         <div>
           <h1>Error</h1>
           <p>{error.message}</p>

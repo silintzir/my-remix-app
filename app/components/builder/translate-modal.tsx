@@ -8,11 +8,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import type { ResumeValues } from "@/lib/types";
-import { DialogClose, DialogTrigger } from "@radix-ui/react-dialog";
 import { useFormContext } from "react-hook-form";
 import usFlag from "@/images/us-flag.svg";
 import esFlag from "@/images/es-flag.svg";
 import { useFetcher } from "@remix-run/react";
+import { useEffect, useState } from "react";
 
 type Props = {
   resumeId: number;
@@ -21,15 +21,20 @@ type Props = {
 export function TranslateModal({ resumeId }: Props) {
   const { watch } = useFormContext<ResumeValues>();
 
+  const [open, setOpen] = useState(false);
   const lang = watch("meta.language");
-
   const target = lang === "en" ? "Spanish" : "English";
+  const { submit, state } = useFetcher({ key: "translator" });
 
-  const fetcher = useFetcher({ key: "translator" });
+  useEffect(() => {
+    if (state === "loading") {
+      setOpen(false);
+    }
+  }, [state]);
 
   return (
-    <Dialog>
-      <DialogTrigger>
+    <Dialog open={open}>
+      <button onClick={() => setOpen(true)}>
         <span>
           <img
             src={lang === "en" ? usFlag : esFlag}
@@ -38,7 +43,7 @@ export function TranslateModal({ resumeId }: Props) {
             alt="Language"
           />
         </span>
-      </DialogTrigger>
+      </button>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Translate</DialogTitle>
@@ -47,27 +52,28 @@ export function TranslateModal({ resumeId }: Props) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button
-              type="button"
-              variant="default"
-              onClick={() => {
-                const fd = new FormData();
-                fd.append("id", resumeId.toString());
-                fd.append("target", target);
-                fetcher.submit({}, { action: `/ai/translate`, method: "POST" });
-              }}
-            >
-              <img
-                src={lang === "en" ? esFlag : usFlag}
-                height="16"
-                width="16"
-                alt="Language"
-                className="mr-2"
-              />
-              <span>Translate to {target}</span>
-            </Button>
-          </DialogClose>
+          <Button
+            type="button"
+            variant="default"
+            disabled={state === "submitting"}
+            onClick={() => {
+              const fd = new FormData();
+              fd.append("id", resumeId.toString());
+              fd.append("target", target);
+              submit(fd, { action: `/ai/translate`, method: "POST" });
+            }}
+          >
+            <img
+              src={lang === "en" ? esFlag : usFlag}
+              height="16"
+              width="16"
+              alt="Language"
+              className="mr-2"
+            />
+            {state === "submitting"
+              ? "Translating..."
+              : `Translate to ${target}`}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

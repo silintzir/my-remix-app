@@ -43,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
         document.resume.work,
         ({ uuid }) => uuid === uuidToRemove
       );
-      if (match) {
+      if (match && match.bullets) {
         remove(match.bullets, (b) => b.uuid === uuid);
       }
     } else if (sectionToRemove === "education") {
@@ -51,7 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
         document.resume.education,
         ({ uuid }) => uuid === uuidToRemove
       );
-      if (match) {
+      if (match && match.bullets) {
         remove(match.bullets, (b) => b.uuid === uuid);
       }
     } else if (sectionToRemove === "skills") {
@@ -72,7 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
         (record) => record.uuid === sectionRecordUuid
       );
 
-      if (match) {
+      if (match && match.bullets) {
         match.bullets.push({
           uuid,
           content: suggested.bullet,
@@ -84,7 +84,7 @@ export async function action({ request }: ActionFunctionArgs) {
         (record) => record.uuid === sectionRecordUuid
       );
 
-      if (match) {
+      if (match && match.bullets) {
         match.bullets.push({
           uuid,
           content: suggested.bullet,
