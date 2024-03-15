@@ -57,9 +57,17 @@ export async function action({ request }: ActionFunctionArgs) {
       }),
     });
 
-    console.log(JSON.stringify(response));
-
     const toStore = getResumeValues(response.data.resume);
+
+    toStore.meta.title = [
+      toStore.resume.basics.firstName,
+      toStore.resume.basics.lastName,
+    ]
+      .join(" ")
+      .trim();
+    if (toStore.meta.title.length === 0) {
+      toStore.meta.title = "Untitled resume";
+    }
 
     id = await importResume(request, toStore);
     // id = 653;
