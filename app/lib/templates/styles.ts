@@ -77,15 +77,16 @@ export const pdfStyles = {
       italics: true,
     },
   }),
-  andreas: ({ fontSize }: StyleParams): StyleDictionary => ({
+  accountant: ({ fontSize }: StyleParams): StyleDictionary => ({
     paragraph: {
       fontSize: 10,
-      alignment: "center",
+      alignment: "justify",
     },
     heading1: {
-      fontSize: 18,
+      fontSize: 16,
+      fontFeatures: ["smcp"],
       bold: true,
-      alignment: "center",
+      alignment: "left",
     },
     subheading1: {
       fontSize: 11,
@@ -98,10 +99,11 @@ export const pdfStyles = {
       italics: true,
     },
     heading2: {
-      // Company name
+      // Summary title
       bold: true,
+      fontFeatures: ["smcp"],
       alignment: "center",
-      fontSize: 13,
+      fontSize: 14,
     },
     heading3: {
       // Job title and period
@@ -111,6 +113,10 @@ export const pdfStyles = {
     heading4: {
       fontSize: 11,
       italics: true,
+    },
+    headerRight: {
+      fontSize: 9,
+      alignment: "right",
     },
   }),
 };

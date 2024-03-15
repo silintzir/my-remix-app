@@ -102,7 +102,7 @@ export const resumeSchema = z.object({
     language: z.enum(["en", "es"]),
     mode: z.enum(["standard", "custom"]),
     tailor: tailorSchema,
-    template: z.enum(["chicago", "executive", "andreas"]),
+    template: z.enum(["chicago", "executive", "accountant"]),
     autoSort: z.object({
       work: z.boolean().optional().default(true),
       education: z.boolean().optional().default(true),

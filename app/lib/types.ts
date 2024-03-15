@@ -66,7 +66,7 @@ export interface StrapiLongResume {
 
 export type ResumeValues = z.infer<typeof resumeSchema>;
 
-export type Template = "chicago" | "executive" | "andreas";
+export type Template = "chicago" | "executive" | "accountant";
 
 export type RecordWithBullets = { bullets: Bullet[] };
 export type WorkRecord = z.infer<typeof workSchema>;

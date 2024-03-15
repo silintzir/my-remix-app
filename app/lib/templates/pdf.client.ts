@@ -1,4 +1,8 @@
-import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
+import type {
+  Content,
+  LineStyle,
+  TDocumentDefinitions,
+} from "pdfmake/interfaces";
 import type { ResumeValues, Step, Template } from "@/lib/types";
 import {
   certificateDisplay,
@@ -747,36 +751,49 @@ class ExecutivePdfTemplate extends ChicagoPdfTemplate {
   };
 }
 
-class AndreasPdfTemplate extends ChicagoPdfTemplate {
+class AccountantPdfTemplate extends ChicagoPdfTemplate {
   summary = (): Content[] => {
     const {
       resume: {
         summary: { content, asObjective },
+        skills,
       },
       meta: {
         steps: {
-          summary: { title, enabled },
+          summary: { title: summaryTitle, enabled: summaryEnabled },
+          skills: { title: skillsTitle, enabled: skillsEnabled },
         },
       },
     } = this.values;
     const output: Content[] = [];
 
-    if (!enabled || !content || !content.trim().length) {
-      return output;
+    let noSummary = false;
+    if (!summaryEnabled || !content || !content.trim().length) {
+      noSummary = true;
+    } else {
+      output.push({
+        text: summaryTitle.length
+          ? asObjective
+            ? "Objective"
+            : "Summary"
+          : DEFAULT_SECTION_TITLES.summary,
+        style: "heading2",
+      });
+      output.push({ text: content, style: "paragraph", marginBottom: 12 });
+    }
+
+    const records = nonEmptySkills(skills);
+
+    let noSkills = false;
+    if (!skillsEnabled || !records.length) {
+      noSkills = true;
     }
 
     output.push({
-      text: (title.length
-        ? asObjective
-          ? "Objective"
-          : "Summary"
-        : DEFAULT_SECTION_TITLES.summary
-      ).toUpperCase(),
-      style: "heading2",
+      text: constr(", ", ...map(records, skillDisplay)),
+      style: "paragraph",
+      marginBottom: 12,
     });
-    output.push({ text: content, style: "paragraph", marginBottom: 12 });
-
-    return output;
   };
   work: ContentProvider = () => {
     const {
@@ -938,38 +955,6 @@ class AndreasPdfTemplate extends ChicagoPdfTemplate {
       },
     ];
   };
-  skills: ContentProvider = () => {
-    const {
-      resume: { skills },
-      meta: {
-        steps: {
-          skills: { title, enabled },
-        },
-      },
-    } = this.values;
-
-    const records = nonEmptySkills(skills);
-
-    if (!enabled || !records.length) {
-      return [];
-    }
-
-    return [
-      {
-        text: (title.length
-          ? title
-          : DEFAULT_SECTION_TITLES.skills
-        ).toUpperCase(),
-        style: "heading2",
-        marginBottom: 4,
-      },
-      {
-        text: constr(", ", ...map(records, skillDisplay)),
-        style: "paragraph",
-        marginBottom: 12,
-      },
-    ];
-  };
   certificates: ContentProvider = () => {
     const {
       resume: { certificates },
@@ -1081,10 +1066,6 @@ class AndreasPdfTemplate extends ChicagoPdfTemplate {
 
     return [
       {
-        text: constr(" ", firstName, lastName),
-        style: "heading1",
-      },
-      {
         marginTop: 6,
         marginBottom: 12,
         table: {
@@ -1094,12 +1075,27 @@ class AndreasPdfTemplate extends ChicagoPdfTemplate {
               {
                 alignment: "justify",
                 columns: [
-                  { text: address, alignment: "left", width: "35%" },
-                  { text: "", alignment: "center", width: "30%" },
                   {
-                    text: constr(" | ", phone, email, url),
-                    alignment: "right",
-                    width: "35%",
+                    text: constr(" ", firstName, lastName),
+                    style: "heading1",
+                    width: "60%",
+                  },
+                  {
+                    text: `\n${address}\n${constr(" | ", phone, email, url)}`,
+                    style: "headerRight",
+                    width: "40%",
+                  },
+                ],
+              },
+            ],
+            [
+              {
+                columns: [
+                  {
+                    text: "",
+                  },
+                  {
+                    text: "",
                   },
                 ],
               },
@@ -1110,8 +1106,8 @@ class AndreasPdfTemplate extends ChicagoPdfTemplate {
           paddingLeft: () => 0,
           paddingRight: () => 0,
           paddingTop: () => 0,
-          paddingBottom: () => 4,
-          hLineWidth: (i) => (i === 1 ? 1 : 0),
+          paddingBottom: (i) => (i >= 1 ? 0.7 : 4),
+          hLineWidth: (i) => (i >= 1 ? 1 : 0),
           vLineWidth: () => 0,
         },
       },
@@ -1132,16 +1128,16 @@ export default function getDefinition(
   const styles =
     template === "chicago"
       ? pdfStyles.chicago({ fontSize })
-      : template === "andreas"
-      ? pdfStyles.andreas({ fontSize })
+      : template === "accountant"
+      ? pdfStyles.accountant({ fontSize })
       : pdfStyles.executive({ fontSize });
   let struct: any;
   switch (template) {
     case "executive":
       struct = new ExecutivePdfTemplate(data);
       break;
-    case "andreas":
-      struct = new AndreasPdfTemplate(data);
+    case "accountant":
+      struct = new AccountantPdfTemplate(data);
       break;
     default:
       struct = new ChicagoPdfTemplate(data);
