@@ -1,7 +1,10 @@
-import { OpenAI } from "@langchain/openai";
+import { OpenAI } from "langchain/llms/openai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import chalk from "chalk";
 import type { Step } from "@/lib/types";
 import { sample } from "./sample.server";
+
+const engine = process.env.AI_ENGINE;
 
 export function humanLog(msg: string) {
   console.log(`${chalk.blue.yellow("HUMAN")}:  ${msg}`);
@@ -52,19 +55,33 @@ export function randomResponse(type: Step, mode: "one" | "multi" = "one") {
 }
 
 export class NoMemory {
-  private _chain: OpenAI;
+  private _chain: any;
 
   constructor(temperature = 0.7) {
-    this._chain = new OpenAI({
-      modelName: "gpt-4",
+    const openaiConf = {
       openAIApiKey: process.env.OPENAI_API_KEY,
-      maxTokens: 4096,
+      modelName: process.env.OPENAI_MODEL,
+      maxTokens: +(process.env.OPENAI_MAX_TOKENS as string),
       temperature,
-    });
+    };
+    const geminiConf = {
+      apiKey: process.env.GOOGLE_API_KEY,
+      modelName: process.env.GOOGLE_AI_MODEL,
+      maxOutputTokens: +(process.env.GOOGLE_MAX_TOKENS as string),
+      temperature,
+    };
+
+    this._chain =
+      engine === "openai"
+        ? new OpenAI(openaiConf)
+        : new ChatGoogleGenerativeAI(geminiConf);
   }
 
   public async send(input: string, log = true) {
-    const response = await this._chain.predict(input);
+    const response =
+      engine === "openai"
+        ? await this._chain.invoke(input)
+        : await this._chain.invoke(input).lc_kwargs.content;
     if (log) {
       humanLog(input);
       aiLog(response);
