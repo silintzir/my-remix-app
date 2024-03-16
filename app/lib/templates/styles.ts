@@ -106,17 +106,27 @@ export const pdfStyles = {
       fontSize: 14,
     },
     heading3: {
-      // Job title and period
-      fontSize: 12,
       bold: true,
+      fontFeatures: ["smcp"],
+      alignment: "center",
+      fontSize: 13,
     },
     heading4: {
       fontSize: 11,
       italics: true,
     },
     headerRight: {
-      fontSize: 9,
+      lineHeight: 1.3,
+      fontSize: 8,
       alignment: "right",
+    },
+    cellContent: {
+      fontSize: 10,
+      alignment: "left",
+    },
+    centered: {
+      fontSize: 10,
+      alignment: "center",
     },
   }),
 };

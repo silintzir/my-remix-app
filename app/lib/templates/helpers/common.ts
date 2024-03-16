@@ -77,3 +77,15 @@ export function convertDate(date: string) {
     return toks.length === 2 ? `${toks[1]}-${toks[0]}` : `${toks[0]}-01`;
   }
 }
+
+export const createTwoDimArray = (
+  flatArray: any[],
+  numSubArrays: number
+): any[][] => {
+  const twoDimArray = [];
+  const chunkSize = Math.ceil(flatArray.length / numSubArrays);
+  for (let i = 0; i < flatArray.length; i += chunkSize) {
+    twoDimArray.push(flatArray.slice(i, i + chunkSize));
+  }
+  return twoDimArray;
+};

@@ -26,15 +26,20 @@ export function getHeaderWithLine(text: string): Content {
   };
 }
 
-export function get2ColsSpaceBetween(left: Content, right: Content, mb = 0) {
+export function get2ColsSpaceBetween(
+  left: Content,
+  right: Content,
+  marginBottom = 0,
+  width = "65%"
+) {
   return [
     {
       alignment: "justify",
       columns: [
-        { text: left, alignment: "left", width: "65%" },
+        { text: left, alignment: "left", width },
         { text: right, alignment: "right" },
       ],
-      marginBottom: mb,
+      marginBottom,
     },
   ] satisfies Content;
 }
@@ -48,3 +53,26 @@ export function pine(arr: Content[], text: string, style: string) {
     style,
   });
 }
+
+export const getDoubleHLine = (
+  distance: number,
+  marginTop: number,
+  marginBottom: number
+) => [
+  {
+    marginTop,
+    marginBottom,
+    table: {
+      widths: ["*"],
+      body: [[{ columns: [{ text: "" }, { text: "" }] }]],
+    },
+    layout: {
+      paddingLeft: () => 0,
+      paddingRight: () => 0,
+      paddingTop: () => 0,
+      paddingBottom: () => distance,
+      hLineWidth: () => 1,
+      vLineWidth: () => 0,
+    },
+  },
+];
