@@ -47,7 +47,7 @@ export function OutputSettings({ values }: Props) {
         options={[
           { label: "Chicago", value: "chicago" },
           { label: "Admin executive", value: "executive" },
-          { label: "Accountant WIP", value: "accountant" },
+          { label: "Accountant", value: "accountant" },
         ]}
         name="meta.template"
       />
