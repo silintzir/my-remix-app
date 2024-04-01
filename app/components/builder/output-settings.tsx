@@ -40,17 +40,35 @@ export function OutputSettings({ values }: Props) {
 
   return (
     <div className="flex gap-2 items-center">
-      <label>Template: </label>
-      <SelectInput
-        className="w-full text-black"
-        control={control}
-        options={[
-          { label: "Chicago", value: "chicago" },
-          { label: "Admin executive", value: "executive" },
-          { label: "Accountant", value: "accountant" },
-        ]}
-        name="meta.template"
-      />
+      <div className="flex gap-2 items-center">
+        <label className="hidden 2xl:block">Template: </label>
+        <SelectInput
+          className="w-full text-black"
+          control={control}
+          options={[
+            { label: "Chicago", value: "chicago" },
+            { label: "Admin executive", value: "executive" },
+            { label: "Accountant WIP", value: "accountant" },
+          ]}
+          name="meta.template"
+        />
+      </div>
+      <div className="flex gap-2 items-center">
+        <SelectInput
+          className="w-full text-black"
+          control={control}
+          options={[
+            { label: "English", value: "en" },
+            { label: "Spanish", value: "es" },
+          ]}
+          onChange={(value) => {
+            setTimeout(() => {
+              setOpen(value);
+            }, 1000);
+          }}
+          name="meta.language"
+        />
+      </div>
     </div>
   );
 
