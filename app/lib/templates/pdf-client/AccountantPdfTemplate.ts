@@ -405,6 +405,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
   };
   basics: ContentProvider = () => {
     const {
+      meta: { maskBasics },
       resume: {
         basics: {
           location: { address },
@@ -429,12 +430,16 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
                 alignment: "justify",
                 columns: [
                   {
-                    text: constr(" ", firstName, lastName),
+                    text: maskBasics
+                      ? "Marathon Staffing"
+                      : constr(" ", firstName, lastName),
                     style: "heading1",
                     width: "60%",
                   },
                   {
-                    text: `\n${address}\n${constr(" | ", phone, email, url)}`,
+                    text: maskBasics
+                      ? "\nConfidential document,\nnot for distribution without prior permission."
+                      : `\n${address}\n${constr(" | ", phone, email, url)}`,
                     style: "headerRight",
                     width: "40%",
                   },
