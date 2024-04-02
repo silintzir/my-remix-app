@@ -23,6 +23,7 @@ import { TextInput } from "@/components/shadcn/TextInput";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Settings2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { SelectInput } from "@/components/shadcn/SelectInput";
 
 type Props = {
   singlePage?: boolean;
@@ -47,6 +48,22 @@ export function StartStep({ singlePage = false }: Props) {
 
   return (
     <div className="space-y-2">
+      <h4 className="font-semibold flex justify-between items-center">
+        <span>Template</span>
+      </h4>
+      <div className="flex gap-2 items-center">
+        <SelectInput
+          className="w-full text-black"
+          control={control}
+          options={[
+            { label: "Chicago", value: "chicago" },
+            { label: "Admin executive", value: "executive" },
+            { label: "Accountant WIP", value: "accountant" },
+          ]}
+          name="meta.template"
+        />
+      </div>
+
       <h4 className="font-semibold flex justify-between items-center">
         <span>Resume sections</span>
         {mode === "custom" ? (
