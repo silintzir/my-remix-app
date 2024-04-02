@@ -130,7 +130,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
         endDate,
         bullets,
       } of p2[group]) {
-        stacks.push(
+        stack.push(
           get2ColsSpaceBetween(
             [
               { text: position, bold: true },
@@ -166,6 +166,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.work,
         style: "heading3",
+        marginTop: 4,
         marginBottom: 4,
       },
       {
@@ -236,6 +237,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.education,
         style: "heading3",
+        marginTop: 4,
         marginBottom: 4,
       },
       {
@@ -264,7 +266,8 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
     return [
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.certificates,
-        style: "heading2",
+        style: "heading3",
+        marginTop: 4,
         marginBottom: 4,
       },
       {
@@ -306,12 +309,12 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.accomplishments,
         style: "heading3",
+        marginTop: 4,
         marginBottom: 4,
-        marginTop: 12,
       },
       {
-        marginTop: 6,
-        marginBottom: 12,
+        marginTop: 0,
+        marginBottom: 0,
         table: {
           widths: ["*"],
           body: [
@@ -365,8 +368,8 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.interests,
         style: "heading3",
+        marginTop: 4,
         marginBottom: 4,
-        marginTop: 12,
       },
       {
         marginTop: 6,
@@ -434,14 +437,14 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
                       ? "Marathon Staffing"
                       : constr(" ", firstName, lastName),
                     style: "heading1",
-                    width: "60%",
+                    width: "54%",
                   },
                   {
                     text: maskBasics
                       ? "\nConfidential document,\nnot for distribution without prior permission."
                       : `\n${address}\n${constr(" | ", phone, email, url)}`,
                     style: "headerRight",
-                    width: "40%",
+                    width: "46%",
                   },
                 ],
               },
