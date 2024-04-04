@@ -66,6 +66,7 @@ export default function getDefinition(
     footer: (currentPage, pageCount) => ({
       text: `${currentPage.toString()} of ${pageCount.toString()}`,
       alignment: "center",
+      fontSize: 11,
     }),
     content: struct.create(),
   };
