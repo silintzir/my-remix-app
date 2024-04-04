@@ -4,28 +4,33 @@ import clsx from "clsx";
 
 import { Container } from "./container";
 import backgroundImage from "@/images/background-features.jpg";
-import screenshotStep1 from "@/images/screenshots/step1.png";
-import screenshotStep2 from "@/images/screenshots/step2.png";
-import screenshotStep3 from "@/images/screenshots/step3.png";
+import screenshotStep1 from "@/images/screenshots/new-1.png";
+import screenshotStep2 from "@/images/screenshots/new-2.png";
+import screenshotStep3 from "@/images/screenshots/new-3.png";
+import screenshotStep4 from "@/images/screenshots/new-4.png";
 
 const features = [
   {
     title: "Intuitive step-by-step design",
     description:
-      "Enter your contact info, work history, education, and skills effortesly.",
+      "Enter your contact info, work history and education effortesly.",
     image: screenshotStep1,
   },
   {
     title: "Insightful AI powered suggestions",
     description:
-      "Resume Runner can suggest resume bullets, skills, objectives and more.",
+      "Get AI powered suggestions for resume bullets, skills and more.",
     image: screenshotStep2,
   },
   {
-    title: "Get noticed",
-    description:
-      "Show off your incredible resume to any interested employer in Word and PDF formats.",
+    title: "Tailor your resume to every job",
+    description: "Customize your resume for each job application.",
     image: screenshotStep3,
+  },
+  {
+    title: "Professional templates",
+    description: "Pick a template that fits your store",
+    image: screenshotStep4,
   },
 ];
 
