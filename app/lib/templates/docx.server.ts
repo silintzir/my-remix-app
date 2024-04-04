@@ -1,8 +1,19 @@
 import type { ResumeValues, Template } from "@/lib/types";
 import { ChicagoDocxTemplate } from "./docx-server/ChicagoDocxTemplate";
 import { AccountantDocxTemplate } from "./docx-server/AccountantDocxTemplate";
-import { Document, NumberFormat, PageOrientation } from "docx";
+import {
+  AlignmentType,
+  Document,
+  Footer,
+  NumberFormat,
+  PageNumber,
+  PageOrientation,
+  Paragraph,
+  TextRun,
+} from "docx";
 import { docxStyles } from "@/lib/templates/styles";
+import { constr } from "./helpers/common";
+import { Children } from "react";
 
 type DefConf = {
   isSample?: boolean;
@@ -57,6 +68,25 @@ export default function getDefinition(
           },
         },
         children: struct.create(),
+        footers: {
+          default: new Footer({
+            children: [
+              new Paragraph({
+                children: [
+                  new TextRun({
+                    children: [
+                      PageNumber.CURRENT,
+                      " of ",
+                      PageNumber.TOTAL_PAGES,
+                    ],
+                  }),
+                ],
+                run: { size: 22 },
+                alignment: AlignmentType.CENTER,
+              }),
+            ],
+          }),
+        },
       },
     ],
   });
