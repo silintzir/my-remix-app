@@ -383,7 +383,7 @@ export class ChicagoDocxTemplate {
   protected createBullets(
     bullets: string[],
     level = 0,
-    spacing = { before: 0 }
+    spacing: { before?: number; after?: number } = { before: 0 }
   ) {
     return map(
       bullets,

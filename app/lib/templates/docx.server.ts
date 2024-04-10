@@ -1,19 +1,19 @@
 import type { ResumeValues, Template } from "@/lib/types";
 import { ChicagoDocxTemplate } from "./docx-server/ChicagoDocxTemplate";
 import { AccountantDocxTemplate } from "./docx-server/AccountantDocxTemplate";
+import { ExecutiveDocxTemplate } from "./docx-server/ExecutiveDocxTemplate";
 import {
   AlignmentType,
   Document,
   Footer,
+  IStylesOptions,
   NumberFormat,
   PageNumber,
   PageOrientation,
   Paragraph,
   TextRun,
 } from "docx";
-import { docxStyles } from "@/lib/templates/styles";
-import { constr } from "./helpers/common";
-import { Children } from "react";
+import { docxStyles } from "./docx-server/styles";
 
 type DefConf = {
   isSample?: boolean;
@@ -25,22 +25,20 @@ export default function getDefinition(
   document: ResumeValues,
   { fontSize = 11, template = "chicago" }: DefConf
 ): Document {
-  const styles =
-    template === "chicago"
-      ? docxStyles.chicago({ fontSize })
-      : /* template === "accountant"
-      ?  */ docxStyles.accountant({ fontSize });
-  //   : docxStyles.executive({ fontSize })
+  let styles: IStylesOptions;
   let struct: any;
   switch (template) {
-    // case "executive":
-    //   struct = new ExecutivePdfTemplate(document);
-    //   break;
+    case "executive":
+      struct = new ExecutiveDocxTemplate(document);
+      styles = docxStyles.executive({ fontSize });
+      break;
     case "accountant":
       struct = new AccountantDocxTemplate(document);
+      styles = docxStyles.accountant({ fontSize });
       break;
     default:
       struct = new ChicagoDocxTemplate(document);
+      styles = docxStyles.chicago({ fontSize });
   }
 
   return new Document({
@@ -81,7 +79,7 @@ export default function getDefinition(
                     ],
                   }),
                 ],
-                run: { size: 22 },
+                run: { size: fontSize * 2 },
                 alignment: AlignmentType.CENTER,
               }),
             ],

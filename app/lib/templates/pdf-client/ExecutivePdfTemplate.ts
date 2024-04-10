@@ -1,6 +1,5 @@
 import type { Content } from "pdfmake/interfaces";
 import {
-  certificateDisplay,
   constr,
   nonEmptyAccomplishments,
   nonEmptyCertificates,
@@ -9,42 +8,70 @@ import {
   nonEmptySkills,
   nonEmptyWork,
   skillDisplay,
-} from "@/lib/templates/helpers/common";
+  splitArrayByLimit,
+} from "../helpers/common";
 import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
 import { ContentProvider } from "../pdf.client";
 import { ChicagoPdfTemplate } from "./ChicagoPdfTemplate";
+import { getDoubleHLine } from "../helpers/pdf";
 
 export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
   summary = (): Content[] => {
     const {
       resume: {
         summary: { content, asObjective },
+        skills,
       },
       meta: {
         steps: {
-          summary: { title, enabled },
+          summary: { title: summaryTitle, enabled: summaryEnabled },
+          skills: { title: skillsTitle, enabled: skillsEnabled },
         },
       },
     } = this.values;
     const output: Content[] = [];
-
-    if (!enabled || !content || !content.trim().length) {
-      return output;
+    let noSummary = false;
+    if (!summaryEnabled || !content || !content.trim().length) {
+      noSummary = true;
+    } else {
+      output.push({
+        text: summaryTitle.length
+          ? asObjective
+            ? "Objective"
+            : summaryTitle
+          : DEFAULT_SECTION_TITLES.summary,
+        style: "heading2",
+      });
+      output.push({ text: content, style: "paragraph", marginBottom: 12 });
     }
 
-    output.push({
-      text: (title.length
-        ? asObjective
-          ? "Objective"
-          : "Summary"
-        : DEFAULT_SECTION_TITLES.summary
-      ).toUpperCase(),
-      style: "heading2",
-    });
-    output.push({ text: content, style: "paragraph", marginBottom: 12 });
-
+    const records = nonEmptySkills(skills);
+    let noSkills = false;
+    if (!skillsEnabled || !records.length) {
+      noSkills = true;
+    } else {
+      output.push([
+        {
+          text: `–${
+            skillsTitle.length ? skillsTitle : DEFAULT_SECTION_TITLES.skills
+          }–`,
+          style: "heading4",
+        },
+        splitArrayByLimit(map(records, skillDisplay), 78).map((row) => ({
+          text: constr("  •  ", ...row),
+          style: "paragraph",
+          bold: true,
+          italics: true,
+          alignment: "center",
+        })),
+      ]);
+    }
+    if (noSummary && noSkills) {
+      return [];
+    }
+    output.push(getDoubleHLine(0.7, 12, 12));
     return output;
   };
   work: ContentProvider = () => {
@@ -79,30 +106,30 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
           p2[group][0].name,
           constr(", ", p2[group][0].city, p2[group][0].state)
         ),
-        style: "heading3",
+        alignment: "center",
       } satisfies Content);
 
       for (const { position, startDate, endDate, bullets } of p2[group]) {
         stacks.push({
           text: [
             { text: position, bold: true },
-            { text: ", " },
+            { text: " " },
             {
-              text: constr(
+              text: `(${constr(
                 " - ",
                 getReadableDateFromPicker(startDate),
                 getReadableDateFromPicker(endDate)
-              ),
+              )})`,
             },
           ],
+          alignment: "center",
         });
-        stack.push(
-          map(bullets, (b) => {
-            return {
-              text: b.content,
-            };
-          })
-        );
+        if (bullets && bullets.length) {
+          stack.push({
+            ul: bullets.map((b) => ({ text: b.content })),
+            margin: [8, 0, 0, 0],
+          } satisfies Content);
+        }
       }
 
       stacks.push({
@@ -113,17 +140,13 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
 
     return [
       {
-        text: (title.length
-          ? title
-          : DEFAULT_SECTION_TITLES.work
-        ).toUpperCase(),
-        style: "heading2",
-        marginBottom: 4,
+        text: title.length ? title : DEFAULT_SECTION_TITLES.work,
+        style: "heading3",
       },
       {
         stack: stacks,
         style: "paragraph",
-      },
+      } as Content,
     ];
   };
   education: ContentProvider = () => {
@@ -141,104 +164,53 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
     if (!enabled || !records.length) {
       return [];
     }
+    const output = [];
 
-    // group by employer/location
-    const p1 = map(records, (w) => ({
-      ...w,
-      group: constr(", ", w.institution, constr(" ", w.city, w.state)),
-    }));
-    const p2 = groupBy(p1, "group");
-
-    const stacks = [];
-    for (const group in p2) {
-      const stack = [];
-      stacks.push({
+    for (const {
+      institution,
+      studyType,
+      area,
+      city,
+      state,
+      startDate,
+      endDate,
+      bullets,
+    } of records) {
+      output.push({
         text: constr(
           ", ",
-          p2[group][0].institution,
-          constr(", ", p2[group][0].city, p2[group][0].state)
+          studyType,
+          area,
+          institution,
+          city,
+          state +
+            ` (${constr(
+              " - ",
+              getReadableDateFromPicker(startDate),
+              getReadableDateFromPicker(endDate)
+            )})`
         ),
-        style: "heading3",
-      } satisfies Content);
-
-      for (const { area, studyType, startDate, endDate, bullets } of p2[
-        group
-      ]) {
-        stacks.push({
-          text: [
-            { text: constr(", ", area, studyType), bold: true },
-            { text: ", " },
-            {
-              text: constr(
-                " - ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              ),
-            },
-          ],
-        });
-        stack.push(
-          map(bullets, (b) => {
-            return {
-              text: b.content,
-            };
-          })
-        );
-      }
-
-      stacks.push({
-        stack,
-        marginBottom: 8,
+        alignment: "center",
       });
+      if (bullets && bullets.length) {
+        output.push({
+          ul: bullets.map((b) => ({ text: b.content })),
+          margin: [8, 0, 0, 8],
+        } satisfies Content);
+      }
     }
-
     return [
       {
-        text: (title.length
-          ? title
-          : DEFAULT_SECTION_TITLES.education
-        ).toUpperCase(),
-        style: "heading2",
-        marginBottom: 4,
+        text: title.length ? title : DEFAULT_SECTION_TITLES.education,
+        style: "heading3",
       },
       {
-        stack: stacks,
+        stack: output,
         style: "paragraph",
-      },
+      } as Content,
     ];
   };
-  skills: ContentProvider = () => {
-    const {
-      resume: { skills },
-      meta: {
-        steps: {
-          skills: { title, enabled },
-        },
-      },
-    } = this.values;
-
-    const records = nonEmptySkills(skills);
-
-    if (!enabled || !records.length) {
-      return [];
-    }
-
-    return [
-      {
-        text: (title.length
-          ? title
-          : DEFAULT_SECTION_TITLES.skills
-        ).toUpperCase(),
-        style: "heading2",
-        marginBottom: 4,
-      },
-      {
-        text: constr(", ", ...map(records, skillDisplay)),
-        style: "paragraph",
-        marginBottom: 12,
-      },
-    ];
-  };
+  skills: ContentProvider = () => [];
   certificates: ContentProvider = () => {
     const {
       resume: { certificates },
@@ -257,19 +229,25 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
 
     return [
       {
-        text: (title.length
-          ? title
-          : DEFAULT_SECTION_TITLES.certificates
-        ).toUpperCase(),
-        style: "heading2",
-        marginBottom: 4,
+        text: title.length ? title : DEFAULT_SECTION_TITLES.certificates,
+        style: "heading3",
       },
-      ...map(records, (r) => {
-        return { text: certificateDisplay(r, " - "), style: "paragraph" };
+      ...map(records, ({ name, issuer, date, url }) => {
+        return {
+          text: `${constr(
+            " - ",
+            name,
+            issuer,
+            url
+          )} (${getReadableDateFromPicker(date)})`,
+          style: "paragraph",
+          alignment: "center",
+          marginBottom: 8,
+        } satisfies Content;
       }),
     ];
   };
-  accomplishments = (): Content[] => {
+  accomplishments: ContentProvider = () => {
     const {
       resume: { accomplishments },
       meta: {
@@ -287,21 +265,16 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
 
     return [
       {
-        text: (title.length
-          ? title
-          : DEFAULT_SECTION_TITLES.accomplishments
-        ).toUpperCase(),
-        style: "heading2",
-        marginBottom: 4,
-        marginTop: 12,
+        text: title.length ? title : DEFAULT_SECTION_TITLES.accomplishments,
+        style: "heading3",
       },
-      ...map(records, (r) => ({
-        text: r.name,
+      {
+        ul: map(records, (b) => b.name),
         style: "paragraph",
-      })),
+        margin: [8, 0, 0, 8],
+      } satisfies Content,
     ];
   };
-
   interests = (): Content[] => {
     const {
       resume: { interests },
@@ -320,22 +293,20 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
 
     return [
       {
-        text: (title.length
-          ? title
-          : DEFAULT_SECTION_TITLES.interests
-        ).toUpperCase(),
-        style: "heading2",
-        marginBottom: 4,
-        marginTop: 12,
+        text: title.length ? title : DEFAULT_SECTION_TITLES.interests,
+        style: "heading3",
       },
-      {
-        text: constr(", ", ...map(records, (i) => i.name)),
+      splitArrayByLimit(map(records, "name"), 85).map((row) => ({
+        text: constr("  •  ", ...row),
         style: "paragraph",
-      },
+        italics: true,
+        alignment: "center",
+      })),
     ];
   };
   basics = (): Content[] => {
     const {
+      meta: { maskBasics },
       resume: {
         basics: {
           location: { address },
@@ -350,7 +321,9 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
 
     return [
       {
-        text: constr(" ", firstName, lastName),
+        text: maskBasics
+          ? "Marathon Staffing"
+          : constr(" ", firstName, lastName),
         style: "heading1",
       },
       {
@@ -361,14 +334,21 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
           body: [
             [
               {
-                alignment: "justify",
                 columns: [
-                  { text: address, alignment: "left", width: "35%" },
-                  { text: "", alignment: "center", width: "30%" },
                   {
-                    text: constr(" | ", phone, email, url),
+                    text: maskBasics ? "Confidential document" : address,
+                    style: "paragraph",
+                    alignment: "left",
+                    width: "40%",
+                  },
+                  { text: "", alignment: "center", width: "20%" },
+                  {
+                    text: maskBasics
+                      ? "Not for distribution\nwithout prior permission"
+                      : constr("\n", phone, email, url),
+                    style: "paragraph",
                     alignment: "right",
-                    width: "35%",
+                    width: "40%",
                   },
                 ],
               },

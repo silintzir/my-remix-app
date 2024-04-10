@@ -89,3 +89,30 @@ export const createTwoDimArray = (
   }
   return twoDimArray;
 };
+
+export const splitArrayByLimit = (
+  flatArray: string[],
+  limit: number,
+  overhead = 3
+) => {
+  const twoDimArray: string[][] = [];
+  let currentArray: string[] = [];
+  let currentLength = 0;
+
+  for (const str of flatArray) {
+    if (currentLength + str.length <= limit) {
+      currentArray.push(str);
+      currentLength += str.length + overhead;
+    } else {
+      twoDimArray.push(currentArray);
+      currentArray = [str];
+      currentLength = str.length;
+    }
+  }
+
+  if (currentArray.length > 0) {
+    twoDimArray.push(currentArray);
+  }
+
+  return twoDimArray;
+};

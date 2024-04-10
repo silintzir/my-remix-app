@@ -1,6 +1,6 @@
 import type { Content, TDocumentDefinitions } from "pdfmake/interfaces";
 import type { ResumeValues, Template } from "@/lib/types";
-import { pdfStyles } from "./styles";
+import { pdfStyles } from "./pdf-client/styles";
 import { AccountantPdfTemplate } from "./pdf-client/AccountantPdfTemplate";
 import { ExecutivePdfTemplate } from "./pdf-client/ExecutivePdfTemplate";
 import { ChicagoPdfTemplate } from "./pdf-client/ChicagoPdfTemplate";
@@ -45,24 +45,6 @@ export default function getDefinition(
           watermark: { text: "Sample resume", fontSize: 60 },
         }
       : {}),
-    // header: {
-    //   marginTop: 2,
-    //   columns: [
-    //     {
-    //       text: new Date().toUTCString(),
-    //       alignment: "left",
-    //       marginLeft: 8,
-    //       fontSize: 8,
-    //     },
-    //     {
-    //       text: "https://resumerunner.ai",
-    //       link: "https://resumerunner.ai",
-    //       alignment: "right",
-    //       fontSize: 8,
-    //       marginRight: 8,
-    //     },
-    //   ],
-    // },
     footer: (currentPage, pageCount) => ({
       text: `${currentPage.toString()} of ${pageCount.toString()}`,
       alignment: "center",

@@ -1,6 +1,5 @@
 import {
   constr,
-  createTwoDimArray,
   nonEmptyAccomplishments,
   nonEmptyCertificates,
   nonEmptyEducation,
@@ -8,6 +7,7 @@ import {
   nonEmptySkills,
   nonEmptyWork,
   skillDisplay,
+  splitArrayByLimit,
 } from "../helpers/common";
 import {
   BorderStyle,
@@ -17,6 +17,7 @@ import {
   HeadingLevel,
   Paragraph,
   TextRun,
+  AlignmentType,
 } from "docx";
 import type { FileChild } from "node_modules/docx/build/file/file-child";
 import { map, groupBy } from "lodash-es";
@@ -29,7 +30,7 @@ interface ContentProvider {
   (): FileChild[];
 }
 
-export class AccountantDocxTemplate extends ChicagoDocxTemplate {
+export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
   summary: ContentProvider = () => {
     const {
       resume: {
@@ -39,7 +40,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       meta: {
         steps: {
           summary: { title: summaryTitle, enabled: summaryEnabled },
-          skills: { enabled: skillsEnabled },
+          skills: { title: skillsTitle, enabled: skillsEnabled },
         },
       },
     } = this.values;
@@ -68,53 +69,20 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       noSkills = true;
     } else {
       paragraphs.push(
-        new Table({
-          margins: {
-            left: 0,
-          },
-          borders: {
-            insideHorizontal: {
-              style: BorderStyle.NONE,
-            },
-            bottom: {
-              size: 0,
-              style: BorderStyle.NONE,
-            },
-            left: {
-              size: 0,
-              style: BorderStyle.NONE,
-            },
-            top: {
-              style: BorderStyle.NONE,
-            },
-            right: {
-              style: BorderStyle.NONE,
-            },
-            insideVertical: {
-              style: BorderStyle.NONE,
-            },
-          },
-          rows: [
-            new TableRow({
-              children: createTwoDimArray(records.map(skillDisplay), 3).map(
-                (column) =>
-                  new TableCell({
-                    children: column.map(
-                      (entry) =>
-                        new Paragraph({
-                          children: [
-                            new TextRun({
-                              text: `√   ${entry}`,
-                            }),
-                          ],
-                          spacing: { before: 90 },
-                        })
-                    ),
-                  })
-              ),
-            }),
-          ],
-        }) as any
+        new Paragraph({
+          text: `–${
+            skillsTitle.length ? skillsTitle : DEFAULT_SECTION_TITLES.skills
+          }–`,
+          style: HeadingLevel.HEADING_4,
+        }),
+        ...splitArrayByLimit(map(records, skillDisplay), 78).map(
+          (row) =>
+            new Paragraph({
+              text: constr("  •  ", ...row),
+              alignment: AlignmentType.CENTER,
+              style: HeadingLevel.HEADING_6,
+            })
+        )
       );
     }
     if (noSummary && noSkills) {
@@ -139,8 +107,14 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     } = this.values;
 
     return [
+      new Paragraph({
+        text: maskBasics
+          ? "Marathon Staffing"
+          : constr(" ", firstName, lastName),
+        style: HeadingLevel.HEADING_1,
+      }),
       new Table({
-        columnWidths: [5800, 5000],
+        columnWidths: [4320, 2160, 4320],
         margins: {
           left: 0,
         },
@@ -150,7 +124,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
           },
           bottom: {
             size: 1,
-            style: BorderStyle.DOUBLE,
+            style: BorderStyle.SINGLE,
           },
           left: {
             size: 0,
@@ -172,30 +146,36 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: maskBasics
-                      ? "Marathon Staffing"
-                      : constr(" ", firstName, lastName),
-                    style: HeadingLevel.HEADING_1,
+                    text: maskBasics ? "Confidential document," : address,
                   }),
                 ],
               }),
               new TableCell({
-                children: [
-                  new Paragraph({
-                    text: "",
-                    style: HeadingLevel.HEADING_6,
-                  }),
-                  new Paragraph({
-                    text: maskBasics ? "Confidential document," : address,
-                    style: HeadingLevel.HEADING_6,
-                  }),
-                  new Paragraph({
-                    text: maskBasics
-                      ? "not for distribution without prior permission."
-                      : constr(" | ", phone, email, url),
-                    style: HeadingLevel.HEADING_6,
-                  }),
-                ],
+                children: [new Paragraph({ text: "" })],
+              }),
+              new TableCell({
+                children: maskBasics
+                  ? [
+                      new Paragraph({
+                        text: "Not for distribution",
+                        alignment: AlignmentType.RIGHT,
+                      }),
+                      new Paragraph({
+                        text: "without prior permission",
+                        alignment: AlignmentType.RIGHT,
+                      }),
+                    ]
+                  : [phone, email, url].reduce((curr, i) => {
+                      if (i) {
+                        curr.push(
+                          new Paragraph({
+                            text: i,
+                            alignment: AlignmentType.RIGHT,
+                          })
+                        );
+                      }
+                      return curr;
+                    }, [] as Paragraph[]),
               }),
             ],
           }),
@@ -221,51 +201,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
         title.length ? title : DEFAULT_SECTION_TITLES.accomplishments,
         HeadingLevel.HEADING_3
       ),
-      new Table({
-        columnWidths: [300, 10500],
-        margins: {
-          left: 0,
-        },
-        borders: {
-          insideHorizontal: {
-            style: BorderStyle.NONE,
-          },
-          bottom: {
-            size: 0,
-            style: BorderStyle.NONE,
-          },
-          left: {
-            size: 0,
-            style: BorderStyle.NONE,
-          },
-          top: {
-            style: BorderStyle.NONE,
-          },
-          right: {
-            style: BorderStyle.NONE,
-          },
-          insideVertical: {
-            style: BorderStyle.NONE,
-          },
-        },
-        rows: records.map(
-          (i) =>
-            new TableRow({
-              children: [
-                new TableCell({
-                  children: [
-                    new Paragraph({ text: "√", spacing: { before: 150 } }),
-                  ],
-                }),
-                new TableCell({
-                  children: [
-                    new Paragraph({ text: i.name, spacing: { before: 150 } }),
-                  ],
-                }),
-              ],
-            })
-        ),
-      }),
+      ...this.createBullets(map(records, "name")),
     ];
   };
   work: ContentProvider = () => {
@@ -299,48 +235,49 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       )
     );
 
+    let firstItem = true;
     for (const group in p2) {
-      let firstItemInGroup = true;
-      for (const {
-        name,
-        position,
-        city,
-        state,
-        startDate,
-        endDate,
-        bullets,
-      } of p2[group]) {
+      const stack = [];
+      paragraphs.push(
+        new Paragraph({
+          text: constr(
+            ", ",
+            p2[group][0].name,
+            constr(", ", p2[group][0].city, p2[group][0].state)
+          ),
+          style: HeadingLevel.HEADING_5,
+          spacing: firstItem ? { before: 0 } : { before: 150 },
+        })
+      );
+      firstItem = false;
+
+      for (const { position, startDate, endDate, bullets } of p2[group]) {
         paragraphs.push(
-          this.twoColumns(
-            [
+          new Paragraph({
+            children: [
               new TextRun({
                 text: position,
                 bold: true,
               }),
               new TextRun({
-                text: ", ",
+                text: " ",
               }),
-              new TextRun({ text: constr(", ", name, city, state) }),
-            ],
-            [
               new TextRun({
-                text: constr(
-                  " — ",
+                text: `(${constr(
+                  " - ",
                   getReadableDateFromPicker(startDate),
                   getReadableDateFromPicker(endDate)
-                ),
+                )})`,
               }),
             ],
-            undefined,
-            undefined,
-            8640,
-            2160,
-            firstItemInGroup ? 200 : 0
-          )
+            alignment: AlignmentType.CENTER,
+          })
         );
-        paragraphs.push(...this.createBullets(map(bullets, "content")));
-        firstItemInGroup = false;
+        if (bullets && bullets.length) {
+          stack.push(...this.createBullets(map(bullets, "content")));
+        }
       }
+      paragraphs.push(...stack);
     }
     return paragraphs;
   };
@@ -369,6 +306,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       )
     );
 
+    let firstItem = true;
     for (const {
       institution,
       studyType,
@@ -380,34 +318,25 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       bullets,
     } of records) {
       paragraphs.push(
-        this.twoColumns(
-          [
-            new TextRun({
-              text: constr(", ", institution, studyType, area),
-              bold: true,
-            }),
-            new TextRun({
-              text: ", ",
-              bold: true,
-            }),
-            new TextRun({ text: constr(", ", city, state) }),
-          ],
-          [
-            new TextRun({
-              text: constr(
-                " — ",
+        new Paragraph({
+          text: constr(
+            ", ",
+            studyType,
+            area,
+            institution,
+            city,
+            state +
+              ` (${constr(
+                " - ",
                 getReadableDateFromPicker(startDate),
                 getReadableDateFromPicker(endDate)
-              ),
-            }),
-          ],
-          undefined,
-          undefined,
-          8640,
-          2160,
-          150
-        )
+              )})`
+          ),
+          style: HeadingLevel.HEADING_5,
+          spacing: firstItem ? { before: 0 } : { before: 150 },
+        })
       );
+      firstItem = false;
       paragraphs.push(...this.createBullets(map(bullets, "content")));
     }
     return paragraphs;
@@ -427,35 +356,25 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     if (!enabled || !records.length) {
       return [];
     }
+    let firstItem = true;
     return [
       this.sectionTitle(
         title.length ? title : DEFAULT_SECTION_TITLES.certificates,
         HeadingLevel.HEADING_3
       ),
       ...map(records, ({ name, date, issuer, url }) => {
-        return this.twoColumns(
-          [
-            new TextRun({
-              text: name,
-              bold: true,
-            }),
-            new TextRun({
-              text: ", ",
-              bold: true,
-            }),
-            new TextRun({ text: constr(", ", issuer, url) }),
-          ],
-          [
-            new TextRun({
-              text: getReadableDateFromPicker(date),
-            }),
-          ],
-          undefined,
-          undefined,
-          8640,
-          2160,
-          150
-        );
+        const spacing = firstItem ? { before: 0 } : { before: 150 };
+        firstItem = false;
+        return new Paragraph({
+          text: `${constr(
+            " - ",
+            name,
+            issuer,
+            url
+          )} (${getReadableDateFromPicker(date)})`,
+          style: HeadingLevel.HEADING_5,
+          spacing,
+        });
       }),
     ];
   };
@@ -477,47 +396,13 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
         title.length ? title : DEFAULT_SECTION_TITLES.interests,
         HeadingLevel.HEADING_3
       ),
-      new Table({
-        columnWidths: [5400, 5400],
-        margins: {
-          left: 0,
-        },
-        borders: {
-          insideHorizontal: {
-            style: BorderStyle.NONE,
-          },
-          bottom: {
-            size: 0,
-            style: BorderStyle.NONE,
-          },
-          left: {
-            size: 0,
-            style: BorderStyle.NONE,
-          },
-          top: {
-            style: BorderStyle.NONE,
-          },
-          right: {
-            style: BorderStyle.NONE,
-          },
-          insideVertical: {
-            style: BorderStyle.NONE,
-          },
-        },
-        rows: [
-          new TableRow({
-            children: createTwoDimArray(
-              records.map((i) => i.name),
-              3
-            ).map(
-              (column) =>
-                new TableCell({
-                  children: this.createBullets(column, 0, { before: 90 }),
-                })
-            ),
-          }),
-        ],
-      }) as any,
+      ...splitArrayByLimit(map(records, "name"), 80).map(
+        (row) =>
+          new Paragraph({
+            text: constr("  •  ", ...row),
+            style: HeadingLevel.TITLE,
+          })
+      ),
     ];
   };
 }

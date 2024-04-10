@@ -10,12 +10,8 @@ import {
   nonEmptySkills,
   nonEmptyWork,
   skillDisplay,
-} from "@/lib/templates/helpers/common";
-import {
-  get2ColsSpaceBetween,
-  getHeaderWithLine,
-  pine,
-} from "@/lib/templates/helpers/pdf";
+} from "../helpers/common";
+import { get2ColsSpaceBetween, getHeaderWithLine, pine } from "../helpers/pdf";
 import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
