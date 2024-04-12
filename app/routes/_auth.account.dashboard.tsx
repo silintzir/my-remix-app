@@ -43,6 +43,8 @@ export async function action({ request }: ActionFunctionArgs) {
     const text = trim((fd.get("text") as string) || "");
     if (!text || !text.length) {
       return json({ error: "Field is required" });
+    } else if (text.length > 6000) {
+      return json({ error: "Exceeded 6000 characters limit" });
     }
 
     // const toStore = (await parseText(text)) as ResumeValues;
