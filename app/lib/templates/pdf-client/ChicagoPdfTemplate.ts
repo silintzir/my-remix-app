@@ -188,7 +188,7 @@ export class ChicagoPdfTemplate {
           : DEFAULT_SECTION_TITLES.summary
       )
     );
-    output.push({ text: content, style: "paragraph" });
+    output.push({ text: content, style: "paragraph", marginBottom: 8 });
 
     return output;
   };
@@ -231,7 +231,7 @@ export class ChicagoPdfTemplate {
             style: "heading3",
             alignment: "right",
           },
-          10
+          0
         )
       );
 

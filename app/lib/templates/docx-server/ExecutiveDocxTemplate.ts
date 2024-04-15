@@ -108,13 +108,11 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
 
     return [
       new Paragraph({
-        text: maskBasics
-          ? "Marathon Staffing"
-          : constr(" ", firstName, lastName),
+        text: constr(" ", firstName, lastName),
         style: HeadingLevel.HEADING_1,
       }),
       new Table({
-        columnWidths: [4320, 2160, 4320],
+        columnWidths: [4860, 1080, 4860],
         margins: {
           left: 0,
         },
@@ -146,7 +144,7 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: maskBasics ? "Confidential document," : address,
+                    text: maskBasics ? "Marathon Staffing" : address,
                   }),
                 ],
               }),
@@ -157,11 +155,11 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
                 children: maskBasics
                   ? [
                       new Paragraph({
-                        text: "Not for distribution",
+                        text: "Confidential document,",
                         alignment: AlignmentType.RIGHT,
                       }),
                       new Paragraph({
-                        text: "without prior permission",
+                        text: "not for distribution without prior permission.",
                         alignment: AlignmentType.RIGHT,
                       }),
                     ]

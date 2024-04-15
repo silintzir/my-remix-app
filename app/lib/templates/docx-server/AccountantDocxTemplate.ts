@@ -172,9 +172,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
               new TableCell({
                 children: [
                   new Paragraph({
-                    text: maskBasics
-                      ? "Marathon Staffing"
-                      : constr(" ", firstName, lastName),
+                    text: constr(" ", firstName, lastName),
                     style: HeadingLevel.HEADING_1,
                   }),
                 ],
@@ -186,12 +184,12 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
                     style: HeadingLevel.HEADING_6,
                   }),
                   new Paragraph({
-                    text: maskBasics ? "Confidential document," : address,
+                    text: maskBasics ? "Marathon Staffing" : address,
                     style: HeadingLevel.HEADING_6,
                   }),
                   new Paragraph({
                     text: maskBasics
-                      ? "not for distribution without prior permission."
+                      ? "Confidential document, not for distribution without prior permission."
                       : constr(" | ", phone, email, url),
                     style: HeadingLevel.HEADING_6,
                   }),

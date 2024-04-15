@@ -2,7 +2,7 @@ import type { Content } from "pdfmake/interfaces";
 
 export function getHeaderWithLine(text: string): Content {
   return {
-    marginTop: 12,
+    marginTop: 6,
     marginBottom: 6,
     table: {
       widths: ["*"],

@@ -49,7 +49,7 @@ export const docxStyles = {
         },
         paragraph: {
           spacing: {
-            after: 200,
+            after: 0,
             before: 0,
           },
         },
@@ -246,7 +246,7 @@ export const docxStyles = {
         },
         paragraph: {
           spacing: {
-            after: 0,
+            after: 40,
             before: 0,
           },
           alignment: AlignmentType.RIGHT,

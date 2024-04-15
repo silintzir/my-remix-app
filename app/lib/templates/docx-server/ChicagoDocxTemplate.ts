@@ -158,7 +158,10 @@ export class ChicagoDocxTemplate {
             }),
           ],
           HeadingLevel.HEADING_3,
-          HeadingLevel.HEADING_3
+          HeadingLevel.HEADING_3,
+          8140,
+          2660,
+          120
         )
       );
 
@@ -233,7 +236,10 @@ export class ChicagoDocxTemplate {
             }),
           ],
           HeadingLevel.HEADING_3,
-          HeadingLevel.HEADING_3
+          HeadingLevel.HEADING_3,
+          8140,
+          2660,
+          120
         )
       );
 

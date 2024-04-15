@@ -433,15 +433,13 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
                 alignment: "justify",
                 columns: [
                   {
-                    text: maskBasics
-                      ? "Marathon Staffing"
-                      : constr(" ", firstName, lastName),
+                    text: constr(" ", firstName, lastName),
                     style: "heading1",
                     width: "54%",
                   },
                   {
                     text: maskBasics
-                      ? "\nConfidential document,\nnot for distribution without prior permission."
+                      ? "\nMarathon Staffing\n Confidential document, not for distribution without prior permission."
                       : `\n${address}\n${constr(" | ", phone, email, url)}`,
                     style: "headerRight",
                     width: "46%",

@@ -321,9 +321,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
 
     return [
       {
-        text: maskBasics
-          ? "Marathon Staffing"
-          : constr(" ", firstName, lastName),
+        text: constr(" ", firstName, lastName),
         style: "heading1",
       },
       {
@@ -336,19 +334,19 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
               {
                 columns: [
                   {
-                    text: maskBasics ? "Confidential document" : address,
+                    text: maskBasics ? "Marathon Staffing" : address,
                     style: "paragraph",
                     alignment: "left",
-                    width: "40%",
+                    width: "45%",
                   },
-                  { text: "", alignment: "center", width: "20%" },
+                  { text: "", alignment: "center", width: "10%" },
                   {
                     text: maskBasics
-                      ? "Not for distribution\nwithout prior permission"
+                      ? "Confidential document,\nnot for distribution without prior permission."
                       : constr("\n", phone, email, url),
                     style: "paragraph",
                     alignment: "right",
-                    width: "40%",
+                    width: "45%",
                   },
                 ],
               },
