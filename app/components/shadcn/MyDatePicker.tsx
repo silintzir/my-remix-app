@@ -17,6 +17,7 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { some, isFinite } from "lodash-es";
 
 const MyDatePicker = (ReactDatePicker as any).default;
 
@@ -47,6 +48,11 @@ export function DatePicker<T extends FieldValues>({
   useEffect(() => {
     if (!current && c && c !== "Present") {
       const parts = c.split("/");
+
+      if (some(parts, (p) => !isFinite(+p))) {
+        setCurrent(null);
+        return;
+      }
 
       // Extract month and year
       const month = parts.length === 1 ? 1 : parseInt(parts[0], 10); // Parse the month as an integer
