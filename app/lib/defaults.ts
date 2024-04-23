@@ -88,7 +88,7 @@ export const defaultResumeValues = (
     language,
     mode: "standard",
     tailor: { content: "", suggestions: {} },
-    fontSize: 12,
+    fontSize: 10,
     order: [...DEFAULT_STEPS_ORDER],
     autoSort: {
       education: true,

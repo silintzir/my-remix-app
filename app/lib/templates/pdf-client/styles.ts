@@ -7,56 +7,57 @@ type StyleParams = {
 export const pdfStyles = {
   chicago: ({ fontSize }: StyleParams): StyleDictionary => ({
     paragraph: {
-      fontSize: 10,
+      fontSize,
+      alignment: "justify",
     },
     heading1: {
-      fontSize: 18,
+      fontSize: 1.8 * fontSize,
       bold: true,
       alignment: "center",
     },
     subheading1: {
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       alignment: "center",
     },
     subheading2: {
       // Section title
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       alignment: "center",
       italics: true,
     },
     heading2: {
       // Company name
       bold: true,
-      fontSize: 13,
+      fontSize: 1.3 * fontSize,
     },
     heading3: {
       // Job title and period
-      fontSize: 12,
+      fontSize: 1.2 * fontSize,
       bold: true,
       marginBottom: 20,
     },
     heading4: {
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       italics: true,
     },
   }),
   executive: ({ fontSize }: StyleParams): StyleDictionary => ({
     paragraph: {
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       alignment: "justify",
     },
     heading1: {
-      fontSize: 18,
+      fontSize: 1.8 * fontSize,
       bold: true,
       fontFeatures: ["smcp"],
       alignment: "center",
     },
     subheading1: {
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       alignment: "center",
     },
     subheading2: {
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       alignment: "center",
       italics: true,
     },
@@ -64,39 +65,39 @@ export const pdfStyles = {
       bold: true,
       alignment: "center",
       fontFeatures: ["smcp"],
-      fontSize: 14,
+      fontSize: 1.4 * fontSize,
     },
     heading3: {
       alignment: "center",
-      fontSize: 13,
+      fontSize: 1.3 * fontSize,
       fontFeatures: ["smcp"],
       bold: true,
     },
     heading4: {
       alignment: "center",
-      fontSize: 12,
+      fontSize: 1.2 * fontSize,
       italics: true,
       bold: true,
     },
   }),
   accountant: ({ fontSize }: StyleParams): StyleDictionary => ({
     paragraph: {
-      fontSize: 10,
+      fontSize,
       alignment: "justify",
     },
     heading1: {
-      fontSize: 16,
+      fontSize: 1.6 * fontSize,
       fontFeatures: ["smcp"],
       bold: true,
       alignment: "left",
     },
     subheading1: {
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       alignment: "center",
     },
     subheading2: {
       // Section title
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       alignment: "center",
       italics: true,
     },
@@ -105,29 +106,29 @@ export const pdfStyles = {
       bold: true,
       fontFeatures: ["smcp"],
       alignment: "center",
-      fontSize: 14,
+      fontSize: 1.4 * fontSize,
     },
     heading3: {
       bold: true,
       fontFeatures: ["smcp"],
       alignment: "center",
-      fontSize: 13,
+      fontSize: 1.3 * fontSize,
     },
     heading4: {
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
       italics: true,
     },
     headerRight: {
       lineHeight: 1.3,
-      fontSize: 8,
+      fontSize: 0.8 * fontSize,
       alignment: "right",
     },
     cellContent: {
-      fontSize: 10,
+      fontSize,
       alignment: "left",
     },
     centered: {
-      fontSize: 10,
+      fontSize,
       alignment: "center",
     },
   }),

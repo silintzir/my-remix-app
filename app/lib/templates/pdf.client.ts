@@ -17,7 +17,7 @@ type DefConf = {
 
 export default function getDefinition(
   data: ResumeValues,
-  { isSample = false, fontSize = 11, template = "chicago" }: DefConf
+  { isSample = false, fontSize = 10, template = "chicago" }: DefConf
 ): TDocumentDefinitions {
   const styles =
     template === "chicago"
@@ -48,7 +48,7 @@ export default function getDefinition(
     footer: (currentPage, pageCount) => ({
       text: `${currentPage.toString()} of ${pageCount.toString()}`,
       alignment: "center",
-      fontSize: 11,
+      fontSize: 1.1 * fontSize,
     }),
     content: struct.create(),
   };
