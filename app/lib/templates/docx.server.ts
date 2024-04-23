@@ -14,6 +14,7 @@ import {
   TextRun,
 } from "docx";
 import { docxStyles } from "./docx-server/styles";
+import { DEFAULT_FONT_SIZE } from "../resume";
 
 type DefConf = {
   isSample?: boolean;
@@ -23,7 +24,7 @@ type DefConf = {
 
 export default function getDefinition(
   document: ResumeValues,
-  { fontSize = 11, template = "chicago" }: DefConf
+  { fontSize = DEFAULT_FONT_SIZE, template = "chicago" }: DefConf
 ): Document {
   let styles: IStylesOptions;
   let struct: any;

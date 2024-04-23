@@ -5,18 +5,18 @@ type StyleParams = {
 };
 
 export const docxStyles = {
-  chicago: (_config: StyleParams): IStylesOptions => ({
+  chicago: ({ fontSize }: StyleParams): IStylesOptions => ({
     default: {
       document: {
         run: {
-          size: 20,
+          size: 2.0 * fontSize,
           font: "serif",
         },
       },
       heading1: {
         run: {
           font: "serif",
-          size: 36,
+          size: 3.6 * fontSize,
           bold: true,
           color: "#000000",
         },
@@ -29,7 +29,7 @@ export const docxStyles = {
       },
       heading2: {
         run: {
-          size: 26,
+          size: 2.6 * fontSize,
           allCaps: true,
           font: "serif",
           bold: true,
@@ -44,7 +44,7 @@ export const docxStyles = {
       heading3: {
         run: {
           font: "serif",
-          size: 24,
+          size: 2.4 * fontSize,
           bold: true,
         },
         paragraph: {
@@ -57,7 +57,7 @@ export const docxStyles = {
       heading4: {
         run: {
           font: "serif",
-          size: 22,
+          size: 2.2 * fontSize,
         },
         paragraph: {
           spacing: {
@@ -68,11 +68,11 @@ export const docxStyles = {
       },
     },
   }),
-  executive: (_config: StyleParams): IStylesOptions => ({
+  executive: ({ fontSize }: StyleParams): IStylesOptions => ({
     default: {
       document: {
         run: {
-          size: 22,
+          size: 2.2 * fontSize,
           font: "Arial",
         },
         paragraph: {
@@ -81,7 +81,7 @@ export const docxStyles = {
       },
       heading1: {
         run: {
-          size: 36,
+          size: 3.6 * fontSize,
           smallCaps: true,
           bold: true,
         },
@@ -95,7 +95,7 @@ export const docxStyles = {
       },
       heading2: {
         run: {
-          size: 30,
+          size: 3.0 * fontSize,
           smallCaps: true,
           bold: true,
         },
@@ -109,7 +109,7 @@ export const docxStyles = {
       },
       heading3: {
         run: {
-          size: 28,
+          size: 2.8 * fontSize,
           smallCaps: true,
           bold: true,
         },
@@ -123,7 +123,7 @@ export const docxStyles = {
       },
       heading4: {
         run: {
-          size: 24,
+          size: 2.4 * fontSize,
           bold: true,
           italics: true,
         },
@@ -137,7 +137,7 @@ export const docxStyles = {
       },
       heading5: {
         run: {
-          size: 22,
+          size: 2.2 * fontSize,
         },
         paragraph: {
           spacing: {
@@ -149,7 +149,7 @@ export const docxStyles = {
       },
       heading6: {
         run: {
-          size: 22,
+          size: 2.2 * fontSize,
           bold: true,
           italics: true,
         },
@@ -163,7 +163,7 @@ export const docxStyles = {
       },
       title: {
         run: {
-          size: 22,
+          size: 2.2 * fontSize,
           italics: true,
         },
         paragraph: {
@@ -176,11 +176,11 @@ export const docxStyles = {
       },
     },
   }),
-  accountant: (_config: StyleParams): IStylesOptions => ({
+  accountant: ({ fontSize }: StyleParams): IStylesOptions => ({
     default: {
       document: {
         run: {
-          size: 20,
+          size: 2.0 * fontSize,
           font: "Arial",
         },
         paragraph: {
@@ -189,7 +189,7 @@ export const docxStyles = {
       },
       heading1: {
         run: {
-          size: 36,
+          size: 3.6 * fontSize,
           smallCaps: true,
           bold: true,
         },
@@ -203,7 +203,7 @@ export const docxStyles = {
       },
       heading2: {
         run: {
-          size: 30,
+          size: 3.0 * fontSize,
           smallCaps: true,
           bold: true,
         },
@@ -217,7 +217,7 @@ export const docxStyles = {
       },
       heading3: {
         run: {
-          size: 28,
+          size: 2.8 * fontSize,
           smallCaps: true,
           bold: true,
         },
@@ -231,7 +231,7 @@ export const docxStyles = {
       },
       heading4: {
         run: {
-          size: 22,
+          size: 2.2 * fontSize,
         },
         paragraph: {
           spacing: {
@@ -242,7 +242,7 @@ export const docxStyles = {
       },
       heading6: {
         run: {
-          size: 16,
+          size: 1.6 * fontSize,
         },
         paragraph: {
           spacing: {

@@ -4,6 +4,7 @@ import { pdfStyles } from "./pdf-client/styles";
 import { AccountantPdfTemplate } from "./pdf-client/AccountantPdfTemplate";
 import { ExecutivePdfTemplate } from "./pdf-client/ExecutivePdfTemplate";
 import { ChicagoPdfTemplate } from "./pdf-client/ChicagoPdfTemplate";
+import { DEFAULT_FONT_SIZE } from "../resume";
 
 export interface ContentProvider {
   (): Content[];
@@ -17,7 +18,7 @@ type DefConf = {
 
 export default function getDefinition(
   data: ResumeValues,
-  { isSample = false, fontSize = 10, template = "chicago" }: DefConf
+  { isSample = false, fontSize = DEFAULT_FONT_SIZE, template = "chicago" }: DefConf
 ): TDocumentDefinitions {
   const styles =
     template === "chicago"
