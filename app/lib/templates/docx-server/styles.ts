@@ -12,6 +12,9 @@ export const docxStyles = {
           size: 2.0 * fontSize,
           font: "serif",
         },
+        paragraph: {
+          alignment: AlignmentType.JUSTIFIED,
+        },
       },
       heading1: {
         run: {
