@@ -9,7 +9,7 @@ import { useLoaderData } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Website" },
+    { title: "Resume Runner" },
     { name: "description", content: "Welcome to Resumerunner.ai!" },
   ];
 };
