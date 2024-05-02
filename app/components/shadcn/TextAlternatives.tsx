@@ -57,7 +57,7 @@ export function TextAlternatives({
           className="text-blue-600 flex gap-1 items-center"
           type="button"
           onClick={enhance}
-          title="AI Powered rephrase"
+          title="AI Enhance"
         >
           <Wand2 className="h-4 w-4" />
           {buttonLabel && <span>{buttonLabel}</span>}
@@ -69,7 +69,7 @@ export function TextAlternatives({
             {original && original.length > 0 ? (
               <>
                 <span>
-                  Alternatives for: <br />
+                  Enhancements for: <br />
                 </span>
                 <span className="font-semibold text-base">"{original}"</span>
               </>

@@ -9,12 +9,12 @@ import { getRecordPeriod, getEducationTitle } from "@/lib/resume";
 import type { ResumeValues } from "@/lib/types";
 import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { map } from "lodash-es";
+// import { map } from "lodash-es";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
 import { Separator } from "@/components/ui/separator";
-import { usStateCodes } from "@/lib/states";
-import { SelectInput } from "@/components/shadcn/SelectInput";
+// import { usStateCodes } from "@/lib/states";
+// import { SelectInput } from "@/components/shadcn/SelectInput";
 import { TextInput } from "@/components/shadcn/TextInput";
 import {
   Accordion,
@@ -182,12 +182,8 @@ export function EducationStep() {
                         placeholder="e.x. Miami"
                         label="City"
                       />
-                      <SelectInput
+                      <TextInput
                         className="w-48"
-                        options={map(usStateCodes, (s) => ({
-                          label: s,
-                          value: s,
-                        }))}
                         control={control}
                         name={`resume.education.${index}.state`}
                         label="State"

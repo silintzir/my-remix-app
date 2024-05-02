@@ -25,6 +25,8 @@ export function SummaryStep() {
   const asObjective = watch("resume.summary.asObjective");
   const objectiveTarget = watch("resume.summary.objectiveTarget");
 
+  const hasText = (summary || "").trim().length > 0;
+
   return (
     <div className="space-y-4">
       <p className="small">
@@ -71,7 +73,7 @@ export function SummaryStep() {
               endpoint="summary"
               context={{ ...getContext(), asObjective, objectiveTarget }}
               original={summary || ""}
-              buttonLabel="Suggest/Enhance"
+              buttonLabel={hasText ? "AI Enhance" : "AI Suggest"}
               update={(text: string) => {
                 setValue("resume.summary.content", text, {
                   shouldDirty: true,

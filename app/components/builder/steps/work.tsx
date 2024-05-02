@@ -3,7 +3,7 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
-import { SelectInput } from "@/components/shadcn/SelectInput";
+// import { SelectInput } from "@/components/shadcn/SelectInput";
 import { TextInput } from "@/components/shadcn/TextInput";
 import {
   Accordion,
@@ -21,10 +21,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { getExperienceTitle, getRecordPeriod } from "@/lib/resume";
-import { usStateCodes } from "@/lib/states";
+// import { usStateCodes } from "@/lib/states";
 import type { ResumeValues } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { map } from "lodash-es";
+// import { map } from "lodash-es";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -175,16 +175,12 @@ export function WorkStep() {
                         placeholder="e.x. Miami"
                         label="City"
                       />
-                      <SelectInput
+                      <TextInput
                         className="w-48"
-                        options={map(usStateCodes, (s) => ({
-                          label: s,
-                          value: s,
-                        }))}
                         control={control}
                         name={`resume.work.${index}.state`}
                         label="State"
-                        placeholder="Select state"
+                        placeholder="Enter state"
                       />
                     </div>
                     <Separator />

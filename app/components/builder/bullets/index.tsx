@@ -74,7 +74,7 @@ export function Bullets({ step, index, context }: Props) {
               append(newBullets);
             }}
             endpoint={step}
-            label="Suggest bullets"
+            label="AI Suggest"
             lang={lang}
           />
           <Button

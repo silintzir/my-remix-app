@@ -21,9 +21,10 @@ import {
 } from "@/components/builder/sortable";
 import { TextInput } from "@/components/shadcn/TextInput";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Settings2 } from "lucide-react";
+import { Drama, RotateCcw, Settings2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { SelectInput } from "@/components/shadcn/SelectInput";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Props = {
   singlePage?: boolean;
@@ -48,6 +49,32 @@ export function StartStep({ singlePage = false }: Props) {
 
   return (
     <div className="space-y-2">
+      <Alert className="bg-blue-100">
+        <Drama className="h-4 w-4" />
+        <AlertTitle>Recruiter mode</AlertTitle>
+        <AlertDescription>
+          <div className="flex justify-between items-center">
+            <span>
+              You may mask the basics info and show the Marathon Staffing
+              company info instead.
+            </span>
+            <FormField
+              control={control}
+              name="meta.maskBasics"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg">
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+        </AlertDescription>
+      </Alert>
       <h4 className="font-semibold flex justify-between items-center">
         <span>Template</span>
       </h4>
