@@ -70,7 +70,7 @@ function outputExpectation(step: Step, context: any, enhance: string) {
         enhance
       )} words each, avoiding any numbers or percentages, that describe some courses/projects that I could add to this education entry in my resume to make it look more professional. `;
     case "work":
-      return `Suggest 5 bullets text, avoiding any numbers or percentages, that describe some highlights that I could add to this job position in my resume to make it look more professional. `;
+      return `Suggest 5 bullets, avoiding any numbers or percentages.`;
     case "skills":
       return `Suggest 10 skills of at most ${countWordsOr(
         enhance,
