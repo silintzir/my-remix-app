@@ -19,7 +19,7 @@ export function getHeaderWithLine(text: string): Content {
       paddingLeft: () => 0,
       paddingRight: () => 0,
       paddingTop: () => 0,
-      paddingBottom: () => -2,
+      paddingBottom: () => 1,
       hLineWidth: (i) => (i === 1 ? 1 : 0),
       vLineWidth: () => 0,
     },
@@ -30,13 +30,14 @@ export function get2ColsSpaceBetween(
   left: Content,
   right: Content,
   marginBottom = 0,
-  width = "65%"
+  width = "67%"
 ) {
   return [
     {
       alignment: "justify",
       columns: [
         { text: left, alignment: "left", width },
+        { text: "", width: "3%" },
         { text: right, alignment: "right" },
       ],
       marginBottom,

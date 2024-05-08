@@ -1,4 +1,5 @@
 import {
+  TITLE,
   constr,
   nonEmptyAccomplishments,
   nonEmptyCertificates,
@@ -7,7 +8,7 @@ import {
   nonEmptySkills,
   nonEmptyWork,
   skillDisplay,
-} from "@/lib/templates/helpers/common";
+} from "../helpers/common";
 import type { ResumeValues, Step } from "@/lib/types";
 import {
   AlignmentType,
@@ -19,12 +20,12 @@ import {
   Paragraph,
   TextRun,
   WidthType,
+  Styles,
 } from "docx";
 import type { FileChild } from "node_modules/docx/build/file/file-child";
 import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
-import { Heading1Style } from "node_modules/docx/build/file/styles/style";
 
 interface ContentProvider {
   (): FileChild[];
@@ -58,14 +59,16 @@ export class ChicagoDocxTemplate {
             children: [new TextRun(constr(" ", firstName, lastName))],
           }),
           new Paragraph({
+            heading: HeadingLevel.HEADING_6,
             alignment: AlignmentType.CENTER,
-            children: [new TextRun({ text: "Marathon Staffing" })],
+            children: [new TextRun({ text: TITLE.COMPANY_NAME })],
           }),
           new Paragraph({
+            heading: HeadingLevel.HEADING_6,
             alignment: AlignmentType.CENTER,
             children: [
               new TextRun({
-                text: "Confidential document, not for distribution without prior permission.",
+                text: TITLE.CONFIDENTIALITY_INFO,
                 italics: true,
               }),
             ],
@@ -78,10 +81,12 @@ export class ChicagoDocxTemplate {
             children: [new TextRun(constr(" ", firstName, lastName))],
           }),
           new Paragraph({
+            heading: HeadingLevel.HEADING_6,
             alignment: AlignmentType.CENTER,
             children: [new TextRun({ text: address })],
           }),
           new Paragraph({
+            heading: HeadingLevel.HEADING_6,
             alignment: AlignmentType.CENTER,
             children: [
               new TextRun({
@@ -142,7 +147,7 @@ export class ChicagoDocxTemplate {
 
     for (const group in p2) {
       paragraphs.push(
-        this.twoColumns(
+        this.get2ColsSpaceBetween(
           [
             new TextRun({
               text: p2[group][0].name,
@@ -159,15 +164,14 @@ export class ChicagoDocxTemplate {
           ],
           HeadingLevel.HEADING_3,
           HeadingLevel.HEADING_3,
-          8140,
-          2660,
+          undefined,
           120
         )
       );
 
       for (const { position, startDate, endDate, bullets } of p2[group]) {
         paragraphs.push(
-          this.twoColumns(
+          this.get2ColsSpaceBetween(
             [new TextRun({ text: position, italics: true })],
             [
               new TextRun({
@@ -218,7 +222,7 @@ export class ChicagoDocxTemplate {
 
     for (const group in p2) {
       paragraphs.push(
-        this.twoColumns(
+        this.get2ColsSpaceBetween(
           [
             new TextRun({
               text: p2[group][0].institution,
@@ -237,8 +241,7 @@ export class ChicagoDocxTemplate {
           ],
           HeadingLevel.HEADING_3,
           HeadingLevel.HEADING_3,
-          8140,
-          2660,
+          undefined,
           120
         )
       );
@@ -247,7 +250,7 @@ export class ChicagoDocxTemplate {
         group
       ]) {
         paragraphs.push(
-          this.twoColumns(
+          this.get2ColsSpaceBetween(
             [
               new TextRun({
                 text: constr(", ", area, studyType),
@@ -288,7 +291,10 @@ export class ChicagoDocxTemplate {
     }
     return [
       this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.skills),
-      new Paragraph({ text: constr(", ", ...map(records, skillDisplay)) }),
+      new Paragraph({
+        heading: HeadingLevel.HEADING_6,
+        text: constr(", ", ...map(records, skillDisplay)),
+      }),
     ];
   };
 
@@ -321,12 +327,23 @@ export class ChicagoDocxTemplate {
         const second = constr(" - ", issuer, url);
         const first = firstLine.join(" ");
         return new Paragraph({
+          heading: HeadingLevel.HEADING_5,
           bullet: {
             level: 0,
           },
           children: [
-            ...(first.length ? [new TextRun({ text: first })] : []),
-            ...(second.length ? [new TextRun({ text: second, break: 1 })] : []),
+            ...(first.length
+              ? [new TextRun({ style: HeadingLevel.HEADING_6, text: first })]
+              : []),
+            ...(second.length
+              ? [
+                  new TextRun({
+                    style: HeadingLevel.HEADING_6,
+                    text: second,
+                    break: 1,
+                  }),
+                ]
+              : []),
           ],
         });
       }),
@@ -349,13 +366,16 @@ export class ChicagoDocxTemplate {
       this.sectionTitle(
         title.length ? title : DEFAULT_SECTION_TITLES.interests
       ),
-      new Paragraph({ text: constr(", ", ...map(records, "name")) }),
+      new Paragraph({
+        heading: HeadingLevel.HEADING_6,
+        text: constr(", ", ...map(records, "name")),
+      }),
     ];
   };
   summary: ContentProvider = () => {
     const {
       resume: {
-        summary: { content },
+        summary: { content, asObjective },
       },
       meta: {
         steps: {
@@ -369,8 +389,21 @@ export class ChicagoDocxTemplate {
     }
 
     return [
-      this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.summary),
-      new Paragraph({ text: content }),
+      this.sectionTitle(
+        title.length
+          ? asObjective
+            ? TITLE.OBJECTIVE
+            : title
+          : DEFAULT_SECTION_TITLES.summary
+      ),
+      new Paragraph({
+        heading: HeadingLevel.HEADING_6,
+        text: content,
+        spacing: {
+          before: 100,
+          after: 0,
+        },
+      }),
     ];
   };
 
@@ -393,7 +426,18 @@ export class ChicagoDocxTemplate {
   ) {
     return map(
       bullets,
-      (bullet) => new Paragraph({ text: bullet, bullet: { level }, spacing })
+      (bullet) =>
+        new Paragraph({
+          heading: HeadingLevel.HEADING_5,
+          bullet: { level },
+          spacing,
+          children: [
+            new TextRun({
+              text: bullet,
+              style: HeadingLevel.HEADING_6,
+            }),
+          ],
+        })
     );
   }
 
@@ -401,33 +445,67 @@ export class ChicagoDocxTemplate {
     title: string,
     heading: (typeof HeadingLevel)[keyof typeof HeadingLevel] = HeadingLevel.HEADING_2
   ) {
-    return new Paragraph({ heading, children: [new TextRun(title)] });
+    const TOTAL_TABLE_WIDTH = 10900;
+    return new Table({
+      columnWidths: [TOTAL_TABLE_WIDTH],
+      margins: { left: 0, right: 0 },
+      borders: {
+        bottom: {
+          size: 1,
+          style: BorderStyle.SINGLE,
+        },
+        left: {
+          style: BorderStyle.NONE,
+        },
+        top: {
+          style: BorderStyle.NONE,
+        },
+        right: {
+          style: BorderStyle.NONE,
+        },
+      },
+      indent: {
+        size: 60,
+        type: WidthType.DXA,
+      },
+      rows: [
+        new TableRow({
+          children: [
+            new TableCell({
+              children: [
+                new Paragraph({ heading, children: [new TextRun(title)] }),
+              ],
+            }),
+          ],
+        }),
+      ],
+    }) as any;
   }
 
-  protected twoColumns(
+  protected get2ColsSpaceBetween(
     left: TextRun[],
     right: TextRun[],
     hLeft?: any,
     hRight?: any,
-    leftWidth = 5400,
-    rightWidth = 5400,
+    widthFraction = 0.66,
     spacingBefore = 0
   ) {
+    const TOTAL_TABLE_WIDTH = 10900;
+    const MIDDLE_COLUMN_WIDTH_FRACTION = 0.03;
+    const leftWidth = widthFraction * TOTAL_TABLE_WIDTH;
+    const middleWidth = MIDDLE_COLUMN_WIDTH_FRACTION * TOTAL_TABLE_WIDTH;
+    const rightWidth = TOTAL_TABLE_WIDTH - leftWidth - middleWidth;
     return new Table({
-      columnWidths: [leftWidth, rightWidth],
-      margins: {
-        left: 0,
-      },
+      columnWidths: [leftWidth, middleWidth, rightWidth],
+      margins: { left: 0, right: 0 },
       borders: {
         insideHorizontal: {
           style: BorderStyle.NONE,
         },
         bottom: {
-          size: 0,
           style: BorderStyle.NONE,
         },
         left: {
-          size: 0,
           style: BorderStyle.NONE,
         },
         top: {
@@ -440,6 +518,10 @@ export class ChicagoDocxTemplate {
           style: BorderStyle.NONE,
         },
       },
+      indent: {
+        size: 60,
+        type: WidthType.DXA,
+      },
       rows: [
         new TableRow({
           children: [
@@ -447,6 +529,7 @@ export class ChicagoDocxTemplate {
               children: [
                 new Paragraph({
                   ...(hLeft ? { heading: hLeft } : {}),
+                  alignment: AlignmentType.LEFT,
                   children: left,
                   spacing: { before: spacingBefore },
                 }),
@@ -454,7 +537,14 @@ export class ChicagoDocxTemplate {
             }),
             new TableCell({
               width: {
-                size: 4505,
+                size: middleWidth,
+                type: WidthType.DXA,
+              },
+              children: [new Paragraph({ text: "" })],
+            }),
+            new TableCell({
+              width: {
+                size: rightWidth,
                 type: WidthType.DXA,
               },
               children: [

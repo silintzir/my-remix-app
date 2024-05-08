@@ -1,4 +1,5 @@
 import {
+  TITLE,
   constr,
   createTwoDimArray,
   nonEmptyAccomplishments,
@@ -51,7 +52,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     } else {
       const title = summaryTitle.length
         ? asObjective
-          ? "Objective"
+          ? TITLE.OBJECTIVE
           : summaryTitle
         : DEFAULT_SECTION_TITLES.summary;
       paragraphs.push(
@@ -309,7 +310,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
         bullets,
       } of p2[group]) {
         paragraphs.push(
-          this.twoColumns(
+          this.get2ColsSpaceBetween(
             [
               new TextRun({
                 text: position,
@@ -331,8 +332,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
             ],
             undefined,
             undefined,
-            8640,
-            2160,
+            undefined,
             firstItemInGroup ? 200 : 0
           )
         );
@@ -378,7 +378,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       bullets,
     } of records) {
       paragraphs.push(
-        this.twoColumns(
+        this.get2ColsSpaceBetween(
           [
             new TextRun({
               text: constr(", ", institution, studyType, area),
@@ -401,8 +401,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
           ],
           undefined,
           undefined,
-          8640,
-          2160,
+          undefined,
           150
         )
       );
@@ -431,7 +430,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
         HeadingLevel.HEADING_3
       ),
       ...map(records, ({ name, date, issuer, url }) => {
-        return this.twoColumns(
+        return this.get2ColsSpaceBetween(
           [
             new TextRun({
               text: name,
@@ -450,8 +449,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
           ],
           undefined,
           undefined,
-          8640,
-          2160,
+          undefined,
           150
         );
       }),

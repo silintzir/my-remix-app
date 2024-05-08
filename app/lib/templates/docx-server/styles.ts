@@ -9,8 +9,8 @@ export const docxStyles = {
     default: {
       document: {
         run: {
+          font: "Arial",
           size: 2.0 * fontSize,
-          font: "serif",
         },
         paragraph: {
           alignment: AlignmentType.JUSTIFIED,
@@ -18,7 +18,7 @@ export const docxStyles = {
       },
       heading1: {
         run: {
-          font: "serif",
+          font: "Arial",
           size: 3.6 * fontSize,
           bold: true,
           color: "#000000",
@@ -32,21 +32,18 @@ export const docxStyles = {
       },
       heading2: {
         run: {
+          font: "Arial",
           size: 2.6 * fontSize,
           allCaps: true,
-          font: "serif",
           bold: true,
         },
         paragraph: {
-          thematicBreak: true,
-          spacing: {
-            after: 0,
-          },
+          spacing: { before: 200, after: 0 },
         },
       },
       heading3: {
         run: {
-          font: "serif",
+          font: "Arial",
           size: 2.4 * fontSize,
           bold: true,
         },
@@ -59,7 +56,7 @@ export const docxStyles = {
       },
       heading4: {
         run: {
-          font: "serif",
+          font: "Arial",
           size: 2.2 * fontSize,
         },
         paragraph: {
@@ -69,14 +66,35 @@ export const docxStyles = {
           },
         },
       },
+      heading5: {
+        run: {
+          font: "Arial",
+          size: 1.0 * fontSize,
+        },
+        paragraph: {
+          spacing: {
+            after: 0,
+            before: 0,
+          },
+        },
+      },
+      heading6: {
+        run: {
+          font: "Arial",
+          size: 2.0 * fontSize,
+        },
+        paragraph: {
+          alignment: AlignmentType.JUSTIFIED,
+        },
+      },
     },
   }),
   executive: ({ fontSize }: StyleParams): IStylesOptions => ({
     default: {
       document: {
         run: {
-          size: 2.2 * fontSize,
           font: "Arial",
+          size: 2.2 * fontSize,
         },
         paragraph: {
           alignment: AlignmentType.JUSTIFIED,
@@ -84,6 +102,7 @@ export const docxStyles = {
       },
       heading1: {
         run: {
+          font: "Arial",
           size: 3.6 * fontSize,
           smallCaps: true,
           bold: true,
@@ -98,6 +117,7 @@ export const docxStyles = {
       },
       heading2: {
         run: {
+          font: "Arial",
           size: 3.0 * fontSize,
           smallCaps: true,
           bold: true,
@@ -112,6 +132,7 @@ export const docxStyles = {
       },
       heading3: {
         run: {
+          font: "Arial",
           size: 2.8 * fontSize,
           smallCaps: true,
           bold: true,
@@ -126,6 +147,7 @@ export const docxStyles = {
       },
       heading4: {
         run: {
+          font: "Arial",
           size: 2.4 * fontSize,
           bold: true,
           italics: true,
@@ -140,6 +162,7 @@ export const docxStyles = {
       },
       heading5: {
         run: {
+          font: "Arial",
           size: 2.2 * fontSize,
         },
         paragraph: {
@@ -152,6 +175,7 @@ export const docxStyles = {
       },
       heading6: {
         run: {
+          font: "Arial",
           size: 2.2 * fontSize,
           bold: true,
           italics: true,
@@ -166,6 +190,7 @@ export const docxStyles = {
       },
       title: {
         run: {
+          font: "Arial",
           size: 2.2 * fontSize,
           italics: true,
         },
@@ -183,8 +208,8 @@ export const docxStyles = {
     default: {
       document: {
         run: {
-          size: 2.0 * fontSize,
           font: "Arial",
+          size: 2.0 * fontSize,
         },
         paragraph: {
           alignment: AlignmentType.JUSTIFIED,
@@ -192,6 +217,7 @@ export const docxStyles = {
       },
       heading1: {
         run: {
+          font: "Arial",
           size: 3.6 * fontSize,
           smallCaps: true,
           bold: true,
@@ -206,6 +232,7 @@ export const docxStyles = {
       },
       heading2: {
         run: {
+          font: "arial",
           size: 3.0 * fontSize,
           smallCaps: true,
           bold: true,
@@ -220,6 +247,7 @@ export const docxStyles = {
       },
       heading3: {
         run: {
+          font: "arial",
           size: 2.8 * fontSize,
           smallCaps: true,
           bold: true,
@@ -234,6 +262,7 @@ export const docxStyles = {
       },
       heading4: {
         run: {
+          font: "arial",
           size: 2.2 * fontSize,
         },
         paragraph: {
@@ -245,6 +274,7 @@ export const docxStyles = {
       },
       heading6: {
         run: {
+          font: "arial",
           size: 1.6 * fontSize,
         },
         paragraph: {

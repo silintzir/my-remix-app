@@ -1,4 +1,5 @@
 import {
+  TITLE,
   constr,
   nonEmptyAccomplishments,
   nonEmptyCertificates,
@@ -52,7 +53,7 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
     } else {
       const title = summaryTitle.length
         ? asObjective
-          ? "Objective"
+          ? TITLE.OBJECTIVE
           : summaryTitle
         : DEFAULT_SECTION_TITLES.summary;
       paragraphs.push(

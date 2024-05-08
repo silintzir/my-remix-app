@@ -1,5 +1,6 @@
 import type { Content } from "pdfmake/interfaces";
 import {
+  TITLE,
   constr,
   nonEmptyAccomplishments,
   nonEmptyCertificates,
@@ -39,7 +40,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
       output.push({
         text: summaryTitle.length
           ? asObjective
-            ? "Objective"
+            ? TITLE.OBJECTIVE
             : summaryTitle
           : DEFAULT_SECTION_TITLES.summary,
         style: "heading2",
@@ -334,7 +335,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
               {
                 columns: [
                   {
-                    text: maskBasics ? "Marathon Staffing" : address,
+                    text: maskBasics ? TITLE.COMPANY_NAME : address,
                     style: "paragraph",
                     alignment: "left",
                     width: "45%",
@@ -342,7 +343,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
                   { text: "", alignment: "center", width: "10%" },
                   {
                     text: maskBasics
-                      ? "Confidential document,\nnot for distribution without prior permission."
+                      ? TITLE.CONFIDENTIALITY_INFO_LBR
                       : constr("\n", phone, email, url),
                     style: "paragraph",
                     alignment: "right",

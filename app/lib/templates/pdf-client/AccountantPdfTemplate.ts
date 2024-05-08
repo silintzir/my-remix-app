@@ -1,5 +1,6 @@
 import type { Content } from "pdfmake/interfaces";
 import {
+  TITLE,
   constr,
   createTwoDimArray,
   nonEmptyAccomplishments,
@@ -43,7 +44,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       output.push({
         text: summaryTitle.length
           ? asObjective
-            ? "Objective"
+            ? TITLE.OBJECTIVE
             : summaryTitle
           : DEFAULT_SECTION_TITLES.summary,
         style: "heading2",

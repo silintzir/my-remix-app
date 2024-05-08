@@ -9,6 +9,15 @@ import type {
 import { getReadableDateFromPicker } from "@/lib/utils";
 import { filter } from "lodash-es";
 
+export const TITLE = {
+  OBJECTIVE: "Objective",
+  COMPANY_NAME: "Marathon Staffing",
+  CONFIDENTIALITY_INFO:
+    "Confidential document, not for distribution without prior permission.",
+  CONFIDENTIALITY_INFO_LBR:
+    "Confidential document,\nnot for distribution without prior permission.",
+};
+
 export function constr(delimiter: string, ...strings: string[]): string {
   return strings.filter((str) => str !== "").join(delimiter);
 }

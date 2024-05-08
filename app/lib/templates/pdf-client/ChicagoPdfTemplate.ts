@@ -1,6 +1,7 @@
 import type { Content } from "pdfmake/interfaces";
 import type { ResumeValues, Step } from "@/lib/types";
 import {
+  TITLE,
   certificateDisplay,
   constr,
   nonEmptyAccomplishments,
@@ -41,12 +42,8 @@ export class ChicagoPdfTemplate {
     const output: Content = [];
     if (maskBasics) {
       pine(output, constr(" ", firstName, lastName), "heading1");
-      pine(output, "Marathon Staffing", "subheading1");
-      pine(
-        output,
-        "Confidential document, not for distribution without prior permission.",
-        "subheading2"
-      );
+      pine(output, TITLE.COMPANY_NAME, "subheading1");
+      pine(output, TITLE.CONFIDENTIALITY_INFO, "subheading2");
     } else {
       pine(output, constr(" ", firstName, lastName), "heading1");
       pine(output, address, "subheading1");
@@ -183,7 +180,7 @@ export class ChicagoPdfTemplate {
       getHeaderWithLine(
         title.length
           ? asObjective
-            ? "Objective"
+            ? TITLE.OBJECTIVE
             : title
           : DEFAULT_SECTION_TITLES.summary
       )
