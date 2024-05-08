@@ -38,6 +38,8 @@ export class ChicagoDocxTemplate {
     this.values = values;
   }
 
+ public static TOTAL_TABLE_WIDTH = 10900;
+
   basics: ContentProvider = () => {
     const {
       meta: { maskBasics },
@@ -445,9 +447,8 @@ export class ChicagoDocxTemplate {
     title: string,
     heading: (typeof HeadingLevel)[keyof typeof HeadingLevel] = HeadingLevel.HEADING_2
   ) {
-    const TOTAL_TABLE_WIDTH = 10900;
     return new Table({
-      columnWidths: [TOTAL_TABLE_WIDTH],
+      columnWidths: [ChicagoDocxTemplate.TOTAL_TABLE_WIDTH],
       margins: { left: 0, right: 0 },
       borders: {
         bottom: {
@@ -490,11 +491,10 @@ export class ChicagoDocxTemplate {
     widthFraction = 0.66,
     spacingBefore = 0
   ) {
-    const TOTAL_TABLE_WIDTH = 10900;
     const MIDDLE_COLUMN_WIDTH_FRACTION = 0.03;
-    const leftWidth = widthFraction * TOTAL_TABLE_WIDTH;
-    const middleWidth = MIDDLE_COLUMN_WIDTH_FRACTION * TOTAL_TABLE_WIDTH;
-    const rightWidth = TOTAL_TABLE_WIDTH - leftWidth - middleWidth;
+    const leftWidth = widthFraction * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
+    const middleWidth = MIDDLE_COLUMN_WIDTH_FRACTION * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
+    const rightWidth = ChicagoDocxTemplate.TOTAL_TABLE_WIDTH - leftWidth - middleWidth;
     return new Table({
       columnWidths: [leftWidth, middleWidth, rightWidth],
       margins: { left: 0, right: 0 },
