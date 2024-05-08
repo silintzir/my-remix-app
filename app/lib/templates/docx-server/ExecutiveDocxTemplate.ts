@@ -19,6 +19,7 @@ import {
   Paragraph,
   TextRun,
   AlignmentType,
+  WidthType,
 } from "docx";
 import type { FileChild } from "node_modules/docx/build/file/file-child";
 import { map, groupBy } from "lodash-es";
@@ -113,10 +114,12 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
         style: HeadingLevel.HEADING_1,
       }),
       new Table({
-        columnWidths: [4860, 1080, 4860],
-        margins: {
-          left: 0,
-        },
+        columnWidths: [
+          0.45 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH,
+          0.1 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH,
+          0.45 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH,
+        ],
+        margins: { left: 0, right: 0 },
         borders: {
           insideHorizontal: {
             style: BorderStyle.NONE,
@@ -138,6 +141,10 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
           insideVertical: {
             style: BorderStyle.NONE,
           },
+        },
+        indent: {
+          size: 60,
+          type: WidthType.DXA,
         },
         rows: [
           new TableRow({
@@ -244,7 +251,8 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
             p2[group][0].name,
             constr(", ", p2[group][0].city, p2[group][0].state)
           ),
-          style: HeadingLevel.HEADING_5,
+          style: HeadingLevel.HEADING_6,
+          alignment: AlignmentType.CENTER,
           spacing: firstItem ? { before: 0 } : { before: 150 },
         })
       );
@@ -331,7 +339,8 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
                 getReadableDateFromPicker(endDate)
               )})`
           ),
-          style: HeadingLevel.HEADING_5,
+          style: HeadingLevel.HEADING_6,
+          alignment: AlignmentType.CENTER,
           spacing: firstItem ? { before: 0 } : { before: 150 },
         })
       );
@@ -371,7 +380,8 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
             issuer,
             url
           )} (${getReadableDateFromPicker(date)})`,
-          style: HeadingLevel.HEADING_5,
+          style: HeadingLevel.HEADING_6,
+          alignment: AlignmentType.CENTER,
           spacing,
         });
       }),
@@ -404,4 +414,11 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
       ),
     ];
   };
+
+  protected sectionTitle(
+    title: string,
+    heading: (typeof HeadingLevel)[keyof typeof HeadingLevel] = HeadingLevel.HEADING_2
+  ) {
+    return new Paragraph({ heading, children: [new TextRun(title)] });
+  }
 }

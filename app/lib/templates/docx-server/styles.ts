@@ -163,29 +163,16 @@ export const docxStyles = {
       heading5: {
         run: {
           font: "Arial",
-          size: 2.2 * fontSize,
-        },
-        paragraph: {
-          spacing: {
-            after: 0,
-            before: 200,
-          },
-          alignment: AlignmentType.CENTER,
+          size: 1.1 * fontSize,
         },
       },
       heading6: {
         run: {
           font: "Arial",
           size: 2.2 * fontSize,
-          bold: true,
-          italics: true,
         },
         paragraph: {
-          spacing: {
-            after: 0,
-            before: 0,
-          },
-          alignment: AlignmentType.CENTER,
+          alignment: AlignmentType.JUSTIFIED,
         },
       },
       title: {
