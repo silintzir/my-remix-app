@@ -20,6 +20,7 @@ import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
 import { ContentProvider } from "../pdf.client";
 import { ChicagoPdfTemplate } from "./ChicagoPdfTemplate";
+import { getRecordPeriod2 } from "@/lib/resume";
 
 export class AccountantPdfTemplate extends ChicagoPdfTemplate {
   summary: ContentProvider = () => {
@@ -115,6 +116,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
     // group by employer/location
     const p1 = map(records, (w) => ({
       ...w,
+      period: getRecordPeriod2(w),
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));
     const p2 = groupBy(p1, "group");
@@ -127,8 +129,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
         position,
         city,
         state,
-        startDate,
-        endDate,
+        period,
         bullets,
       } of p2[group]) {
         stack.push(
@@ -139,11 +140,12 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
               { text: constr(", ", name, city, state) },
             ],
             {
-              text: constr(
-                " — ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              ),
+              // text: constr(
+              //   " — ",
+              //   getReadableDateFromPicker(startDate),
+              //   getReadableDateFromPicker(endDate)
+              // ),
+              text: period
             },
             0,
             "80%"

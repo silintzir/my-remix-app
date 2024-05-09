@@ -78,6 +78,38 @@ export const nonEmptyInterests = (records: InterestRecord[]) => {
   return filter(records, (c) => c.name.trim().length > 0);
 };
 
+export function getComparableEndDate(values: {startMonth?: string, startYear?: string, endMonth?: string, endYear?: string, toPresent?: boolean}) {
+  const { startYear, startMonth, endMonth, endYear, toPresent } = values;
+
+  if (toPresent) {
+    return '9999-12';
+  }
+
+  const from = [];
+  let start = '0001-01';
+  if (startYear?.length && startYear !== '-') {
+    from.push(startYear);
+    if (startMonth?.length && startMonth !== '-') {
+      from.push(startMonth);
+    }
+  }
+  if (from.length) {
+    start = from.join('-');
+  }
+
+  const to = [];
+  if (endYear?.length && endYear !== '-') {
+    to.push(endYear);
+    if (endMonth?.length && endMonth !== '-') {
+      to.push(endMonth);
+    }
+  }
+  if (to.length) {
+    return to.join('-')
+  }
+  return start;
+}
+
 export function convertDate(date: string) {
   if (date.trim().length === 0) {
     return "9999-12";

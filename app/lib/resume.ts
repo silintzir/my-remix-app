@@ -58,6 +58,13 @@ export const workSchema = z.object({
   position: z.string(),
   startDate: z.string(),
   endDate: z.string(),
+
+  startMonth: z.string().optional(),
+  startYear: z.string().optional(),
+  endMonth: z.string().optional(),
+  endYear: z.string().optional(),
+  toPresent: z.boolean().optional().default(false),
+
   city: z.string(),
   state: z.string(),
   bullets: z.array(bulletSchema).optional(),
@@ -183,6 +190,45 @@ export function getRecordPeriod(values: {
   return toks.length ? toks.join(" - ") : "No dates set";
 }
 
+export function getRecordPeriod2(values: {
+  startMonth?: string;
+  startYear?: string;
+  endMonth?: string;
+  endYear?: string;
+  toPresent?: boolean;
+}) {
+  const {startMonth, startYear, endMonth, endYear, toPresent} = values;
+  const toks = [];
+  const from = [];
+  const to = [];
+  if (startYear?.length && startYear !== '-') {
+    if (startMonth?.length && startMonth !== '-') {
+      from.push(startMonth);
+    }
+    from.push(startYear);
+  }
+  if (from.length) {
+    toks.push(from.join('/'));
+  }
+
+
+  if (toPresent) {
+    to.push('Present');
+  } else {
+    if (endYear?.length && endYear !== '-') {
+      if (endMonth?.length && endMonth !== '-') {
+        to.push(endMonth);
+      }
+      to.push(endYear);
+    }
+  }
+  if (to.length) {
+    toks.push(to.join('/'));
+  }
+
+  return toks.join (' - ')
+}
+
 export function getSkillLevelOptions() {
   return [
     { label: "No mention", value: "no_mention" },
@@ -212,4 +258,24 @@ export function getEducationDegreeOptions() {
     { label: "Post-Doctoral Training", value: "post_doctoral_training" },
     { label: "No Formal Education", value: "no_formal_education" },
   ];
+}
+
+export function getMonthOptions() {
+  const months = [{label: '-', value: '-'}];
+
+  for (let i = 1; i <= 12; i++) {
+    const monthNumber = i.toString().padStart(2, '0'); // Ensures the month number has two digits
+    months.push({ value: monthNumber, label: monthNumber });
+
+  }
+  return months;
+}
+
+export function getYearOptions() {
+  const years = [{label: '-', value: '-'}];
+  const currentYear = new Date().getFullYear(); // Get the current year
+  for (let year = currentYear; year >= 1970; year--) {
+    years.push({ value: year.toString(), label: year.toString() });
+  }
+  return years;
 }

@@ -25,6 +25,7 @@ import { getReadableDateFromPicker } from "@/lib/utils";
 import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { ChicagoDocxTemplate } from "./ChicagoDocxTemplate";
 import { getDoubleHLine } from "../helpers/docx";
+import { getRecordPeriod2 } from "@/lib/resume";
 
 interface ContentProvider {
   (): FileChild[];
@@ -285,6 +286,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     // group by employer / location
     const p1 = map(records, (w) => ({
       ...w,
+      period: getRecordPeriod2(w),
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));
     const p2 = groupBy(p1, "group");
@@ -305,8 +307,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
         position,
         city,
         state,
-        startDate,
-        endDate,
+        period,
         bullets,
       } of p2[group]) {
         paragraphs.push(
@@ -323,11 +324,12 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
             ],
             [
               new TextRun({
-                text: constr(
-                  " — ",
-                  getReadableDateFromPicker(startDate),
-                  getReadableDateFromPicker(endDate)
-                ),
+                // text: constr(
+                //   " — ",
+                //   getReadableDateFromPicker(startDate),
+                //   getReadableDateFromPicker(endDate)
+                // ),
+                text: period
               }),
             ],
             undefined,

@@ -20,9 +20,9 @@ import {
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { getExperienceTitle, getRecordPeriod } from "@/lib/resume";
+import { getExperienceTitle, getMonthOptions, getRecordPeriod2, getYearOptions } from "@/lib/resume";
 // import { usStateCodes } from "@/lib/states";
-import type { ResumeValues } from "@/lib/types";
+import type { ResumeValues, WorkRecord } from "@/lib/types";
 import { cn } from "@/lib/utils";
 // import { map } from "lodash-es";
 import { Plus, Trash2 } from "lucide-react";
@@ -30,8 +30,10 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
-import { convertDate } from "@/lib/templates/helpers/common";
+import { convertDate, getComparableEndDate } from "@/lib/templates/helpers/common";
 import { DatePicker } from "@/components/shadcn/MyDatePicker";
+import { SelectInput } from "@/components/shadcn/SelectInput";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function WorkStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -54,25 +56,52 @@ export function WorkStep() {
 
   const autoSort = watch("meta.autoSort.work");
 
-  const sortFn = (index: number, expr: string, autoSort: boolean) => {
+  const sortFn = (index: number, expr: WorkRecord, autoSort: boolean) => {
     if (autoSort) {
       for (let i = 0; i < fields.length; i++) {
         if (i < index) {
           // convert dates
-          const dateA = convertDate(fields[i].endDate);
-          const dateB = convertDate(expr);
+          // const dateA = convertDate(fields[i].endDate);
+          const dateA = getComparableEndDate(fields[i]);
+
+
+          const dateB = getComparableEndDate(expr);
           if (dateA < dateB) {
-            setValue(`resume.work.${index}.endDate`, expr, {
+            setValue(`resume.work.${index}.endMonth`, expr.endMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.startMonth`, expr.startMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.endYear`, expr.endYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.startYear`, expr.startYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.toPresent`, expr.toPresent, {
               shouldDirty: true,
             });
             swap(i, index);
             return;
           }
         } else if (i > index) {
-          const dateA = convertDate(fields[i].endDate);
-          const dateB = convertDate(expr);
+          const dateA = getComparableEndDate(fields[i]);
+          const dateB = getComparableEndDate(expr);
           if (dateA > dateB) {
-            setValue(`resume.work.${index}.endDate`, expr, {
+            setValue(`resume.work.${index}.endMonth`, expr.endMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.startMonth`, expr.startMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.endYear`, expr.endYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.startYear`, expr.startYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.work.${index}.toPresent`, expr.toPresent, {
               shouldDirty: true,
             });
             swap(i, index);
@@ -82,9 +111,9 @@ export function WorkStep() {
       }
     }
 
-    setValue(`resume.work.${index}.endDate`, expr, {
-      shouldDirty: true,
-    });
+    // setValue(`resume.work.${index}.endDate`, expr, {
+    //   shouldDirty: true,
+    // });
   };
 
   return (
@@ -108,6 +137,10 @@ export function WorkStep() {
       >
         <Accordion value={open} type="single" className="space-y-1" collapsible>
           {fields.map((field, index) => {
+
+
+            const toPresent = watch(`resume.work.${index}.toPresent`);
+
             return (
               <SortableItem
                 index={index}
@@ -129,7 +162,7 @@ export function WorkStep() {
                       <div className="font-semibold hover:underline">
                         {getExperienceTitle(field)}
                       </div>
-                      <div className="muted">{getRecordPeriod(field)}</div>
+                      <div className="muted">{getRecordPeriod2(field)}</div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4 mt-2 px-1">
@@ -142,46 +175,52 @@ export function WorkStep() {
                       />
                       <TextInput
                         control={control}
+                        name={`resume.work.${index}.city`}
+                        placeholder="e.x. Miami, FL"
+                        label="Location"
+                      />
+                      <TextInput
+                        control={control}
                         name={`resume.work.${index}.position`}
                         placeholder="e.x. Accountant"
                         label="Job title/Position"
                       />
                     </div>
                     <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
-                      <DatePicker
-                        control={control}
-                        name={`resume.work.${index}.startDate`}
-                        label="Start date"
-                        onChange={(expr: string) => {
-                          setValue(`resume.work.${index}.startDate`, expr, {
-                            shouldDirty: true,
-                          });
-                        }}
-                      />
-                      <DatePicker
-                        control={control}
-                        name={`resume.work.${index}.endDate`}
-                        label="End date"
-                        showToPresent
-                        onChange={(expr: string) => {
-                          sortFn(index, expr, autoSort);
-                        }}
-                      />
-                    </div>
-                    <div className="flex gap-2 w-full sm:flex-8">
-                      <TextInput
-                        control={control}
-                        name={`resume.work.${index}.city`}
-                        placeholder="e.x. Miami"
-                        label="City"
-                      />
-                      <TextInput
-                        className="w-48"
-                        control={control}
-                        name={`resume.work.${index}.state`}
-                        label="State"
-                        placeholder="Enter state"
-                      />
+                      <div className="flex gap-2 flex-grow">
+                        <SelectInput label="Start (month/year)" className="w-32" control={control} name={`resume.work.${index}.startMonth`} options={getMonthOptions()} onChange={() => {
+                          sortFn(index, fields[index], autoSort)
+                        }} />
+                        <SelectInput label="Start year" className="w-32" labelHidden control={control} name={`resume.work.${index}.startYear`} options={getYearOptions()} onChange={() => sortFn(index, fields[index], autoSort)} />
+                      </div>
+                      <span className="self-center font-bold">Until</span>
+                      <div className="flex gap-2 flex-grow justify-end">
+                        <SelectInput label="End month/year" disabled={toPresent} control={control} className="w-32" name={`resume.work.${index}.endMonth`} options={getMonthOptions()} onChange={() => sortFn(index, fields[index], autoSort)} />
+                        <SelectInput disabled={toPresent} label={<span className="flex justify-end h-5 items-center gap-2" onChange={() => sortFn(index, fields[index], autoSort)}>
+
+                          <FormField
+                            control={control}
+                            name={`resume.work.${index}.toPresent`}
+                            render={({ field }) => (
+                              <FormItem className="flex items-center gap-2 space-y-0">
+                                <FormLabel className="font-normal">
+                                  To present
+                                </FormLabel>
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={(val) => {
+                                      field.onChange(val);
+                                      sortFn(index, fields[index], autoSort)
+                                    }}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+
+                        </span>} className="w-32" control={control} name={`resume.work.${index}.endYear`} options={getYearOptions()} />
+                      </div>
                     </div>
                     <Separator />
                     {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
@@ -219,6 +258,11 @@ export function WorkStep() {
               city: "",
               state: "",
               startDate: "",
+              startMonth: "-",
+              startYear: "-",
+              toPresent: false,
+              endMonth: "-",
+              endYear: "-",
               endDate: "",
               bullets: [],
             });
@@ -244,7 +288,7 @@ export function WorkStep() {
                     field.onChange(checked);
                     if (checked) {
                       if (fields.length) {
-                        sortFn(0, fields[0].endDate, true);
+                        sortFn(0, fields[0], true);
                       }
                     }
                   }}

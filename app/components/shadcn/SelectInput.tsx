@@ -25,6 +25,8 @@ type Props<T extends FieldValues> = {
   placeholder?: string;
   className?: string;
   onChange?: (value: string) => void;
+  labelHidden?: boolean;
+  disabled?: boolean;
 };
 
 export function SelectInput<T extends FieldValues>({
@@ -36,6 +38,8 @@ export function SelectInput<T extends FieldValues>({
   placeholder,
   className = "w-full",
   onChange,
+  labelHidden = false,
+  disabled = false
 }: Props<T>) {
   return (
     <FormField
@@ -43,8 +47,9 @@ export function SelectInput<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className={className}>
-          {label && <FormLabel>{label}</FormLabel>}
+          {label && <FormLabel>{labelHidden ? <span style={{ height: '20px' }}>&nbsp;</span> : label}</FormLabel>}
           <Select
+            disabled={disabled}
             onValueChange={(value) => {
               field.onChange(value);
               if (onChange) {

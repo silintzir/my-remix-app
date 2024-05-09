@@ -17,6 +17,7 @@ import { DEFAULT_SECTION_TITLES } from "../../defaults";
 import { ContentProvider } from "../pdf.client";
 import { ChicagoPdfTemplate } from "./ChicagoPdfTemplate";
 import { getDoubleHLine } from "../helpers/pdf";
+import { getRecordPeriod2 } from "@/lib/resume";
 
 export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
   summary = (): Content[] => {
@@ -94,6 +95,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
     // group by employer/location
     const p1 = map(records, (w) => ({
       ...w,
+      period: getRecordPeriod2(w),
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));
     const p2 = groupBy(p1, "group");
@@ -110,17 +112,18 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
         alignment: "center",
       } satisfies Content);
 
-      for (const { position, startDate, endDate, bullets } of p2[group]) {
+      for (const { position, period, bullets } of p2[group]) {
         stacks.push({
           text: [
             { text: position, bold: true },
             { text: " " },
             {
-              text: `(${constr(
-                " - ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              )})`,
+              // text: `(${constr(
+              //   " - ",
+              //   getReadableDateFromPicker(startDate),
+              //   getReadableDateFromPicker(endDate)
+              // )})`,
+              text: period,
             },
           ],
           alignment: "center",

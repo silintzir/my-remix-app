@@ -1,5 +1,5 @@
 import { NoMemory, extractJson as MyExtractJson } from "@/lib/ai/bot.server";
-import { get, map, set } from "lodash-es";
+import { get, map, set, join } from "lodash-es";
 import chalk from "chalk";
 import type {
   AccomplishmentRecord,
@@ -201,8 +201,8 @@ export function getResumeValues(data: any) {
           uuid: v4(),
           name: get(w, "name", "") || "",
           position: get(w, "position", "") || "",
-          city: get(w, "city", "") || "",
-          state: get(w, "state", "") || "",
+          city: join([get(w, "city", "") || "", get(w, 'state', '') || '']),
+          state: "",
           startDate: get(w, "startDate", "") || "",
           endDate: get(w, "endDate", "") || "",
           bullets: map(get(w, "bullets", []), (b) => ({
@@ -225,8 +225,8 @@ export function getResumeValues(data: any) {
           studyType: get(w, "studyType", "") || "",
           area: get(w, "area", "") || "",
           status: get(w, "status", "no_mention") || "",
-          city: get(w, "city", "") || "",
-          state: get(w, "state", "") || "",
+          city: join([get(w, "city", "") || "", get(w, 'state', '') || '']),
+          state: "",
           startDate: get(w, "startDate", "") || "",
           endDate: get(w, "endDate", "") || "",
           bullets: map(get(w, "bullets", []), (b) => ({

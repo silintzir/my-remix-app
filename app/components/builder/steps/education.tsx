@@ -139,6 +139,14 @@ export function EducationStep() {
                       />
                       <TextInput
                         control={control}
+                        name={`resume.education.${index}.city`}
+                        label="Location"
+                        placeholder="e.x. Miami, FL"
+                      />
+                    </div>
+                    <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
+                      <TextInput
+                        control={control}
                         name={`resume.education.${index}.area`}
                         placeholder="e.x. Business management"
                         label="Area of studies"
@@ -176,19 +184,6 @@ export function EducationStep() {
                       />
                     </div>
                     <div className="flex gap-2 w-full sm:flex-8">
-                      <TextInput
-                        control={control}
-                        name={`resume.education.${index}.city`}
-                        placeholder="e.x. Miami"
-                        label="City"
-                      />
-                      <TextInput
-                        className="w-48"
-                        control={control}
-                        name={`resume.education.${index}.state`}
-                        label="State"
-                        placeholder="Select state"
-                      />
                     </div>
                     <Separator />
                     {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}

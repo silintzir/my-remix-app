@@ -17,6 +17,7 @@ import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
 import { ContentProvider } from "../pdf.client";
+import { getRecordPeriod2 } from "@/lib/resume";
 
 export class ChicagoPdfTemplate {
   public values: ResumeValues;
@@ -294,6 +295,7 @@ export class ChicagoPdfTemplate {
     // group by employer/location
     const p1 = map(records, (w) => ({
       ...w,
+      period: getRecordPeriod2(w),
       group: constr(", ", w.name, constr(" ", w.city, w.state)),
     }));
     const p2 = groupBy(p1, "group");
@@ -317,16 +319,17 @@ export class ChicagoPdfTemplate {
         )
       );
 
-      for (const { position, startDate, endDate, bullets } of p2[group]) {
+      for (const { position, period, bullets } of p2[group]) {
         stack.push(
           get2ColsSpaceBetween(
             { text: position, style: "heading4", alignment: "left" },
             {
-              text: constr(
-                " - ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              ),
+              // text: constr(
+              //   " - ",
+              //   getReadableDateFromPicker(startDate),
+              //   getReadableDateFromPicker(endDate)
+              // ),
+              text: period
             }
           )
         );
