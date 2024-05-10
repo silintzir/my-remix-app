@@ -170,16 +170,9 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
     }
     const output = [];
 
-    for (const {
-      institution,
-      studyType,
-      area,
-      city,
-      state,
-      startDate,
-      endDate,
-      bullets,
-    } of records) {
+    for (const r of records) {
+      const { institution, studyType, area, city, state, bullets } = r;
+      const period = getRecordPeriod2(r);
       output.push({
         text: constr(
           ", ",
@@ -187,12 +180,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
           area,
           institution,
           city,
-          state +
-            ` (${constr(
-              " - ",
-              getReadableDateFromPicker(startDate),
-              getReadableDateFromPicker(endDate)
-            )})`
+          state + ` (${period})`
         ),
         alignment: "center",
       });

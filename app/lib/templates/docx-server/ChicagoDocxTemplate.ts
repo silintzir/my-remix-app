@@ -162,7 +162,7 @@ export class ChicagoDocxTemplate {
               //   getReadableDateFromPicker(p2[group][0].city),
               //   getReadableDateFromPicker(p2[group][0].state)
               // ),
-              text: p2[group][0].period
+              text: p2[group][0].period,
             }),
           ],
           HeadingLevel.HEADING_3,
@@ -213,6 +213,7 @@ export class ChicagoDocxTemplate {
     // group by employer / location
     const p1 = map(records, (w) => ({
       ...w,
+      period: getRecordPeriod2(w),
       group: constr(", ", w.institution, constr(" ", w.city, w.state)),
     }));
     const p2 = groupBy(p1, "group");
@@ -234,11 +235,7 @@ export class ChicagoDocxTemplate {
           ],
           [
             new TextRun({
-              text: constr(
-                ", ",
-                getReadableDateFromPicker(p2[group][0].city),
-                getReadableDateFromPicker(p2[group][0].state)
-              ),
+              text: p2[group][0].period,
               bold: true,
             }),
           ],

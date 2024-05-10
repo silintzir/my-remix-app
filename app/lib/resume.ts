@@ -88,6 +88,13 @@ export const educationSchema = z.object({
   studyType: z.string(),
   startDate: z.string(),
   endDate: z.string(),
+
+  startMonth: z.string().optional(),
+  startYear: z.string().optional(),
+  endMonth: z.string().optional(),
+  endYear: z.string().optional(),
+  toPresent: z.boolean().optional().default(false),
+
   city: z.string(),
   state: z.string(),
   status: z.string(),
@@ -197,36 +204,35 @@ export function getRecordPeriod2(values: {
   endYear?: string;
   toPresent?: boolean;
 }) {
-  const {startMonth, startYear, endMonth, endYear, toPresent} = values;
+  const { startMonth, startYear, endMonth, endYear, toPresent } = values;
   const toks = [];
   const from = [];
   const to = [];
-  if (startYear?.length && startYear !== '-') {
-    if (startMonth?.length && startMonth !== '-') {
+  if (startYear?.length && startYear !== "-") {
+    if (startMonth?.length && startMonth !== "-") {
       from.push(startMonth);
     }
     from.push(startYear);
   }
   if (from.length) {
-    toks.push(from.join('/'));
+    toks.push(from.join("/"));
   }
 
-
   if (toPresent) {
-    to.push('Present');
+    to.push("Present");
   } else {
-    if (endYear?.length && endYear !== '-') {
-      if (endMonth?.length && endMonth !== '-') {
+    if (endYear?.length && endYear !== "-") {
+      if (endMonth?.length && endMonth !== "-") {
         to.push(endMonth);
       }
       to.push(endYear);
     }
   }
   if (to.length) {
-    toks.push(to.join('/'));
+    toks.push(to.join("/"));
   }
 
-  return toks.join (' - ')
+  return toks.join(" - ");
 }
 
 export function getSkillLevelOptions() {
@@ -261,18 +267,17 @@ export function getEducationDegreeOptions() {
 }
 
 export function getMonthOptions() {
-  const months = [{label: '-', value: '-'}];
+  const months = [{ label: "-", value: "-" }];
 
   for (let i = 1; i <= 12; i++) {
-    const monthNumber = i.toString().padStart(2, '0'); // Ensures the month number has two digits
+    const monthNumber = i.toString().padStart(2, "0"); // Ensures the month number has two digits
     months.push({ value: monthNumber, label: monthNumber });
-
   }
   return months;
 }
 
 export function getYearOptions() {
-  const years = [{label: '-', value: '-'}];
+  const years = [{ label: "-", value: "-" }];
   const currentYear = new Date().getFullYear(); // Get the current year
   for (let year = currentYear; year >= 1970; year--) {
     years.push({ value: year.toString(), label: year.toString() });

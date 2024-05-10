@@ -124,14 +124,9 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
     const stacks = [];
     for (const group in p2) {
       const stack = [];
-      for (const {
-        name,
-        position,
-        city,
-        state,
-        period,
-        bullets,
-      } of p2[group]) {
+      for (const { name, position, city, state, period, bullets } of p2[
+        group
+      ]) {
         stack.push(
           get2ColsSpaceBetween(
             [
@@ -145,7 +140,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
               //   getReadableDateFromPicker(startDate),
               //   getReadableDateFromPicker(endDate)
               // ),
-              text: period
+              text: period,
             },
             0,
             "80%"
@@ -195,44 +190,33 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
     }
     const output = [];
 
-    for (const {
-      institution,
-      studyType,
-      area,
-      city,
-      state,
-      startDate,
-      endDate,
-      bullets,
-    } of records) {
-      {
-        output.push(
-          get2ColsSpaceBetween(
-            [
-              {
-                text: constr(", ", institution, studyType, area),
-                bold: true,
-              },
-              { text: ", " },
-              { text: constr(", ", city, state) },
-            ],
+    for (const r of records) {
+      const { institution, studyType, area, city, state, bullets } = r;
+
+      const period = getRecordPeriod2(r);
+
+      output.push(
+        get2ColsSpaceBetween(
+          [
             {
-              text: constr(
-                " — ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              ),
+              text: constr(", ", institution, studyType, area),
+              bold: true,
             },
-            0,
-            "80%"
-          )
-        );
-        if (bullets && bullets.length) {
-          output.push({
-            ul: bullets.map((b) => ({ text: b.content })),
-            margin: [12, 0, 0, 8],
-          } satisfies Content);
-        }
+            { text: ", " },
+            { text: constr(", ", city, state) },
+          ],
+          {
+            text: period,
+          },
+          0,
+          "80%"
+        )
+      );
+      if (bullets && bullets.length) {
+        output.push({
+          ul: bullets.map((b) => ({ text: b.content })),
+          margin: [12, 0, 0, 8],
+        } satisfies Content);
       }
     }
 

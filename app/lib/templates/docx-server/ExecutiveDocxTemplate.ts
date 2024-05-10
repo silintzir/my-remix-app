@@ -309,16 +309,9 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
     );
 
     let firstItem = true;
-    for (const {
-      institution,
-      studyType,
-      area,
-      city,
-      state,
-      startDate,
-      endDate,
-      bullets,
-    } of records) {
+    for (const r of records) {
+      const { institution, studyType, area, city, state, bullets } = r;
+      const period = getRecordPeriod2(r);
       paragraphs.push(
         new Paragraph({
           text: constr(
@@ -327,12 +320,7 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
             area,
             institution,
             city,
-            state +
-              ` (${constr(
-                " - ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              )})`
+            state + ` (${period})`
           ),
           style: HeadingLevel.HEADING_5,
           spacing: firstItem ? { before: 0 } : { before: 150 },

@@ -164,6 +164,57 @@ export async function parseText(text: string) {
   return getResumeValues(extracted);
 }
 
+function mapMonthWordToNumber(word: string) {
+  switch (word.toLowerCase()) {
+    case "january":
+    case "jan":
+    case "1":
+      return "01";
+    case "february":
+    case "feb":
+    case "2":
+      return "02";
+    case "march":
+    case "mar":
+    case "3":
+      return "03";
+    case "april":
+    case "apr":
+    case "4":
+      return "04";
+    case "may":
+    case "5":
+      return "05";
+    case "june":
+    case "jun":
+    case "6":
+      return "06";
+    case "july":
+    case "jul":
+    case "7":
+      return "07";
+    case "august":
+    case "aug":
+    case "8":
+      return "08";
+    case "september":
+    case "sep":
+    case "9":
+      return "09";
+    case "october":
+    case "oct":
+      return "10";
+    case "november":
+    case "nov":
+      return "11";
+    case "december":
+    case "dec":
+      return "12";
+    default:
+      return word;
+  }
+}
+
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function getResumeValues(data: any) {
   const output = defaultResumeValues(
@@ -194,47 +245,137 @@ export function getResumeValues(data: any) {
   set(
     output,
     "resume.work",
-    map(
-      get(data, "work", []),
-      (w) =>
-        ({
+    map(get(data, "work", []), (w) => {
+      const startDate = get(w, "startDate") || "";
+      const endDate: string | undefined = get(w, "endDate");
+
+      let startMonth = "-";
+      let startYear = "-";
+      let endMonth = "-";
+      let endYear = "-";
+      let toPresent = false;
+      let toks = startDate.split(/[\/\-\s]+/);
+      if (toks.length === 1) {
+        startYear = toks[0];
+      } else if (toks.length === 2) {
+        startMonth = mapMonthWordToNumber(toks[0]);
+        startYear = toks[1];
+      }
+      toks = endDate ? endDate.split(/[\/\-\s]+/) : [];
+      if (toks.length === 1) {
+        endYear = toks[0];
+      } else if (toks.length === 2) {
+        endMonth = mapMonthWordToNumber(toks[0]);
+        endYear = toks[1];
+      } else {
+        if (startDate.length) {
+          toPresent = true;
+        }
+      }
+
+      if (startYear && startYear.length && startYear !== "-") {
+        if (+startYear < 50) {
+          startYear = (+startYear + 2000).toString();
+        } else if (+startYear < 100) {
+          startYear = (+startYear + 1900).toString();
+        }
+      }
+      if (endYear && endYear.length && endYear !== "-") {
+        if (+endYear < 50) {
+          endYear = (+endYear + 2000).toString();
+        } else if (+endYear < 100) {
+          endYear = (+endYear + 1900).toString();
+        }
+      }
+
+      return {
+        uuid: v4(),
+        name: get(w, "name", "") || "",
+        position: get(w, "position", "") || "",
+        city: join([get(w, "city", "") || "", get(w, "state", "") || ""]),
+        state: "",
+        startDate,
+        endDate: endDate || "",
+        startMonth,
+        startYear,
+        endYear,
+        endMonth,
+        toPresent,
+        bullets: map(get(w, "bullets", []), (b) => ({
           uuid: v4(),
-          name: get(w, "name", "") || "",
-          position: get(w, "position", "") || "",
-          city: join([get(w, "city", "") || "", get(w, 'state', '') || '']),
-          state: "",
-          startDate: get(w, "startDate", "") || "",
-          endDate: get(w, "endDate", "") || "",
-          bullets: map(get(w, "bullets", []), (b) => ({
-            uuid: v4(),
-            content: get(b, "content", ""),
-          })),
-        } satisfies WorkRecord)
-    )
+          content: get(b, "content", ""),
+        })),
+      } satisfies WorkRecord;
+    })
   );
 
   set(
     output,
     "resume.education",
-    map(
-      get(data, "education", []),
-      (w) =>
-        ({
+    map(get(data, "education", []), (w) => {
+      const startDate = get(w, "startDate") || "";
+      const endDate: string | undefined = get(w, "endDate");
+
+      let startMonth = "-";
+      let startYear = "-";
+      let endMonth = "-";
+      let endYear = "-";
+      let toPresent = false;
+      let toks = startDate.split(/[\/\-\s]+/);
+      if (toks.length === 1) {
+        startYear = toks[0];
+      } else if (toks.length === 2) {
+        startMonth = mapMonthWordToNumber(toks[0]);
+        startYear = toks[1];
+      }
+      toks = endDate ? endDate.split(/[\/\-\s]+/) : [];
+      if (toks.length === 1) {
+        endYear = toks[0];
+      } else if (toks.length === 2) {
+        endMonth = mapMonthWordToNumber(toks[0]);
+        endYear = toks[1];
+      } else {
+        if (startDate.length) {
+          toPresent = true;
+        }
+      }
+
+      if (startYear && startYear.length && startYear !== "-") {
+        if (+startYear < 50) {
+          startYear = (+startYear + 2000).toString();
+        } else if (+startYear < 100) {
+          startYear = (+startYear + 1900).toString();
+        }
+      }
+      if (endYear && endYear.length && endYear !== "-") {
+        if (+endYear < 50) {
+          endYear = (+endYear + 2000).toString();
+        } else if (+endYear < 100) {
+          endYear = (+endYear + 1900).toString();
+        }
+      }
+
+      return {
+        uuid: v4(),
+        institution: get(w, "institution", "") || "",
+        studyType: get(w, "studyType", "") || "",
+        area: get(w, "area", "") || "",
+        status: get(w, "status", "no_mention") || "",
+        city: join([get(w, "city", "") || "", get(w, "state", "") || ""]),
+        state: "",
+        startDate,
+        endDate: endDate || "",
+        startMonth,
+        startYear,
+        endYear,
+        endMonth,
+        toPresent,
+        bullets: map(get(w, "bullets", []), (b) => ({
           uuid: v4(),
-          institution: get(w, "institution", "") || "",
-          studyType: get(w, "studyType", "") || "",
-          area: get(w, "area", "") || "",
-          status: get(w, "status", "no_mention") || "",
-          city: join([get(w, "city", "") || "", get(w, 'state', '') || '']),
-          state: "",
-          startDate: get(w, "startDate", "") || "",
-          endDate: get(w, "endDate", "") || "",
-          bullets: map(get(w, "bullets", []), (b) => ({
-            uuid: v4(),
-            content: get(b, "content", ""),
-          })),
-        } satisfies EducationRecord)
-    )
+          content: get(b, "content", ""),
+        })),
+      } satisfies EducationRecord;
+    })
   );
 
   set(

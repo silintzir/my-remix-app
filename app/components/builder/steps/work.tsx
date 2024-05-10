@@ -63,9 +63,8 @@ export function WorkStep() {
           // convert dates
           // const dateA = convertDate(fields[i].endDate);
           const dateA = getComparableEndDate(fields[i]);
-
-
           const dateB = getComparableEndDate(expr);
+
           if (dateA < dateB) {
             setValue(`resume.work.${index}.endMonth`, expr.endMonth, {
               shouldDirty: true,
@@ -88,6 +87,7 @@ export function WorkStep() {
         } else if (i > index) {
           const dateA = getComparableEndDate(fields[i]);
           const dateB = getComparableEndDate(expr);
+
           if (dateA > dateB) {
             setValue(`resume.work.${index}.endMonth`, expr.endMonth, {
               shouldDirty: true,
@@ -188,15 +188,15 @@ export function WorkStep() {
                     </div>
                     <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
                       <div className="flex gap-2 flex-grow">
-                        <SelectInput label="Start (month/year)" className="w-32" control={control} name={`resume.work.${index}.startMonth`} options={getMonthOptions()} onChange={() => {
-                          sortFn(index, fields[index], autoSort)
+                        <SelectInput label="Start (month/year)" className="w-32" control={control} name={`resume.work.${index}.startMonth`} options={getMonthOptions()} onChange={(val) => {
+                          sortFn(index, { ...fields[index], startMonth: val }, autoSort)
                         }} />
-                        <SelectInput label="Start year" className="w-32" labelHidden control={control} name={`resume.work.${index}.startYear`} options={getYearOptions()} onChange={() => sortFn(index, fields[index], autoSort)} />
+                        <SelectInput label="Start year" className="w-32" labelHidden control={control} name={`resume.work.${index}.startYear`} options={getYearOptions()} onChange={(val) => sortFn(index, { ...fields[index], startYear: val }, autoSort)} />
                       </div>
                       <span className="self-center font-bold">Until</span>
                       <div className="flex gap-2 flex-grow justify-end">
-                        <SelectInput label="End month/year" disabled={toPresent} control={control} className="w-32" name={`resume.work.${index}.endMonth`} options={getMonthOptions()} onChange={() => sortFn(index, fields[index], autoSort)} />
-                        <SelectInput disabled={toPresent} label={<span className="flex justify-end h-5 items-center gap-2" onChange={() => sortFn(index, fields[index], autoSort)}>
+                        <SelectInput label="End month/year" disabled={toPresent} control={control} className="w-32" name={`resume.work.${index}.endMonth`} options={getMonthOptions()} onChange={(val) => sortFn(index, { ...fields[index], endMonth: val }, autoSort)} />
+                        <SelectInput disabled={toPresent} onChange={(val) => sortFn(index, { ...fields[index], endYear: val }, autoSort)} label={<span className="flex justify-end h-5 items-center gap-2" >
 
                           <FormField
                             control={control}
@@ -211,7 +211,7 @@ export function WorkStep() {
                                     checked={field.value}
                                     onCheckedChange={(val) => {
                                       field.onChange(val);
-                                      sortFn(index, fields[index], autoSort)
+                                      sortFn(index, { ...fields[index], toPresent: !!val }, autoSort)
                                     }}
                                   />
                                 </FormControl>

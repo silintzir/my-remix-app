@@ -6,7 +6,7 @@ import { formatDistance } from "date-fns";
 import { Separator } from "../ui/separator";
 import { ClientOnly } from "remix-utils/client-only";
 import { OpenPreview } from "../builder/open-preview";
-import { SecondaryActions } from "../builder/export-actions";
+import { SecondaryActions } from "../builder/secondary-actions";
 import usFlag from "@/images/us-flag.svg";
 import esFlag from "@/images/es-flag.svg";
 import { RenameResume } from "./rename";

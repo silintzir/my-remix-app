@@ -2,7 +2,7 @@ import { FontSizeAdjust, PdfPaper } from "@/components/builder";
 import { PdfPages } from "@/components/builder/PdfPages";
 import { AutoSavedFeedback } from "@/components/builder/auto-saved-feedback";
 import { DownloadPdfButton } from "@/components/builder/download-pdf-button";
-import { SecondaryActions } from "@/components/builder/export-actions";
+import { ExportActions } from "@/components/builder/export-actions";
 import { StartStep } from "@/components/builder/steps/start";
 // import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
 import { UserMenu } from "@/components/navbar/user-menu";
@@ -166,7 +166,12 @@ export default function Builder() {
   );
   const fontSizeAdjust = <FontSizeAdjust />;
 
-  const exportActions = <SecondaryActions resumeId={id} />;
+  const exportActions = <ExportActions resumeId={id}
+    isSample={sampleMode}
+    values={defaultValues}
+    fontSize={submittedData.meta.fontSize}
+    template={submittedData.meta.template || "chicago"}
+  />;
 
   const pdfPaper = (
     <PdfPaper base64={base64} id={id} fullPage={view === "preview"} />
@@ -308,7 +313,6 @@ export default function Builder() {
                             <OutputSettings values={submittedData} />
                           </div>
                           <div className="flex gap-1">
-                            {downloadPdf}
                             {exportActions}
                           </div>
                         </div>
@@ -339,7 +343,6 @@ export default function Builder() {
                     </div>
 
                     <div className="flex items-center justify-end flex-1 gap-1">
-                      {downloadPdf}
                       {exportActions}
                     </div>
                   </div>

@@ -5,17 +5,14 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { getRecordPeriod, getEducationTitle } from "@/lib/resume";
-import type { ResumeValues } from "@/lib/types";
+import type { EducationRecord, ResumeValues } from "@/lib/types";
 import { Plus, Trash2 } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-// import { map } from "lodash-es";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
 import { Separator } from "@/components/ui/separator";
-// import { usStateCodes } from "@/lib/states";
-// import { SelectInput } from "@/components/shadcn/SelectInput";
 import { TextInput } from "@/components/shadcn/TextInput";
+import { getEducationTitle, getMonthOptions, getRecordPeriod2, getYearOptions } from "@/lib/resume";
 import {
   Accordion,
   AccordionItem,
@@ -30,8 +27,9 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { convertDate } from "@/lib/templates/helpers/common";
-import { DatePicker } from "@/components/shadcn/MyDatePicker";
+import { getComparableEndDate } from "@/lib/templates/helpers/common";
+import { SelectInput } from "@/components/shadcn/SelectInput";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function EducationStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -54,25 +52,52 @@ export function EducationStep() {
 
   const autoSort = watch("meta.autoSort.education");
 
-  const sortFn = (index: number, expr: string, autoSort: boolean) => {
+  const sortFn = (index: number, expr: EducationRecord, autoSort: boolean) => {
     if (autoSort) {
       for (let i = 0; i < fields.length; i++) {
         if (i < index) {
           // convert dates
-          const dateA = convertDate(fields[i].endDate);
-          const dateB = convertDate(expr);
+          // const dateA = convertDate(fields[i].endDate);
+          const dateA = getComparableEndDate(fields[i]);
+          const dateB = getComparableEndDate(expr);
+
           if (dateA < dateB) {
-            setValue(`resume.education.${index}.endDate`, expr, {
+            setValue(`resume.education.${index}.endMonth`, expr.endMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.startMonth`, expr.startMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.endYear`, expr.endYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.startYear`, expr.startYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.toPresent`, expr.toPresent, {
               shouldDirty: true,
             });
             swap(i, index);
             return;
           }
         } else if (i > index) {
-          const dateA = convertDate(fields[i].endDate);
-          const dateB = convertDate(expr);
+          const dateA = getComparableEndDate(fields[i]);
+          const dateB = getComparableEndDate(expr);
+
           if (dateA > dateB) {
-            setValue(`resume.education.${index}.endDate`, expr, {
+            setValue(`resume.education.${index}.endMonth`, expr.endMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.startMonth`, expr.startMonth, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.endYear`, expr.endYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.startYear`, expr.startYear, {
+              shouldDirty: true,
+            });
+            setValue(`resume.education.${index}.toPresent`, expr.toPresent, {
               shouldDirty: true,
             });
             swap(i, index);
@@ -81,9 +106,10 @@ export function EducationStep() {
         }
       }
     }
-    setValue(`resume.education.${index}.endDate`, expr, {
-      shouldDirty: true,
-    });
+
+    // setValue(`resume.education.${index}.endDate`, expr, {
+    //   shouldDirty: true,
+    // });
   };
 
   return (
@@ -105,6 +131,8 @@ export function EducationStep() {
       >
         <Accordion value={open} type="single" className="space-y-1" collapsible>
           {fields.map((field, index) => {
+
+            const toPresent = watch(`resume.education.${index}.toPresent`);
             return (
               <SortableItem
                 index={index}
@@ -126,7 +154,7 @@ export function EducationStep() {
                       <div className="font-semibold hover:underline">
                         {getEducationTitle(field)}
                       </div>
-                      <div className="muted">{getRecordPeriod(field)}</div>
+                      <div className="muted">{getRecordPeriod2(field)}</div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4 mt-2 px-1">
@@ -159,31 +187,40 @@ export function EducationStep() {
                       />
                     </div>
                     <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
-                      <DatePicker
-                        control={control}
-                        name={`resume.education.${index}.startDate`}
-                        label="Start date"
-                        onChange={(expr: string) => {
-                          setValue(
-                            `resume.education.${index}.startDate`,
-                            expr,
-                            {
-                              shouldDirty: true,
-                            }
-                          );
-                        }}
-                      />
-                      <DatePicker
-                        control={control}
-                        name={`resume.education.${index}.endDate`}
-                        label="End date"
-                        showToPresent
-                        onChange={(expr: string) => {
-                          sortFn(index, expr, autoSort);
-                        }}
-                      />
-                    </div>
-                    <div className="flex gap-2 w-full sm:flex-8">
+                      <div className="flex gap-2 flex-grow">
+                        <SelectInput label="Start (month/year)" className="w-32" control={control} name={`resume.education.${index}.startMonth`} options={getMonthOptions()} onChange={(val) => {
+                          sortFn(index, { ...fields[index], startMonth: val }, autoSort)
+                        }} />
+                        <SelectInput label="Start year" className="w-32" labelHidden control={control} name={`resume.education.${index}.startYear`} options={getYearOptions()} onChange={(val) => sortFn(index, { ...fields[index], startYear: val }, autoSort)} />
+                      </div>
+                      <span className="self-center font-bold">Until</span>
+                      <div className="flex gap-2 flex-grow justify-end">
+                        <SelectInput label="End month/year" disabled={toPresent} control={control} className="w-32" name={`resume.education.${index}.endMonth`} options={getMonthOptions()} onChange={(val) => sortFn(index, { ...fields[index], endMonth: val }, autoSort)} />
+                        <SelectInput disabled={toPresent} onChange={(val) => sortFn(index, { ...fields[index], endYear: val }, autoSort)} label={<span className="flex justify-end h-5 items-center gap-2" >
+
+                          <FormField
+                            control={control}
+                            name={`resume.education.${index}.toPresent`}
+                            render={({ field }) => (
+                              <FormItem className="flex items-center gap-2 space-y-0">
+                                <FormLabel className="font-normal">
+                                  To present
+                                </FormLabel>
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value}
+                                    onCheckedChange={(val) => {
+                                      field.onChange(val);
+                                      sortFn(index, { ...fields[index], toPresent: !!val }, autoSort)
+                                    }}
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+
+                        </span>} className="w-32" control={control} name={`resume.education.${index}.endYear`} options={getYearOptions()} />
+                      </div>
                     </div>
                     <Separator />
                     {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
@@ -232,6 +269,11 @@ export function EducationStep() {
               startDate: "",
               endDate: "",
               bullets: [],
+              startMonth: "-",
+              startYear: "-",
+              toPresent: false,
+              endMonth: "-",
+              endYear: "-",
             });
             setOpen(id);
           }}
@@ -255,7 +297,7 @@ export function EducationStep() {
                     field.onChange(checked);
                     if (checked) {
                       if (fields.length) {
-                        sortFn(0, fields[0].endDate, true);
+                        sortFn(0, fields[0], true);
                       }
                     }
                   }}

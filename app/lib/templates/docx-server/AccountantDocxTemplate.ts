@@ -302,14 +302,9 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
 
     for (const group in p2) {
       let firstItemInGroup = true;
-      for (const {
-        name,
-        position,
-        city,
-        state,
-        period,
-        bullets,
-      } of p2[group]) {
+      for (const { name, position, city, state, period, bullets } of p2[
+        group
+      ]) {
         paragraphs.push(
           this.get2ColsSpaceBetween(
             [
@@ -329,7 +324,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
                 //   getReadableDateFromPicker(startDate),
                 //   getReadableDateFromPicker(endDate)
                 // ),
-                text: period
+                text: period,
               }),
             ],
             undefined,
@@ -369,16 +364,9 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       )
     );
 
-    for (const {
-      institution,
-      studyType,
-      area,
-      city,
-      state,
-      startDate,
-      endDate,
-      bullets,
-    } of records) {
+    for (const r of records) {
+      const { institution, studyType, area, city, state, bullets } = r;
+      const period = getRecordPeriod2(r);
       paragraphs.push(
         this.get2ColsSpaceBetween(
           [
@@ -394,11 +382,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
           ],
           [
             new TextRun({
-              text: constr(
-                " — ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              ),
+              text: period,
             }),
           ],
           undefined,

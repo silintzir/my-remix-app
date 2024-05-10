@@ -13,7 +13,7 @@ import {
   skillDisplay,
 } from "../helpers/common";
 import { get2ColsSpaceBetween, getHeaderWithLine, pine } from "../helpers/pdf";
-import { map, groupBy } from "lodash-es";
+import { map, groupBy, take } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
 import { ContentProvider } from "../pdf.client";
@@ -127,7 +127,20 @@ export class ChicagoPdfTemplate {
     return [
       getHeaderWithLine(title.length ? title : DEFAULT_SECTION_TITLES.skills),
       {
-        text: constr(", ", ...map(records, skillDisplay)),
+        text:
+          constr(
+            ", ",
+            ...map(
+              take(
+                records,
+                records.length > 1 ? records.length - 1 : records.length
+              ),
+              skillDisplay
+            )
+          ) +
+          (records.length > 1
+            ? ` and ${skillDisplay(records[records.length - 1])}`
+            : ""),
         style: "paragraph",
       },
     ];
@@ -210,6 +223,7 @@ export class ChicagoPdfTemplate {
     // group by employer/location
     const p1 = map(records, (w) => ({
       ...w,
+      period: getRecordPeriod2(w),
       group: constr(", ", w.institution, constr(" ", w.city, w.state)),
     }));
     const p2 = groupBy(p1, "group");
@@ -233,9 +247,7 @@ export class ChicagoPdfTemplate {
         )
       );
 
-      for (const { area, studyType, startDate, endDate, bullets } of p2[
-        group
-      ]) {
+      for (const { area, studyType, period, bullets } of p2[group]) {
         stack.push(
           get2ColsSpaceBetween(
             {
@@ -244,11 +256,7 @@ export class ChicagoPdfTemplate {
               alignment: "left",
             },
             {
-              text: constr(
-                " - ",
-                getReadableDateFromPicker(startDate),
-                getReadableDateFromPicker(endDate)
-              ),
+              text: period,
             }
           )
         );
@@ -329,7 +337,7 @@ export class ChicagoPdfTemplate {
               //   getReadableDateFromPicker(startDate),
               //   getReadableDateFromPicker(endDate)
               // ),
-              text: period
+              text: period,
             }
           )
         );
