@@ -226,12 +226,9 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
       },
       ...map(records, ({ name, issuer, date, url }) => {
         return {
-          text: `${constr(
-            " - ",
-            name,
-            issuer,
-            url
-          )} (${getReadableDateFromPicker(date)})`,
+          text: `${constr(" - ", name, issuer, url)}${
+            date.length ? ` (${getReadableDateFromPicker(date)})` : ""
+          }`,
           style: "paragraph",
           alignment: "center",
           marginBottom: 8,

@@ -2,7 +2,7 @@ import type { Content } from "pdfmake/interfaces";
 import type { ResumeValues, Step } from "@/lib/types";
 import {
   TITLE,
-  certificateDisplay,
+  certificateDisplay2,
   constr,
   nonEmptyAccomplishments,
   nonEmptyCertificates,
@@ -14,7 +14,6 @@ import {
 } from "../helpers/common";
 import { get2ColsSpaceBetween, getHeaderWithLine, pine } from "../helpers/pdf";
 import { map, groupBy, take } from "lodash-es";
-import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
 import { ContentProvider } from "../pdf.client";
 import { getRecordPeriod2 } from "@/lib/resume";
@@ -167,7 +166,20 @@ export class ChicagoPdfTemplate {
         title.length ? title : DEFAULT_SECTION_TITLES.certificates
       ),
       {
-        ul: records.map((r) => certificateDisplay(r)),
+        text:
+          constr(
+            ", ",
+            ...map(
+              take(
+                records,
+                records.length > 1 ? records.length - 1 : records.length
+              ),
+              certificateDisplay2
+            )
+          ) +
+          (records.length > 1
+            ? ` and ${certificateDisplay2(records[records.length - 1])}`
+            : ""),
         style: "paragraph",
       },
     ];

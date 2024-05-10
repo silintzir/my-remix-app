@@ -30,6 +30,18 @@ export function skillDisplay({ name, level }: SkillRecord) {
   return constr(" ", name, lv);
 }
 
+export function certificateDisplay2({ name, issuer, date }: CertificateRecord) {
+  const toks = [];
+  toks.push(name);
+  if (issuer.length) {
+    toks.push(`by ${issuer}`);
+  }
+  if (date.length) {
+    toks.push(`(${date})`);
+  }
+  return toks.join(" ");
+}
+
 export function certificateDisplay(
   { name, issuer, date, url }: CertificateRecord,
   delimiter = "\n"
@@ -78,34 +90,40 @@ export const nonEmptyInterests = (records: InterestRecord[]) => {
   return filter(records, (c) => c.name.trim().length > 0);
 };
 
-export function getComparableEndDate(values: {startMonth?: string, startYear?: string, endMonth?: string, endYear?: string, toPresent?: boolean}) {
+export function getComparableEndDate(values: {
+  startMonth?: string;
+  startYear?: string;
+  endMonth?: string;
+  endYear?: string;
+  toPresent?: boolean;
+}) {
   const { startYear, startMonth, endMonth, endYear, toPresent } = values;
 
   if (toPresent) {
-    return '9999-12';
+    return "9999-12";
   }
 
   const from = [];
-  let start = '0001-01';
-  if (startYear?.length && startYear !== '-') {
+  let start = "0001-01";
+  if (startYear?.length && startYear !== "-") {
     from.push(startYear);
-    if (startMonth?.length && startMonth !== '-') {
+    if (startMonth?.length && startMonth !== "-") {
       from.push(startMonth);
     }
   }
   if (from.length) {
-    start = from.join('-');
+    start = from.join("-");
   }
 
   const to = [];
-  if (endYear?.length && endYear !== '-') {
+  if (endYear?.length && endYear !== "-") {
     to.push(endYear);
-    if (endMonth?.length && endMonth !== '-') {
+    if (endMonth?.length && endMonth !== "-") {
       to.push(endMonth);
     }
   }
   if (to.length) {
-    return to.join('-')
+    return to.join("-");
   }
   return start;
 }
