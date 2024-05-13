@@ -38,7 +38,7 @@ export class ChicagoDocxTemplate {
     this.values = values;
   }
 
- public static TOTAL_TABLE_WIDTH = 10900;
+  public static TOTAL_TABLE_WIDTH = 10900;
 
   basics: ContentProvider = () => {
     const {
@@ -159,11 +159,6 @@ export class ChicagoDocxTemplate {
           ],
           [
             new TextRun({
-              // text: constr(
-              //   ", ",
-              //   getReadableDateFromPicker(p2[group][0].city),
-              //   getReadableDateFromPicker(p2[group][0].state)
-              // ),
               text: p2[group][0].period,
             }),
           ],
@@ -488,13 +483,15 @@ export class ChicagoDocxTemplate {
     right: TextRun[],
     hLeft?: any,
     hRight?: any,
-    widthFraction = 0.66,
+    leftWidthFraction = 0.66,
     spacingBefore = 0
   ) {
     const MIDDLE_COLUMN_WIDTH_FRACTION = 0.03;
-    const leftWidth = widthFraction * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
-    const middleWidth = MIDDLE_COLUMN_WIDTH_FRACTION * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
-    const rightWidth = ChicagoDocxTemplate.TOTAL_TABLE_WIDTH - leftWidth - middleWidth;
+    const leftWidth = leftWidthFraction * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
+    const middleWidth =
+      MIDDLE_COLUMN_WIDTH_FRACTION * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
+    const rightWidth =
+      ChicagoDocxTemplate.TOTAL_TABLE_WIDTH - leftWidth - middleWidth;
     return new Table({
       columnWidths: [leftWidth, middleWidth, rightWidth],
       margins: { left: 0, right: 0 },
@@ -526,6 +523,7 @@ export class ChicagoDocxTemplate {
         new TableRow({
           children: [
             new TableCell({
+              width: { size: leftWidth, type: WidthType.DXA },
               children: [
                 new Paragraph({
                   ...(hLeft ? { heading: hLeft } : {}),
