@@ -169,19 +169,11 @@ export class ChicagoDocxTemplate {
         )
       );
 
-      for (const { position, startDate, endDate, bullets } of p2[group]) {
+      for (const { position, period, bullets } of p2[group]) {
         paragraphs.push(
           this.get2ColsSpaceBetween(
             [new TextRun({ text: position, italics: true })],
-            [
-              new TextRun({
-                text: constr(
-                  " - ",
-                  getReadableDateFromPicker(startDate),
-                  getReadableDateFromPicker(endDate)
-                ),
-              }),
-            ],
+            [new TextRun({ text: period })],
             HeadingLevel.HEADING_4,
             HeadingLevel.HEADING_4
           )
@@ -243,9 +235,7 @@ export class ChicagoDocxTemplate {
         )
       );
 
-      for (const { area, studyType, startDate, endDate, bullets } of p2[
-        group
-      ]) {
+      for (const { area, studyType, period, bullets } of p2[group]) {
         paragraphs.push(
           this.get2ColsSpaceBetween(
             [
@@ -254,15 +244,7 @@ export class ChicagoDocxTemplate {
                 italics: true,
               }),
             ],
-            [
-              new TextRun({
-                text: constr(
-                  " - ",
-                  getReadableDateFromPicker(startDate),
-                  getReadableDateFromPicker(endDate)
-                ),
-              }),
-            ],
+            [new TextRun({ text: period })],
             HeadingLevel.HEADING_4,
             HeadingLevel.HEADING_4
           )

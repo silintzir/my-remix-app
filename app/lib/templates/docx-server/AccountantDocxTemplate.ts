@@ -24,7 +24,7 @@ import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "@/lib/utils";
 import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { ChicagoDocxTemplate } from "./ChicagoDocxTemplate";
-import { getDoubleHLine } from "../helpers/docx";
+import { addBottomDoubleHLine } from "../helpers/docx";
 import { getRecordPeriod2 } from "@/lib/resume";
 
 interface ContentProvider {
@@ -122,7 +122,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     if (noSummary && noSkills) {
       return [];
     }
-    paragraphs.push(getDoubleHLine() as any);
+    paragraphs.push(addBottomDoubleHLine() as any);
     return paragraphs;
   };
   basics: ContentProvider = () => {

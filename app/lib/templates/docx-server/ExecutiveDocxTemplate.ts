@@ -26,7 +26,7 @@ import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "@/lib/utils";
 import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { ChicagoDocxTemplate } from "./ChicagoDocxTemplate";
-import { getDoubleHLine } from "../helpers/docx";
+import { addBottomDoubleHLine } from "../helpers/docx";
 import { getRecordPeriod2 } from "@/lib/resume";
 
 interface ContentProvider {
@@ -81,9 +81,15 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
         ...splitArrayByLimit(map(records, skillDisplay), 78).map(
           (row) =>
             new Paragraph({
-              text: constr("  •  ", ...row),
               alignment: AlignmentType.CENTER,
               style: HeadingLevel.HEADING_6,
+              children: [
+                new TextRun({
+                  bold: true,
+                  italics: true,
+                  text: constr("  •  ", ...row),
+                }),
+              ],
             })
         )
       );
@@ -91,8 +97,7 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
     if (noSummary && noSkills) {
       return [];
     }
-    paragraphs.push(getDoubleHLine() as any);
-    return paragraphs;
+    return [addBottomDoubleHLine(paragraphs)];
   };
   basics: ContentProvider = () => {
     const {
@@ -109,25 +114,47 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
       },
     } = this.values;
 
+    const leftWidth = 0.45 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH;
+    const middleWidth = 0.1 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH;
+    const rightWidth = 0.45 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH;
+
+    const borders = {
+      insideHorizontal: {
+        style: BorderStyle.NONE,
+      },
+      bottom: {
+        size: 1,
+        style: BorderStyle.SINGLE,
+      },
+      left: {
+        size: 0,
+        style: BorderStyle.NONE,
+      },
+      top: {
+        style: BorderStyle.NONE,
+      },
+      right: {
+        style: BorderStyle.NONE,
+      },
+      insideVertical: {
+        style: BorderStyle.NONE,
+      },
+    };
+
     return [
       new Paragraph({
         text: constr(" ", firstName, lastName),
         style: HeadingLevel.HEADING_1,
       }),
       new Table({
-        columnWidths: [
-          0.45 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH,
-          0.1 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH,
-          0.45 * ExecutiveDocxTemplate.TOTAL_TABLE_WIDTH,
-        ],
+        columnWidths: [leftWidth, middleWidth, rightWidth],
         margins: { left: 0, right: 0 },
         borders: {
           insideHorizontal: {
             style: BorderStyle.NONE,
           },
           bottom: {
-            size: 1,
-            style: BorderStyle.SINGLE,
+            style: BorderStyle.NONE,
           },
           left: {
             size: 0,
@@ -151,6 +178,8 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
           new TableRow({
             children: [
               new TableCell({
+                borders,
+                width: { size: leftWidth, type: WidthType.DXA },
                 children: [
                   new Paragraph({
                     text: maskBasics ? "Marathon Staffing" : address,
@@ -158,9 +187,14 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
                 ],
               }),
               new TableCell({
+                borders,
+                width: { size: middleWidth, type: WidthType.DXA },
                 children: [new Paragraph({ text: "" })],
               }),
               new TableCell({
+                borders,
+                margins: { bottom: 60 },
+                width: { size: rightWidth, type: WidthType.DXA },
                 children: maskBasics
                   ? [
                       new Paragraph({
@@ -273,11 +307,6 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
               }),
               new TextRun({
                 text: period,
-                // text: `(${constr(
-                //   " - ",
-                //   getReadableDateFromPicker(startDate),
-                //   getReadableDateFromPicker(endDate)
-                // )})`,
               }),
             ],
             alignment: AlignmentType.CENTER,

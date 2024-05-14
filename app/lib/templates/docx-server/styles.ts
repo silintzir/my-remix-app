@@ -69,7 +69,7 @@ export const docxStyles = {
       heading5: {
         run: {
           font: "Arial",
-          size: 0.8 * fontSize,
+          size: 0.6 * fontSize,
         },
         paragraph: {
           spacing: {
@@ -96,9 +96,7 @@ export const docxStyles = {
           font: "Arial",
           size: 2.2 * fontSize,
         },
-        paragraph: {
-          alignment: AlignmentType.JUSTIFIED,
-        },
+        paragraph: { alignment: AlignmentType.JUSTIFIED },
       },
       heading1: {
         run: {
@@ -163,7 +161,7 @@ export const docxStyles = {
       heading5: {
         run: {
           font: "Arial",
-          size: 1.1 * fontSize,
+          size: 0.6 * fontSize,
         },
       },
       heading6: {
