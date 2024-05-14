@@ -23,7 +23,7 @@ import {
   Styles,
 } from "docx";
 import type { FileChild } from "node_modules/docx/build/file/file-child";
-import { map, groupBy } from "lodash-es";
+import { map, groupBy, take } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
 import { getRecordPeriod2 } from "@/lib/resume";
@@ -159,12 +159,12 @@ export class ChicagoDocxTemplate {
           ],
           [
             new TextRun({
-              text: p2[group][0].period,
+              text: constr(", ", p2[group][0].city, p2[group][0].state),
             }),
           ],
           HeadingLevel.HEADING_3,
           HeadingLevel.HEADING_3,
-          undefined,
+          0.72,
           120
         )
       );
@@ -232,13 +232,13 @@ export class ChicagoDocxTemplate {
           ],
           [
             new TextRun({
-              text: p2[group][0].period,
+              text: constr(", ", p2[group][0].city, p2[group][0].state),
               bold: true,
             }),
           ],
           HeadingLevel.HEADING_3,
           HeadingLevel.HEADING_3,
-          undefined,
+          0.72,
           120
         )
       );
@@ -290,7 +290,20 @@ export class ChicagoDocxTemplate {
       this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.skills),
       new Paragraph({
         heading: HeadingLevel.HEADING_6,
-        text: constr(", ", ...map(records, skillDisplay)),
+        text:
+          constr(
+            ", ",
+            ...map(
+              take(
+                records,
+                records.length > 1 ? records.length - 1 : records.length
+              ),
+              skillDisplay
+            )
+          ) +
+          (records.length > 1
+            ? ` and ${skillDisplay(records[records.length - 1])}`
+            : ""),
       }),
     ];
   };
@@ -446,9 +459,11 @@ export class ChicagoDocxTemplate {
       columnWidths: [ChicagoDocxTemplate.TOTAL_TABLE_WIDTH],
       margins: { left: 0, right: 0 },
       borders: {
+        insideHorizontal: {
+          style: BorderStyle.NONE,
+        },
         bottom: {
-          size: 1,
-          style: BorderStyle.SINGLE,
+          style: BorderStyle.NONE,
         },
         left: {
           style: BorderStyle.NONE,
@@ -457,6 +472,9 @@ export class ChicagoDocxTemplate {
           style: BorderStyle.NONE,
         },
         right: {
+          style: BorderStyle.NONE,
+        },
+        insideVertical: {
           style: BorderStyle.NONE,
         },
       },
@@ -468,6 +486,25 @@ export class ChicagoDocxTemplate {
         new TableRow({
           children: [
             new TableCell({
+              width: {
+                size: ChicagoDocxTemplate.TOTAL_TABLE_WIDTH,
+                type: WidthType.DXA,
+              },
+              borders: {
+                bottom: {
+                  size: 1,
+                  style: BorderStyle.SINGLE,
+                },
+                left: {
+                  style: BorderStyle.NONE,
+                },
+                top: {
+                  style: BorderStyle.NONE,
+                },
+                right: {
+                  style: BorderStyle.NONE,
+                },
+              },
               children: [
                 new Paragraph({ heading, children: [new TextRun(title)] }),
               ],
@@ -483,10 +520,10 @@ export class ChicagoDocxTemplate {
     right: TextRun[],
     hLeft?: any,
     hRight?: any,
-    leftWidthFraction = 0.66,
+    leftWidthFraction = 0.7,
     spacingBefore = 0
   ) {
-    const MIDDLE_COLUMN_WIDTH_FRACTION = 0.03;
+    const MIDDLE_COLUMN_WIDTH_FRACTION = 0.02;
     const leftWidth = leftWidthFraction * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
     const middleWidth =
       MIDDLE_COLUMN_WIDTH_FRACTION * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;

@@ -69,7 +69,7 @@ export const docxStyles = {
       heading5: {
         run: {
           font: "Arial",
-          size: 1.0 * fontSize,
+          size: 0.8 * fontSize,
         },
         paragraph: {
           spacing: {

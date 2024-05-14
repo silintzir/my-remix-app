@@ -343,14 +343,7 @@ export class ChicagoPdfTemplate {
         stack.push(
           get2ColsSpaceBetween(
             { text: position, style: "heading4", alignment: "left" },
-            {
-              // text: constr(
-              //   " - ",
-              //   getReadableDateFromPicker(startDate),
-              //   getReadableDateFromPicker(endDate)
-              // ),
-              text: period,
-            }
+            { text: period }
           )
         );
         stack.push({
