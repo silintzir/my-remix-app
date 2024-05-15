@@ -30,15 +30,15 @@ export default function getDefinition(
   let struct: any;
   switch (template) {
     case "executive":
-      struct = new ExecutiveDocxTemplate(document);
+      struct = new ExecutiveDocxTemplate(document, fontSize);
       styles = docxStyles.executive({ fontSize });
       break;
     case "accountant":
-      struct = new AccountantDocxTemplate(document);
+      struct = new AccountantDocxTemplate(document, fontSize);
       styles = docxStyles.accountant({ fontSize });
       break;
     default:
-      struct = new ChicagoDocxTemplate(document);
+      struct = new ChicagoDocxTemplate(document, fontSize);
       styles = docxStyles.chicago({ fontSize });
   }
 

@@ -20,7 +20,6 @@ import {
   Paragraph,
   TextRun,
   WidthType,
-  Styles,
 } from "docx";
 import type { FileChild } from "node_modules/docx/build/file/file-child";
 import { map, groupBy, take } from "lodash-es";
@@ -34,8 +33,10 @@ interface ContentProvider {
 
 export class ChicagoDocxTemplate {
   public values: ResumeValues;
-  public constructor(values: ResumeValues) {
+  protected fontSize: number;
+  public constructor(values: ResumeValues, fontSize: number) {
     this.values = values;
+    this.fontSize = fontSize;
   }
 
   public static TOTAL_TABLE_WIDTH = 10900;

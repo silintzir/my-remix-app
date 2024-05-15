@@ -1,6 +1,5 @@
 import {
   BorderStyle,
-  HeadingLevel,
   Paragraph,
   Table,
   TableCell,
@@ -12,7 +11,8 @@ import { ChicagoDocxTemplate } from "../docx-server/ChicagoDocxTemplate";
 export const addBottomDoubleHLine = (
   content: Paragraph[],
   marginTop = 0,
-  marginBottom = 0
+  marginBottom = 0,
+  spacingBefore = 100
 ) =>
   new Table({
     columnWidths: [ChicagoDocxTemplate.TOTAL_TABLE_WIDTH],
@@ -47,14 +47,13 @@ export const addBottomDoubleHLine = (
               size: ChicagoDocxTemplate.TOTAL_TABLE_WIDTH,
               type: WidthType.DXA,
             },
-            margins: { bottom: 120 },
+            margins: { bottom: spacingBefore },
             borders: {
               bottom: {
                 size: 1,
                 style: BorderStyle.DOUBLE,
               },
               left: {
-                size: 0,
                 style: BorderStyle.NONE,
               },
               top: {

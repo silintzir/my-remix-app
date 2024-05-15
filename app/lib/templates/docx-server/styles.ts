@@ -224,7 +224,7 @@ export const docxStyles = {
         },
         paragraph: {
           spacing: {
-            before: 250,
+            before: 0,
             after: 0,
           },
           alignment: "center",

@@ -18,6 +18,8 @@ import {
   HeadingLevel,
   Paragraph,
   TextRun,
+  WidthType,
+  AlignmentType,
 } from "docx";
 import type { FileChild } from "node_modules/docx/build/file/file-child";
 import { map, groupBy } from "lodash-es";
@@ -26,12 +28,13 @@ import { DEFAULT_SECTION_TITLES } from "@/lib/defaults";
 import { ChicagoDocxTemplate } from "./ChicagoDocxTemplate";
 import { addBottomDoubleHLine } from "../helpers/docx";
 import { getRecordPeriod2 } from "@/lib/resume";
+import { ExecutiveDocxTemplate } from "./ExecutiveDocxTemplate";
 
 interface ContentProvider {
   (): FileChild[];
 }
 
-export class AccountantDocxTemplate extends ChicagoDocxTemplate {
+export class AccountantDocxTemplate extends ExecutiveDocxTemplate {
   summary: ContentProvider = () => {
     const {
       resume: {
@@ -41,7 +44,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       meta: {
         steps: {
           summary: { title: summaryTitle, enabled: summaryEnabled },
-          skills: { enabled: skillsEnabled },
+          skills: { title: skillsTitle, enabled: skillsEnabled },
         },
       },
     } = this.values;
@@ -69,46 +72,40 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     if (!skillsEnabled || !records.length) {
       noSkills = true;
     } else {
+      if (noSummary) {
+        paragraphs.push(
+          this.sectionTitle(
+            skillsTitle.length ? skillsTitle : DEFAULT_SECTION_TITLES.skills
+          )
+        );
+      }
+      const width = ChicagoDocxTemplate.TOTAL_TABLE_WIDTH / 3;
       paragraphs.push(
         new Table({
-          margins: {
-            left: 0,
-          },
+          columnWidths: [width, width, width],
+          margins: { left: 0 },
           borders: {
-            insideHorizontal: {
-              style: BorderStyle.NONE,
-            },
-            bottom: {
-              size: 0,
-              style: BorderStyle.NONE,
-            },
-            left: {
-              size: 0,
-              style: BorderStyle.NONE,
-            },
-            top: {
-              style: BorderStyle.NONE,
-            },
-            right: {
-              style: BorderStyle.NONE,
-            },
-            insideVertical: {
-              style: BorderStyle.NONE,
-            },
+            insideHorizontal: { style: BorderStyle.NONE },
+            bottom: { style: BorderStyle.NONE },
+            left: { style: BorderStyle.NONE },
+            top: { style: BorderStyle.NONE },
+            right: { style: BorderStyle.NONE },
+            insideVertical: { style: BorderStyle.NONE },
           },
           rows: [
             new TableRow({
               children: createTwoDimArray(records.map(skillDisplay), 3).map(
                 (column) =>
                   new TableCell({
+                    width: {
+                      size: ChicagoDocxTemplate.TOTAL_TABLE_WIDTH,
+                      type: WidthType.DXA,
+                    },
                     children: column.map(
                       (entry) =>
                         new Paragraph({
-                          children: [
-                            new TextRun({
-                              text: `√   ${entry}`,
-                            }),
-                          ],
+                          alignment: AlignmentType.LEFT,
+                          children: [new TextRun({ text: `√   ${entry}` })],
                           spacing: { before: 90 },
                         })
                     ),
@@ -122,8 +119,13 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     if (noSummary && noSkills) {
       return [];
     }
-    paragraphs.push(addBottomDoubleHLine() as any);
-    return paragraphs;
+    return [
+      new Paragraph({
+        spacing: { before: 0, after: 0 },
+        children: [new TextRun({ text: "", size: 0.6 * this.fontSize })],
+      }),
+      addBottomDoubleHLine(paragraphs, 0, 0, 150),
+    ];
   };
   basics: ContentProvider = () => {
     const {
@@ -140,68 +142,87 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
       },
     } = this.values;
 
+    const LEFT_COLUMN_WIDTH_FRACTION = 0.49;
+    const MIDDLE_COLUMN_WIDTH_FRACTION = 0.02;
+    const leftWidth =
+      LEFT_COLUMN_WIDTH_FRACTION * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
+    const middleWidth =
+      MIDDLE_COLUMN_WIDTH_FRACTION * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
+    const rightWidth =
+      ChicagoDocxTemplate.TOTAL_TABLE_WIDTH - leftWidth - middleWidth;
+
     return [
-      new Table({
-        columnWidths: [5800, 5000],
-        margins: {
-          left: 0,
-        },
-        borders: {
-          insideHorizontal: {
-            style: BorderStyle.NONE,
-          },
-          bottom: {
-            size: 1,
-            style: BorderStyle.DOUBLE,
-          },
-          left: {
-            size: 0,
-            style: BorderStyle.NONE,
-          },
-          top: {
-            style: BorderStyle.NONE,
-          },
-          right: {
-            style: BorderStyle.NONE,
-          },
-          insideVertical: {
-            style: BorderStyle.NONE,
-          },
-        },
-        rows: [
-          new TableRow({
-            children: [
-              new TableCell({
+      addBottomDoubleHLine(
+        [
+          new Table({
+            columnWidths: [leftWidth, middleWidth, rightWidth],
+            margins: { left: 0 },
+            borders: {
+              insideHorizontal: { style: BorderStyle.NONE },
+              bottom: { style: BorderStyle.NONE },
+              left: { style: BorderStyle.NONE },
+              top: { style: BorderStyle.NONE },
+              right: { style: BorderStyle.NONE },
+              insideVertical: { style: BorderStyle.NONE },
+            },
+            indent: {
+              size: 60,
+              type: WidthType.DXA,
+            },
+            rows: [
+              new TableRow({
                 children: [
-                  new Paragraph({
-                    text: constr(" ", firstName, lastName),
-                    style: HeadingLevel.HEADING_1,
+                  new TableCell({
+                    width: {
+                      size: leftWidth,
+                      type: WidthType.DXA,
+                    },
+                    children: [
+                      new Paragraph({
+                        text: constr(" ", firstName, lastName),
+                        style: HeadingLevel.HEADING_1,
+                      }),
+                    ],
                   }),
-                ],
-              }),
-              new TableCell({
-                children: [
-                  new Paragraph({
-                    text: "",
-                    style: HeadingLevel.HEADING_6,
+                  new TableCell({
+                    width: {
+                      size: middleWidth,
+                      type: WidthType.DXA,
+                    },
+                    children: [new Paragraph({ text: "" })],
                   }),
-                  new Paragraph({
-                    text: maskBasics ? "Marathon Staffing" : address,
-                    style: HeadingLevel.HEADING_6,
-                  }),
-                  new Paragraph({
-                    text: maskBasics
-                      ? "Confidential document, not for distribution without prior permission."
-                      : constr(" | ", phone, email, url),
-                    style: HeadingLevel.HEADING_6,
+                  new TableCell({
+                    width: {
+                      size: rightWidth,
+                      type: WidthType.DXA,
+                    },
+                    children: [
+                      new Paragraph({
+                        text: "",
+                        style: HeadingLevel.HEADING_6,
+                      }),
+                      new Paragraph({
+                        text: maskBasics ? "Marathon Staffing" : address,
+                        style: HeadingLevel.HEADING_6,
+                      }),
+                      new Paragraph({
+                        text: maskBasics
+                          ? "Confidential document, not for distribution without prior permission."
+                          : constr(" | ", phone, email, url),
+                        style: HeadingLevel.HEADING_6,
+                      }),
+                    ],
                   }),
                 ],
               }),
             ],
           }),
-        ],
-      }),
-    ] as any;
+        ] as any,
+        undefined,
+        undefined,
+        60
+      ),
+    ];
   };
   accomplishments: ContentProvider = () => {
     const {
@@ -216,13 +237,15 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     if (!enabled || !records.length) {
       return [];
     }
+    const leftWidth = 0.04 * ChicagoDocxTemplate.TOTAL_TABLE_WIDTH;
+    const rightWidth = ChicagoDocxTemplate.TOTAL_TABLE_WIDTH - leftWidth;
     return [
       this.sectionTitle(
         title.length ? title : DEFAULT_SECTION_TITLES.accomplishments,
         HeadingLevel.HEADING_3
       ),
       new Table({
-        columnWidths: [300, 10500],
+        columnWidths: [leftWidth, rightWidth],
         margins: {
           left: 0,
         },
@@ -253,11 +276,13 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
             new TableRow({
               children: [
                 new TableCell({
+                  width: { size: leftWidth, type: WidthType.DXA },
                   children: [
-                    new Paragraph({ text: "√", spacing: { before: 150 } }),
+                    new Paragraph({ text: " √", spacing: { before: 150 } }),
                   ],
                 }),
                 new TableCell({
+                  width: { size: rightWidth, type: WidthType.DXA },
                   children: [
                     new Paragraph({ text: i.name, spacing: { before: 150 } }),
                   ],
@@ -317,20 +342,11 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
               }),
               new TextRun({ text: constr(", ", name, city, state) }),
             ],
-            [
-              new TextRun({
-                // text: constr(
-                //   " — ",
-                //   getReadableDateFromPicker(startDate),
-                //   getReadableDateFromPicker(endDate)
-                // ),
-                text: period,
-              }),
-            ],
+            [new TextRun({ text: period })],
             undefined,
             undefined,
-            undefined,
-            firstItemInGroup ? 200 : 0
+            0.76,
+            firstItemInGroup ? 100 : 0
           )
         );
         paragraphs.push(...this.createBullets(map(bullets, "content")));
@@ -387,7 +403,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
           ],
           undefined,
           undefined,
-          undefined,
+          0.76,
           150
         )
       );
@@ -454,13 +470,14 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
     if (!enabled || !records.length) {
       return [];
     }
+    const width = ChicagoDocxTemplate.TOTAL_TABLE_WIDTH / 3;
     return [
       this.sectionTitle(
         title.length ? title : DEFAULT_SECTION_TITLES.interests,
         HeadingLevel.HEADING_3
       ),
       new Table({
-        columnWidths: [5400, 5400],
+        columnWidths: [width, width, width],
         margins: {
           left: 0,
         },
@@ -486,6 +503,10 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
             style: BorderStyle.NONE,
           },
         },
+        indent: {
+          size: 60,
+          type: WidthType.DXA,
+        },
         rows: [
           new TableRow({
             children: createTwoDimArray(
@@ -494,6 +515,7 @@ export class AccountantDocxTemplate extends ChicagoDocxTemplate {
             ).map(
               (column) =>
                 new TableCell({
+                  width: { size: width, type: WidthType.DXA },
                   children: this.createBullets(column, 0, { before: 90 }),
                 })
             ),

@@ -32,7 +32,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       meta: {
         steps: {
           summary: { title: summaryTitle, enabled: summaryEnabled },
-          skills: { enabled: skillsEnabled },
+          skills: { title: skillsTitle, enabled: skillsEnabled },
         },
       },
     } = this.values;
@@ -58,6 +58,14 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
     if (!skillsEnabled || !records.length) {
       noSkills = true;
     } else {
+      if (noSummary) {
+        output.push({
+          text: skillsTitle.length
+            ? skillsTitle
+            : DEFAULT_SECTION_TITLES.skills,
+          style: "heading2",
+        });
+      }
       output.push({
         marginTop: 0,
         marginBottom: 8,
