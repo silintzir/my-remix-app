@@ -40,6 +40,7 @@ export function createPrompt(
   enhance = "",
   lang: Lang = "en"
 ) {
+
   const toks = [];
   toks.push(introPrompt(lang));
   toks.push(inputDescription(step));

@@ -1,10 +1,8 @@
 import { FontSizeAdjust, PdfPaper } from "@/components/builder";
 import { PdfPages } from "@/components/builder/PdfPages";
 import { AutoSavedFeedback } from "@/components/builder/auto-saved-feedback";
-import { DownloadPdfButton } from "@/components/builder/download-pdf-button";
 import { ExportActions } from "@/components/builder/export-actions";
 import { StartStep } from "@/components/builder/steps/start";
-// import { SwitchViewOverlay } from "@/components/builder/switch-view-overlay";
 import { UserMenu } from "@/components/navbar/user-menu";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -112,12 +110,30 @@ export default function Builder() {
   });
   const { submit, state: fetcherState } = useFetcher({ key: "resume-values" });
 
+  const { state: translateState, data: translateData } = useFetcher({ key: "translate" });
+
+
   const {
+    setValue,
     formState: { isSubmitSuccessful, errors },
     reset,
   } = form;
 
   const ref = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (translateData) {
+      const steps = get(translateData, 'steps');
+      if (steps) {
+        setValue('meta.steps', steps as any, { shouldDirty: true })
+      }
+
+      const resume = get(translateData, 'resume');
+      if (resume) {
+        setValue('resume', resume as any, { shouldDirty: true })
+      }
+    }
+  }, [translateData, setValue])
 
   function onSubmit(data: ResumeValues) {
     setSubmittedData(data);
@@ -156,14 +172,6 @@ export default function Builder() {
     template: submittedData.meta.template || "chicago",
   });
 
-  const downloadPdf = (
-    <DownloadPdfButton
-      isSample={sampleMode}
-      values={defaultValues}
-      fontSize={submittedData.meta.fontSize}
-      template={submittedData.meta.template || "chicago"}
-    />
-  );
   const fontSizeAdjust = <FontSizeAdjust />;
 
   const exportActions = <ExportActions resumeId={id}
@@ -180,6 +188,8 @@ export default function Builder() {
   return (
     <>
       <Overlay visible={state === "loading"} />
+      <Overlay visible={translateState === "submitting"} text="Translating..." />
+
       <header className="block xl:hidden h-16 relative z-50 bg-white border-b shadow-lg">
         <div className="fixed top-0 left-0 right-0 h-inherit">
           <div className="flex justify-between items-center px-4 relative h-inherit">
@@ -310,7 +320,7 @@ export default function Builder() {
                           className="absolute left-0 w-full flex items-center justify-between top-[-52px]"
                         >
                           <div className="flex items-center gap-2">
-                            <OutputSettings values={submittedData} />
+                            <OutputSettings id={id} />
                           </div>
                           <div className="flex gap-1">
                             {exportActions}

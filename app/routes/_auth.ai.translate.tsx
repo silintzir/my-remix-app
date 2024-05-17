@@ -1,13 +1,13 @@
 import { NoMemory } from "@/lib/ai/bot.server";
 import { authenticatedFetch } from "@/lib/strapi.server";
 import type { ResumeValues, StrapiLongResume } from "@/lib/types";
-import { json, type ActionFunctionArgs } from "@remix-run/node";
-import chalk from "chalk";
+import { type ActionFunctionArgs } from "@remix-run/node";
 
 export async function action({ request }: ActionFunctionArgs) {
   const { id, target } = Object.fromEntries(
     await request.formData()
   ) as unknown as { id: string; target: string };
+
   try {
     const record: { data: StrapiLongResume } = await authenticatedFetch(
       request,
@@ -17,6 +17,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     );
     const document = record.data.attributes.document;
+
     const resume = document.resume;
     const steps = document.meta.steps;
     const bot = new NoMemory();
@@ -28,28 +29,25 @@ export async function action({ request }: ActionFunctionArgs) {
       steps: any;
     };
 
-    await authenticatedFetch(request, `/api/resumes/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        data: {
-          document: {
-            ...document,
-            resume: response.resume,
-            meta: {
-              ...document.meta,
-              language: target === "Spanish" ? "es" : "en",
-              steps: response.steps,
-            },
-          } satisfies ResumeValues,
-        },
-      }),
-    });
+    // await authenticatedFetch(request, `/api/resumes/${id}`, {
+    //   method: "PUT",
+    //   body: JSON.stringify({
+    //     data: {
+    //       document: {
+    //         ...document,
+    //         resume: response.resume,
+    //         meta: {
+    //           ...document.meta,
+    //           language: target === "Spanish" ? "es" : "en",
+    //           steps: response.steps,
+    //         },
+    //       } satisfies ResumeValues,
+    //     },
+    //   }),
+    // });
 
-    return null;
+    return response;
   } catch (e) {
-    console.error(chalk.red(`Failed to translate with AI`));
-    return json({
-      test: 0,
-    });
+    return null;
   }
 }

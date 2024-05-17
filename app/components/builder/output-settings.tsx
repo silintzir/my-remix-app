@@ -1,42 +1,15 @@
-// import { Button } from "@/components/ui/button";
-// import { Label } from "@/components/ui/label";
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover";
-// import { SlidersHorizontal } from "lucide-react";
-// import { FontSizeAdjust } from ".";
 import { useFormContext } from "react-hook-form";
 import type { ResumeValues } from "@/lib/types";
 import { SelectInput } from "../shadcn/SelectInput";
 import { useFetcher } from "@remix-run/react";
-import { useEffect, useState } from "react";
 
 interface Props {
-  values: ResumeValues;
+  id: number;
 }
-export function OutputSettings({ values }: Props) {
-  const { control, getValues } = useFormContext<ResumeValues>();
-  const [open, setOpen] = useState<string | false>(false);
+export function OutputSettings({ id }: Props) {
+  const { control, setValue, getValues } = useFormContext<ResumeValues>();
 
   const translator = useFetcher({ key: "translate" });
-
-  useEffect(() => {
-    if (open) {
-      const ans = confirm("Translate the resume text to the target language?");
-      if (ans) {
-        const fd = new FormData();
-        fd.append("values", JSON.stringify(getValues()));
-        fd.append("target", open);
-        translator.submit(fd, {
-          method: "POST",
-          action: `/ai/translate`,
-        });
-      }
-      setOpen(false);
-    }
-  }, [open, setOpen, getValues, translator]);
 
   return (
     <div className="flex gap-2 items-center">
@@ -62,9 +35,16 @@ export function OutputSettings({ values }: Props) {
             { label: "Spanish", value: "es" },
           ]}
           onChange={(value) => {
-            setTimeout(() => {
-              setOpen(value);
-            }, 1000);
+            setValue('meta.language', value as "en" | "es");
+            const fd = new FormData();
+            fd.append("values", JSON.stringify(getValues()));
+            fd.append("id", id.toString());
+            fd.append("target", value);
+
+            translator.submit(fd, {
+              method: "POST",
+              action: `/ai/translate`,
+            });
           }}
           name="meta.language"
         />
