@@ -15,7 +15,7 @@ import {
 import { get2ColsSpaceBetween, getHeaderWithLine, pine } from "../helpers/pdf";
 import { map, groupBy, take } from "lodash-es";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
-import { ContentProvider } from "../pdf.client";
+import type { ContentProvider } from "../pdf.client";
 import { getRecordPeriod2 } from "@/lib/resume";
 
 export class ChicagoPdfTemplate {
@@ -236,7 +236,7 @@ export class ChicagoPdfTemplate {
     const p1 = map(records, (w) => ({
       ...w,
       period: getRecordPeriod2(w),
-      group: constr(", ", w.institution, constr(" ", w.city, w.state)),
+      group: constr(", ", w.institution, w.city),
     }));
     const p2 = groupBy(p1, "group");
 
@@ -251,7 +251,7 @@ export class ChicagoPdfTemplate {
             alignment: "left",
           },
           {
-            text: constr(", ", p2[group][0].city, p2[group][0].state),
+            text: p2[group][0].city,
             style: "heading3",
             alignment: "right",
           },
@@ -316,7 +316,7 @@ export class ChicagoPdfTemplate {
     const p1 = map(records, (w) => ({
       ...w,
       period: getRecordPeriod2(w),
-      group: constr(", ", w.name, constr(" ", w.city, w.state)),
+      group: w.city,
     }));
     const p2 = groupBy(p1, "group");
 
@@ -331,7 +331,7 @@ export class ChicagoPdfTemplate {
             alignment: "left",
           },
           {
-            text: constr(", ", p2[group][0].city, p2[group][0].state),
+            text: p2[group][0].city,
             style: "heading3",
             alignment: "right",
           },

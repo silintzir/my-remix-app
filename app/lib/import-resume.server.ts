@@ -1,5 +1,5 @@
 import { NoMemory, extractJson as MyExtractJson } from "@/lib/ai/bot.server";
-import { get, map, set, join } from "lodash-es";
+import { get, map, set } from "lodash-es";
 import chalk from "chalk";
 import type {
   AccomplishmentRecord,
@@ -14,6 +14,7 @@ import type {
 import { extractJson } from "crack-json";
 import { v4 } from "uuid";
 import { defaultResumeValues } from "@/lib/defaults";
+import { constr } from "./templates/helpers/common";
 
 export async function parseText(text: string) {
   const bot = new NoMemory(0.2);
@@ -292,7 +293,7 @@ export function getResumeValues(data: any) {
         uuid: v4(),
         name: get(w, "name", "") || "",
         position: get(w, "position", "") || "",
-        city: join([get(w, "city", "") || "", get(w, "state", "") || ""]),
+        city: constr(get(w, "city", "") || "", get(w, "state", "") || ""),
         state: "",
         startDate,
         endDate: endDate || "",
@@ -321,14 +322,14 @@ export function getResumeValues(data: any) {
       let endMonth = "-";
       let endYear = "-";
       let toPresent = false;
-      let toks = startDate.split(/[\/\-\s]+/);
+      let toks = startDate.split(/[/\-\s]+/);
       if (toks.length === 1) {
         startYear = toks[0];
       } else if (toks.length === 2) {
         startMonth = mapMonthWordToNumber(toks[0]);
         startYear = toks[1];
       }
-      toks = endDate ? endDate.split(/[\/\-\s]+/) : [];
+      toks = endDate ? endDate.split(/[/\-\s]+/) : [];
       if (toks.length === 1) {
         endYear = toks[0];
       } else if (toks.length === 2) {
@@ -361,7 +362,7 @@ export function getResumeValues(data: any) {
         studyType: get(w, "studyType", "") || "",
         area: get(w, "area", "") || "",
         status: get(w, "status", "no_mention") || "",
-        city: join([get(w, "city", "") || "", get(w, "state", "") || ""]),
+        city: constr(get(w, "city", "") || "", get(w, "state", "") || ""),
         state: "",
         startDate,
         endDate: endDate || "",

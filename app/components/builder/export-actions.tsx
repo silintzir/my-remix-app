@@ -1,4 +1,4 @@
-import { Download, MoreHorizontal, Trash } from "lucide-react";
+import { Download, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,7 +13,7 @@ import getDefinition from "@/lib/templates/pdf.client";
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
 import filenamify from "filenamify";
-import { ResumeValues, Template } from "@/lib/types";
+import type { ResumeValues, Template } from "@/lib/types";
 import { DEFAULT_FONT_SIZE } from "@/lib/resume";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -25,22 +25,25 @@ interface Props extends ButtonProps {
   fontSize?: number;
   template?: Template;
 }
-export function ExportActions({ resumeId, values, isSample = false, fontSize = DEFAULT_FONT_SIZE, template = 'chicago', ...rest }: Props) {
-
+export function ExportActions({
+  resumeId,
+  values,
+  isSample = false,
+  fontSize = DEFAULT_FONT_SIZE,
+  template = "chicago",
+  ...rest
+}: Props) {
   const create = useCallback(() => {
     const def = getDefinition(values, { isSample, fontSize, template });
-    pdfMake
-      .createPdf(def)
-      .download(filenamify(`${values.meta.title} [resumerunner.io].pdf`));
+    pdfMake.createPdf(def).download(filenamify(`${values.meta.title}.pdf`));
   }, [values, isSample, fontSize, template]);
-
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button {...rest}>
-          <Download />&nbsp;
-          Download
+          <Download />
+          &nbsp; Download
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">

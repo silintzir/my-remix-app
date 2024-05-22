@@ -19,7 +19,7 @@ export const TITLE = {
 };
 
 export function constr(delimiter: string, ...strings: string[]): string {
-  return strings.filter((str) => str !== "").join(delimiter);
+  return strings.filter((str) => str.trim() !== "").join(delimiter);
 }
 
 export function skillDisplay({ name, level }: SkillRecord) {
