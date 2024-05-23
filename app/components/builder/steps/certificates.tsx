@@ -28,6 +28,7 @@ import {
 import { cn, getReadableDateFromPicker } from "@/lib/utils";
 import { convertDate } from "@/lib/templates/helpers/common";
 import { DatePicker } from "@/components/shadcn/MyDatePicker";
+import { useTranslation } from "react-i18next";
 
 export function CertificatesStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
@@ -47,6 +48,7 @@ export function CertificatesStep() {
   }) => {
     swap(oldIndex, newIndex);
   };
+  const { t } = useTranslation();
 
   const autoSort = watch("meta.autoSort.certificates");
 
@@ -85,14 +87,9 @@ export function CertificatesStep() {
   return (
     <div className="space-y-4">
       {fields.length === 0 ? (
-        <p className="small">
-          If you do not wish to enter any certificates, continue to the next
-          step.
-        </p>
+        <p className="small">{t("certificates.no_wish")}</p>
       ) : (
-        <p className="small">
-          You may keep adding as many certificates and reorder as needed.
-        </p>
+        <p className="small">{t("certificates.you_may_add")}</p>
       )}
       <SortableList
         lockAxis="y"
@@ -123,12 +120,13 @@ export function CertificatesStep() {
                     <div className="flex-grow text-left small">
                       <div className="font-semibold flex flex-col gap-2">
                         <span className="hover:underline">
-                          {getCertificateTitle(field)}
+                          {getCertificateTitle(field) ||
+                            t("builder.not_specified")}
                         </span>
                         <span className="font-normal">
                           {field.date
                             ? getReadableDateFromPicker(field.date)
-                            : "No date"}
+                            : ""}
                         </span>
                       </div>
                     </div>
@@ -139,13 +137,13 @@ export function CertificatesStep() {
                         control={control}
                         name={`resume.certificates.${index}.name`}
                         placeholder="e.x. AWS Cloud Practitioner Level 1"
-                        label="Certificate"
+                        label={t("certificate.name")}
                       />
                       <TextInput
                         control={control}
                         name={`resume.certificates.${index}.issuer`}
                         placeholder="e.x. Amazon Web Services"
-                        label="Issuing authority"
+                        label={t("certificate.issuing_authority")}
                       />
                     </div>
                     <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
@@ -153,7 +151,7 @@ export function CertificatesStep() {
                         <DatePicker
                           control={control}
                           name={`resume.certificates.${index}.date`}
-                          label="Date"
+                          label={t("certificate.date")}
                           onChange={(expr) => {
                             sortFn(index, expr, autoSort);
                           }}
@@ -162,7 +160,7 @@ export function CertificatesStep() {
                           control={control}
                           name={`resume.certificates.${index}.url`}
                           placeholder="e.x. https://aws.com"
-                          label="URL/Website"
+                          label={t("certificate.url")}
                         />
                       </div>
                     </div>
@@ -173,7 +171,7 @@ export function CertificatesStep() {
                   type="button"
                   variant="ghost"
                   className="text-destructive mr-4"
-                  title="Delete entry"
+                  title={t("builder.delete_entry")}
                   size="sm"
                   onClick={() => {
                     remove(index);
@@ -206,7 +204,7 @@ export function CertificatesStep() {
           }}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add certificate
+          {t("certificates.add_new")}
         </Button>
         <FormField
           control={control}
@@ -214,7 +212,7 @@ export function CertificatesStep() {
           render={({ field }) => (
             <FormItem className="flex items-center justify-between gap-1 space-y-0">
               <FormLabel className={cn({ muted: fields.length < 2 })}>
-                Auto sort by date
+                {t("builder.auto_sort")}
               </FormLabel>
               <FormControl>
                 <Switch

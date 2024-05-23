@@ -8,6 +8,7 @@ import {
   TooltipContent,
   Tooltip,
 } from "../ui/tooltip";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   title: string;
@@ -17,6 +18,7 @@ interface Props {
 
 export function Stepper({ title, current, steps }: Props) {
   const progress = ((current + 1) / steps.length) * 100;
+  const { t } = useTranslation();
   return (
     <nav className="flex items-center" aria-label="Progress">
       <h3 className="text-lg font-semibold my-2 flex justify-between">
@@ -37,7 +39,7 @@ export function Stepper({ title, current, steps }: Props) {
               : index < current
               ? "complete"
               : "upcoming";
-          const name = DEFAULT_SECTION_TITLES[step];
+          const name = t(DEFAULT_SECTION_TITLES[step]);
 
           return (
             <li key={name}>

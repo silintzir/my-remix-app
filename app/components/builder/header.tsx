@@ -11,6 +11,7 @@ import { AutoSavedFeedback } from "./auto-saved-feedback";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 import { TranslateModal } from "./translate-modal";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   step: Step;
@@ -40,6 +41,7 @@ export function StepHeader({
   const activeStep = (searchParams.get("step") || "start") as Step;
 
   const currentIndex = steps.indexOf(activeStep);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -58,7 +60,7 @@ export function StepHeader({
                       showEditIcon
                       defaultValue={DEFAULT_RESUME_TITLE}
                       name="meta.title"
-                      title="Edit resume title"
+                      title={t("builder.edit_resume_title")}
                     />
                   ) : (
                     <span>{DEFAULT_RESUME_TITLE}</span>
@@ -67,17 +69,19 @@ export function StepHeader({
               </ClientOnly>
             </>
           ) : (
-            <ClientOnly fallback={<span>{DEFAULT_SECTION_TITLES[step]}</span>}>
+            <ClientOnly
+              fallback={<span>{t(DEFAULT_SECTION_TITLES[step])}</span>}
+            >
               {() =>
                 editable ? (
                   <InlineEdit
                     showEditIcon
-                    defaultValue={DEFAULT_SECTION_TITLES[step]}
+                    defaultValue={t(DEFAULT_SECTION_TITLES[step])}
                     name={`meta.steps.${step}.title`}
-                    title="Edit section title"
+                    title={t("builder.edit_section_title")}
                   />
                 ) : (
-                  <span>{DEFAULT_SECTION_TITLES[step]}</span>
+                  <span>{t(DEFAULT_SECTION_TITLES[step])}</span>
                 )
               }
             </ClientOnly>
@@ -89,7 +93,7 @@ export function StepHeader({
             {hasErrors ? (
               <span className="text-destructive flex items-center small">
                 <AlertCircle className="w-4 h-4 mr-2" />
-                Fix errors to proceed
+                {t("builder.fix_errors")}
               </span>
             ) : (
               <div className={cn({ muted: !isSaving })}>
@@ -101,7 +105,7 @@ export function StepHeader({
       </h2>
       {showStepper && (
         <Stepper
-          title={DEFAULT_SECTION_TITLES[step]}
+          title={t(DEFAULT_SECTION_TITLES[step])}
           steps={steps}
           current={currentIndex}
         />

@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import type { StrapiUser } from "@/lib/types";
 import { DASHBOARD } from "@/lib/routes";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   user: StrapiUser;
@@ -46,6 +47,7 @@ export function UserMenu({ user }: Props) {
   const logout = () => {
     submit(null, { method: "POST", action: "/logout" });
   };
+  const { t } = useTranslation();
 
   return (
     <div id="user-menu">
@@ -67,19 +69,19 @@ export function UserMenu({ user }: Props) {
             <DropdownMenuItem asChild>
               <Link to={DASHBOARD}>
                 <GaugeCircle />
-                <span>Dashboard</span>
+                <span>{t("base.dashboard")}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to="/account/settings">
                 <Settings />
-                <span>Account settings</span>
+                <span>{t("account.account_settings")}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <button onClick={logout} className="flex">
                 <LogOut />
-                <span>Logout</span>
+                <span>{t("account.logout")}</span>
               </button>
             </DropdownMenuItem>
           </DropdownMenuGroup>

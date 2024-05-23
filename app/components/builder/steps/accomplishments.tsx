@@ -13,6 +13,7 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
+import { useTranslation } from "react-i18next";
 
 export function AccomplishmentsStep() {
   const { control, watch } = useFormContext<ResumeValues>();
@@ -41,18 +42,14 @@ export function AccomplishmentsStep() {
   }) => {
     swap(oldIndex, newIndex);
   };
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-4">
       {fields.length === 0 ? (
-        <p className="small">
-          If you do not wish to enter any accomplishments, continue to the next
-          step.
-        </p>
+        <p className="small">{t("accomplishments.no_wish")}</p>
       ) : (
-        <p className="small">
-          You may keep adding as many accomplishments and reorder as needed.
-        </p>
+        <p className="small">{t("accomplishments.you_may_add")}</p>
       )}
       {fields.length > 0 && (
         <SortableList
@@ -69,7 +66,7 @@ export function AccomplishmentsStep() {
                   className="w-full"
                   control={control}
                   name={`resume.accomplishments.${index}.name`}
-                  placeholder="Something you are proud of"
+                  placeholder={t("accomplishments.placeholder")}
                   alternatives={{
                     fetcher: enhancer,
                     context: getContext({
@@ -84,7 +81,7 @@ export function AccomplishmentsStep() {
                   type="button"
                   variant="ghost"
                   className="text-destructive"
-                  title="Delete entry"
+                  title={t("builder.delete_entry")}
                   size="sm"
                   onClick={() => remove(index)}
                 >
@@ -110,7 +107,7 @@ export function AccomplishmentsStep() {
           }}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add accomplishment
+          {t("accomplishments.add_new")}
         </Button>
         <TextSuggestions
           fetcher={suggester}
@@ -127,7 +124,7 @@ export function AccomplishmentsStep() {
           }}
           endpoint="accomplishments"
           lang={lang}
-          label="Suggest accomplishments"
+          label={t("accomplishments.suggest")}
         />
       </div>
     </div>

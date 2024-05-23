@@ -12,6 +12,7 @@ import { useFetcher } from "@remix-run/react";
 import { useAiContext } from "@/components/hooks/aiContext";
 import { TextAlternatives } from "@/components/shadcn/TextAlternatives";
 import { TextInput } from "@/components/shadcn/TextInput";
+import { useTranslation } from "react-i18next";
 
 export function SummaryStep() {
   const { control, watch, setValue } = useFormContext<ResumeValues>();
@@ -26,19 +27,17 @@ export function SummaryStep() {
   const objectiveTarget = watch("resume.summary.objectiveTarget");
 
   const hasText = (summary || "").trim().length > 0;
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-4">
-      <p className="small">
-        A couple sentence recap of your experience and skills to date that will
-        go at the top of your resume.
-      </p>
+      <p className="small">{t("summary.intro")}</p>
       <FormField
         control={control}
         name="resume.summary.asObjective"
         render={({ field }) => (
           <FormItem className="flex items-center gap-4 space-y-0">
-            <FormLabel>Treat as objective</FormLabel>
+            <FormLabel>{t("summary.treat_as")}</FormLabel>
             <FormControl>
               <Switch checked={field.value} onCheckedChange={field.onChange} />
             </FormControl>
@@ -50,14 +49,14 @@ export function SummaryStep() {
           control={control}
           name="resume.summary.objectiveTarget"
           placeholder="e.x. Get hired by Marathon Staffing"
-          label="What is your target job"
+          label={t("summary.what_is")}
         />
       ) : (
         <TextInput
           control={control}
           name="meta.steps.summary.title"
           placeholder="e.x. Senior Accountant"
-          label="Title of your summary section"
+          label={t("summary.summary_title")}
         />
       )}
 
@@ -67,13 +66,15 @@ export function SummaryStep() {
         name="resume.summary.content"
         label={
           <div className="flex justify-between items-center">
-            <span>Content</span>
+            <span>{t("summary.content")}</span>
             <TextAlternatives
               fetcher={enhancer}
               endpoint="summary"
               context={{ ...getContext(), asObjective, objectiveTarget }}
               original={summary || ""}
-              buttonLabel={hasText ? "AI Enhance" : "AI Suggest"}
+              buttonLabel={
+                hasText ? t("builder.ai_enhance") : t("builder.ai_suggest")
+              }
               update={(text: string) => {
                 setValue("resume.summary.content", text, {
                   shouldDirty: true,

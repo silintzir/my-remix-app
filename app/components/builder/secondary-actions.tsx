@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useFetcher } from "@remix-run/react";
 import { Button, type ButtonProps } from "../ui/button";
+import { useTranslation } from "react-i18next";
 
 interface Props extends ButtonProps {
   resumeId: number;
 }
 export function SecondaryActions({ resumeId, ...rest }: Props) {
   const fetcher = useFetcher({ key: "resume-delete" });
+  const { t } = useTranslation();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -26,23 +28,19 @@ export function SecondaryActions({ resumeId, ...rest }: Props) {
           <DropdownMenuItem asChild>
             <Link to={`/resumes/${resumeId}/docx`} target="_blank">
               <Download />
-              <span>Export to MS Word</span>
+              <span>{t("dashboard.export_ms")}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to={`/resumes/${resumeId}/json`} target="_blank">
               <Download />
-              <span>Export to JSON</span>
+              <span>{t("dashboard.export_json")}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-destructive"
             onClick={() => {
-              if (
-                confirm(
-                  "Deleting a resume is an action that cannot be undone. Proceed anyway?"
-                )
-              ) {
+              if (confirm(t("dashboard.delete_warning"))) {
                 fetcher.submit(
                   {},
                   { method: "DELETE", action: `/resumes/${resumeId}/delete` }
@@ -52,7 +50,7 @@ export function SecondaryActions({ resumeId, ...rest }: Props) {
             }}
           >
             <Trash className="h-4 w-4" />
-            <span className="ml-2">Delete resume</span>
+            <span className="ml-2">{t("dashboard.delete_resume")}</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

@@ -2,6 +2,7 @@ import { useFormContext } from "react-hook-form";
 import type { ResumeValues } from "@/lib/types";
 import { SelectInput } from "../shadcn/SelectInput";
 import { useFetcher } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   id: number;
@@ -10,11 +11,12 @@ export function OutputSettings({ id }: Props) {
   const { control, setValue, getValues } = useFormContext<ResumeValues>();
 
   const translator = useFetcher({ key: "translate" });
+  const { t } = useTranslation();
 
   return (
     <div className="flex gap-2 items-center">
       <div className="flex gap-2 items-center">
-        <label className="hidden 2xl:block">Template: </label>
+        <label className="hidden 2xl:block">{t("base.template")}: </label>
         <SelectInput
           className="w-full text-black"
           control={control}
@@ -31,11 +33,11 @@ export function OutputSettings({ id }: Props) {
           className="w-full text-black"
           control={control}
           options={[
-            { label: "English", value: "en" },
-            { label: "Spanish", value: "es" },
+            { label: t("base.english"), value: "en" },
+            { label: t("base.spanish"), value: "es" },
           ]}
           onChange={(value) => {
-            setValue('meta.language', value as "en" | "es");
+            setValue("meta.language", value as "en" | "es");
             const fd = new FormData();
             fd.append("values", JSON.stringify(getValues()));
             fd.append("id", id.toString());

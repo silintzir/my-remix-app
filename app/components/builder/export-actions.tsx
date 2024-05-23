@@ -15,6 +15,7 @@ import pdfFonts from "pdfmake/build/vfs_fonts.js";
 import filenamify from "filenamify";
 import type { ResumeValues, Template } from "@/lib/types";
 import { DEFAULT_FONT_SIZE } from "@/lib/resume";
+import { useTranslation } from "react-i18next";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -33,6 +34,7 @@ export function ExportActions({
   template = "chicago",
   ...rest
 }: Props) {
+  const { t } = useTranslation();
   const create = useCallback(() => {
     const def = getDefinition(values, { isSample, fontSize, template });
     pdfMake.createPdf(def).download(filenamify(`${values.meta.title}.pdf`));
@@ -43,7 +45,7 @@ export function ExportActions({
       <DropdownMenuTrigger asChild>
         <Button {...rest}>
           <Download />
-          &nbsp; Download
+          &nbsp; {t("builder.download")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">

@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { useTranslation } from "react-i18next";
 
 type ButtonProps = {
   title: string;
@@ -35,6 +36,7 @@ function SourceButton({
   onClick,
   loading = false,
 }: ButtonProps) {
+  const { t } = useTranslation();
   return (
     <button
       className="outline-none text-left w-full hover:bg-gray-300 bg-gray-200 flex justify-between items-center rounded-md px-4 py-4"
@@ -43,7 +45,7 @@ function SourceButton({
     >
       {loading ? (
         <>
-          <div className="text-lg">Processing...</div>
+          <div className="text-lg">{t("base.processing")}...</div>
           <Loader2 className="animate-spin" />
         </>
       ) : (
@@ -70,6 +72,7 @@ export function CreateResume({ startOpen = false }: Props) {
   const [mode, setMode] = useState<"manual" | "text" | "upload" | undefined>();
 
   const { state } = useNavigation();
+  const { t } = useTranslation();
 
   const data = useActionData<{ error?: string }>();
 
@@ -85,30 +88,30 @@ export function CreateResume({ startOpen = false }: Props) {
       <DialogTrigger asChild>
         <Button>
           <PlusCircle className="w-4 h-4 mr-2" />
-          Add new
+          {t("base.add_new")}
         </Button>
       </DialogTrigger>
 
       {!mode && (
         <DialogContent className="max-w-full sm:max-w-lg">
           <DialogHeader className="text-left">
-            <DialogTitle className="text-xl">New resume</DialogTitle>
-            <DialogDescription>
-              Please select one of the following options:
-            </DialogDescription>
+            <DialogTitle className="text-xl">
+              {t("base.new_resume")}
+            </DialogTitle>
+            <DialogDescription>{t("base.resume_options")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
             <Form method="post" action="?intent=manual">
               <SourceButton
-                title="Start empty and build it"
-                description="Use the wizard to build your resume from scratch"
+                title={t("dashboard.start_empty")}
+                description={t("dashboard.start_empty_subtitle")}
                 type="submit"
                 loading={state === "submitting" || state === "loading"}
               />
             </Form>
             <SourceButton
-              title="Import existing from text"
-              description="Copy your resume text and improve it"
+              title={t("dashboard.import_existing")}
+              description={t("dashboard.import_existing_subtitle")}
               type="button"
               onClick={() => setMode("text")}
             />
@@ -126,9 +129,9 @@ export function CreateResume({ startOpen = false }: Props) {
           <Form method="post" action="?intent=text">
             <div className="space-y-2">
               <DialogHeader className="text-left">
-                <DialogTitle>Import your resume</DialogTitle>
+                <DialogTitle>{t("dashboard.import_title")}</DialogTitle>
                 <DialogDescription>
-                  Past the text of your resume below.
+                  {t("dashboard.import_title_subtitle")}
                 </DialogDescription>
               </DialogHeader>
               <Textarea rows={10} name="text" />
@@ -136,19 +139,19 @@ export function CreateResume({ startOpen = false }: Props) {
               <DialogFooter>
                 <DialogTrigger asChild>
                   <Button type="button" variant="outline">
-                    Cancel
+                    {t("base.cancel")}
                   </Button>
                 </DialogTrigger>
                 <Button type="submit" disabled={state === "submitting"}>
                   {state === "submitting" ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      <span>Processing...</span>
+                      <span>{t("base.processing")}...</span>
                     </>
                   ) : (
                     <>
                       <Import className="w-4 h-4 mr-2" />
-                      <span>Import</span>
+                      <span>{t("dashboard.import")}</span>
                     </>
                   )}
                 </Button>
@@ -180,19 +183,19 @@ export function CreateResume({ startOpen = false }: Props) {
               <DialogFooter>
                 <DialogTrigger asChild>
                   <Button type="button" variant="outline">
-                    Cancel
+                    {t("base.cancel")}
                   </Button>
                 </DialogTrigger>
                 <Button type="submit" disabled={state === "submitting"}>
                   {state === "submitting" ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      <span>Processing...</span>
+                      <span>{t("base.processing")}...</span>
                     </>
                   ) : (
                     <>
                       <Import className="w-4 h-4 mr-2" />
-                      <span>Import</span>
+                      <span>{t("dashboard.import")}</span>
                     </>
                   )}
                 </Button>

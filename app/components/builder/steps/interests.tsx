@@ -13,6 +13,7 @@ import {
   SortableItem,
   SortableList,
 } from "@/components/builder/sortable";
+import { useTranslation } from "react-i18next";
 
 export function InterestsStep() {
   const { control, watch } = useFormContext<ResumeValues>();
@@ -41,17 +42,14 @@ export function InterestsStep() {
   }) => {
     swap(oldIndex, newIndex);
   };
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-4">
       {fields.length === 0 ? (
-        <p className="small">
-          If you do not wish to enter any interests, continue to the next step.
-        </p>
+        <p className="small">{t("interests.no_wish")}</p>
       ) : (
-        <p className="small">
-          You may keep adding as many interests and reorder as needed.
-        </p>
+        <p className="small">{t("interests.you_may_add")}</p>
       )}
       {fields.length > 0 && (
         <SortableList
@@ -68,7 +66,7 @@ export function InterestsStep() {
                   className="w-full"
                   control={control}
                   name={`resume.interests.${index}.name`}
-                  placeholder="Interest/Hobby"
+                  placeholder={t("interests.placeholder")}
                   alternatives={{
                     fetcher: enhancer,
                     context: getContext({
@@ -83,7 +81,7 @@ export function InterestsStep() {
                   type="button"
                   variant="ghost"
                   className="text-destructive"
-                  title="Delete entry"
+                  title={t("builder.delete_entry")}
                   size="sm"
                   onClick={() => remove(index)}
                 >
@@ -109,7 +107,7 @@ export function InterestsStep() {
           }}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add interest
+          {t("interests.add_new")}
         </Button>
         <TextSuggestions
           fetcher={suggester}
@@ -122,7 +120,7 @@ export function InterestsStep() {
             append(newInterests);
           }}
           endpoint="interests"
-          label="Suggest interests"
+          label={t("interests.suggest")}
           lang={lang}
         />
       </div>

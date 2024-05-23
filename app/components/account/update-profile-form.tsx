@@ -24,8 +24,17 @@ import {
   updateProfileSchema,
   UPDATE_PROFILE_INTENT,
 } from "@/lib/account/validation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { type StrapiUser } from "@/lib/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { useChangeLanguage } from "remix-i18next/react";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   user: StrapiUser;
@@ -41,13 +50,18 @@ export function UpdateProfileForm({ user }: Props) {
       _intent: UPDATE_PROFILE_INTENT,
       firstName: user.firstName || "",
       lastName: user.lastName || "",
+      language: user.language || "en-US",
     },
   });
-  const { control, handleSubmit } = methods;
+  const { t } = useTranslation();
+  const { control, watch, handleSubmit } = methods;
 
   const onSubmit: SubmitHandler<UpdateProfileValues> = (_data) => {
     submit(ref.current);
   };
+
+  const lang = watch("language");
+  useChangeLanguage(lang as string);
 
   const isSubmitting =
     state === "submitting" &&
@@ -71,8 +85,10 @@ export function UpdateProfileForm({ user }: Props) {
           />
           <fieldset disabled={isSubmitting}>
             <CardHeader>
-              <CardTitle>Profile settings</CardTitle>
-              <CardDescription>Update your profile</CardDescription>
+              <CardTitle>{t("account.profile_settings")}</CardTitle>
+              <CardDescription>
+                {t("account.profile_settings_subtitle")}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               <FormField
@@ -80,7 +96,7 @@ export function UpdateProfileForm({ user }: Props) {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First name</FormLabel>
+                    <FormLabel>{t("basics.firstName")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -93,7 +109,7 @@ export function UpdateProfileForm({ user }: Props) {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last name</FormLabel>
+                    <FormLabel>{t("basics.lastName")}</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -101,10 +117,38 @@ export function UpdateProfileForm({ user }: Props) {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={control}
+                name="language"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("base.language")}</FormLabel>
+                    <Select
+                      name={field.name}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a language to use" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="en-US">
+                          {t("base.english")}
+                        </SelectItem>
+                        <SelectItem value="es-ES">
+                          {t("base.spanish")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
             </CardContent>
             <CardFooter>
               <Button type="submit">
-                {isSubmitting ? "Please wait" : "Update"}
+                {isSubmitting ? t("base.please_wait") : t("base.update")}
               </Button>
             </CardFooter>
           </fieldset>

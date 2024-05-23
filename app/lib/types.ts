@@ -49,6 +49,7 @@ export interface StrapiUser {
   updatedAt: Date;
   firstName: string | null;
   lastName: string | null;
+  language: string;
 }
 
 export type Lang = "en" | "es";

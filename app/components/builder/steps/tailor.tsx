@@ -12,6 +12,7 @@ import type {
 import { cn } from "@/lib/utils";
 import { TextareaInput } from "@/components/shadcn/TextareaInput";
 import { getEducationTitle, getExperienceTitle } from "@/lib/resume";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   id: number;
@@ -23,6 +24,7 @@ export function TailorStep({ id, values }: Props) {
   const lang = watch("meta.language");
 
   const content = watch("meta.tailor.content");
+  const { t } = useTranslation();
 
   const fetcher = useFetcher({
     key: "tailor-suggestions",
@@ -83,10 +85,7 @@ export function TailorStep({ id, values }: Props) {
 
   return (
     <div className="space-y-4">
-      <p className="small mb-4 muted">
-        Enter the description from a job posting and then click the button to
-        get suggestions for your resume.
-      </p>
+      <p className="small mb-4 muted">{t("tailor.intro")}</p>
       <TextareaInput control={control} name="meta.tailor.content" rows={10} />
       <Button
         type="button"
@@ -97,24 +96,20 @@ export function TailorStep({ id, values }: Props) {
         {state === "submitting" ? (
           <>
             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            <span>Please wait</span>
+            <span>{t("base.please_wait")}</span>
           </>
         ) : (
           <>
             <Wand className="h-4 w-4 mr-2" />
-            <span> Suggest enhancements</span>
+            <span>{t("builder.ai_enhance")}</span>
           </>
         )}
       </Button>
 
       {Object.keys(suggestions).length > 0 && (
         <div className="space-y-2">
-          <div className="font-semibold">Suggestions</div>
-          <p className="text-left muted small">
-            ResumeRunner has compared your resume to the requirements of your
-            selected job and has suggested bullets below. Only incorporate
-            bullets that genuinely reflect your experience.
-          </p>
+          <div className="font-semibold">{t("base.suggestions")}</div>
+          <p className="text-left muted small">{t("tailor.instructions")}</p>
 
           <div className="mt-2">
             <ul className="list-disc text-left">
@@ -151,10 +146,10 @@ export function TailorStep({ id, values }: Props) {
                             );
                           }}
                         >
-                          <option value="">Do not use</option>
+                          <option value="">{t("tailor.do_not_use")}</option>
                           {values.meta.steps.work.enabled &&
                             work.length > 0 && (
-                              <optgroup label="Work experience">
+                              <optgroup label={t("Experience")}>
                                 {work.map((exp) => {
                                   const value = `work::${exp.uuid}`;
                                   return (
@@ -163,7 +158,8 @@ export function TailorStep({ id, values }: Props) {
                                       value={value}
                                       selected={section === value}
                                     >
-                                      {getExperienceTitle(exp)}
+                                      {getExperienceTitle(exp) ||
+                                        t("builder.not_specified")}
                                     </option>
                                   );
                                 })}
@@ -171,7 +167,7 @@ export function TailorStep({ id, values }: Props) {
                             )}
                           {values.meta.steps.education.enabled &&
                             education.length > 0 && (
-                              <optgroup label="Education">
+                              <optgroup label={t("Education")}>
                                 {education.map((edu) => {
                                   const value = `education::${edu.uuid}`;
                                   return (
@@ -180,29 +176,30 @@ export function TailorStep({ id, values }: Props) {
                                       value={value}
                                       selected={section === value}
                                     >
-                                      {getEducationTitle(edu)}
+                                      {getEducationTitle(edu) ||
+                                        t("builder.not_specified")}
                                     </option>
                                   );
                                 })}
                               </optgroup>
                             )}
                           {values.meta.steps.skills.enabled && (
-                            <optgroup label="Skills">
+                            <optgroup label={t("Skills")}>
                               <option
                                 value="skills"
                                 selected={section === "skills"}
                               >
-                                Skills
+                                {t("Skills")}
                               </option>
                             </optgroup>
                           )}
                           {values.meta.steps.accomplishments.enabled && (
-                            <optgroup label="Accomplishments">
+                            <optgroup label={t("Accomplishments")}>
                               <option
                                 value="accomplishments"
                                 selected={section === "accomplishments"}
                               >
-                                Accomplishments
+                                {t("Accomplishments")}
                               </option>
                             </optgroup>
                           )}

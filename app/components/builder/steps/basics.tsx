@@ -4,9 +4,11 @@ import { useFormContext } from "react-hook-form";
 import { usePlacesWidget } from "react-google-autocomplete";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslation } from "react-i18next";
 
 export function BasicsStep() {
   const { control, setValue, getValues } = useFormContext<ResumeValues>();
+  const { t } = useTranslation();
 
   const {
     resume: {
@@ -37,13 +39,13 @@ export function BasicsStep() {
           control={control}
           name="resume.basics.firstName"
           placeholder="e.x. John"
-          label="First name"
+          label={t("basics.firstName")}
         />
         <TextInput
           control={control}
           name="resume.basics.lastName"
           placeholder="e.x. Doe"
-          label="Last name"
+          label={t("basics.lastName")}
         />
       </div>
       <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
@@ -51,19 +53,19 @@ export function BasicsStep() {
           control={control}
           name="resume.basics.email"
           placeholder="e.x. jdoe@example.com"
-          label="Email"
+          label={t("basics.email")}
           type="email"
         />
         <TextInput
           control={control}
           name="resume.basics.phone"
           placeholder="e.x. (555) 555-5555"
-          label="Phone"
+          label={t("basics.phone")}
         />
       </div>
       <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
         <div className="w-full space-y-2">
-          <Label>Address</Label>
+          <Label>{t("basics.address")}</Label>
           <Input
             ref={maps as any}
             defaultValue={address}
@@ -76,7 +78,7 @@ export function BasicsStep() {
           control={control}
           name="resume.basics.url"
           placeholder="e.x. https://linkedin.com/jdoe"
-          label="Website / Social profile URL"
+          label={t("basics.url")}
         />
       </div>
     </div>

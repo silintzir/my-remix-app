@@ -15,6 +15,7 @@ import { useFetcher } from "@remix-run/react";
 import { transformWork, transformEducation } from "@/lib/jsonresume";
 import { TextSuggestions } from "@/components/shadcn/TextSuggestions";
 import { TextInput } from "@/components/shadcn/TextInput";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   index: number;
@@ -23,6 +24,7 @@ type Props = {
 };
 export function Bullets({ step, index, context }: Props) {
   const { control, watch } = useFormContext<ResumeValues>();
+  const { t } = useTranslation();
 
   const lang = watch("meta.language") as Lang;
 
@@ -60,7 +62,7 @@ export function Bullets({ step, index, context }: Props) {
     <div>
       <div className="flex justify-between items-center flex-wrap">
         <FormLabel className="font-semibold">
-          Bullets ({fields.length})
+          {t("builder.bullets")} ({fields.length})
         </FormLabel>
         <div className="flex flex-wrap">
           <TextSuggestions
@@ -74,7 +76,7 @@ export function Bullets({ step, index, context }: Props) {
               append(newBullets);
             }}
             endpoint={step}
-            label="AI Suggest"
+            label={t("builder.ai_suggest")}
             lang={lang}
           />
           <Button
@@ -91,13 +93,11 @@ export function Bullets({ step, index, context }: Props) {
             }}
           >
             <Plus className="h-4 w-4 mr-2" />
-            Add bullet
+            {t("builder.add_bullet")}
           </Button>
         </div>
       </div>
-      <p className="small muted">
-        Click on "Suggest bullets" for some bullet inspiration
-      </p>
+      <p className="small muted">{t("builder.suggest_bullets")}</p>
       <List lockAxis="y" onSortEnd={onSortEnd} useDragHandle>
         {fields.map((field, index2) => {
           // remove the bullet in question
@@ -127,7 +127,7 @@ export function Bullets({ step, index, context }: Props) {
                 type="button"
                 className="h-8 text-red-600"
                 onClick={() => remove(index2)}
-                title="Delete bullet"
+                title={t("builder.delete_bullet")}
               >
                 <Trash2 className="w-3 h-3" />
               </button>

@@ -13,6 +13,7 @@ export const updateProfileSchema = z.object({
   _intent: z.enum([UPDATE_PROFILE_INTENT]),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
+  language: z.string().optional(),
 });
 
 export type UpdateProfileValues = z.infer<typeof updateProfileSchema>;

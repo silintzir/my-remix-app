@@ -157,7 +157,7 @@ export function getExperienceTitle(values: WorkRecord) {
   if (values.name?.length) {
     toks.push(values.name);
   }
-  return toks.length ? toks.join(" @ ") : "(Unknown position)";
+  return toks.length ? toks.join(" @ ") : null;
 }
 
 export function getEducationTitle(values: EducationRecord) {
@@ -168,7 +168,7 @@ export function getEducationTitle(values: EducationRecord) {
   if (values.institution?.length) {
     toks.push(values.institution);
   }
-  return toks.length ? toks.join(" @ ") : "(Not specified)";
+  return toks.length ? toks.join(" @ ") : null;
 }
 
 export function getCertificateTitle(values: CertificateRecord) {
@@ -179,7 +179,7 @@ export function getCertificateTitle(values: CertificateRecord) {
   if (values.issuer?.length) {
     toks.push(values.issuer);
   }
-  return toks.length ? toks.join(" from ") : "(Not specified)";
+  return toks.length ? toks.join(" from ") : null;
 }
 
 export function getRecordPeriod(values: {
@@ -235,12 +235,12 @@ export function getRecordPeriod2(values: {
   return toks.join(" - ");
 }
 
-export function getSkillLevelOptions() {
+export function getSkillLevelOptions(t: any) {
   return [
-    { label: "No mention", value: "no_mention" },
-    { label: "Beginner", value: "beginner" },
-    { label: "Advanced", value: "advanced" },
-    { label: "Expert", value: "expert" },
+    { label: t("skills.no_mention"), value: "no_mention" },
+    { label: t("skills.beginner"), value: "beginner" },
+    { label: t("skills.advanced"), value: "advanced" },
+    { label: t("skills.expert"), value: "expert" },
   ];
 }
 

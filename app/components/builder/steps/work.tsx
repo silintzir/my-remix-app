@@ -20,24 +20,28 @@ import {
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { getExperienceTitle, getMonthOptions, getRecordPeriod2, getYearOptions } from "@/lib/resume";
-// import { usStateCodes } from "@/lib/states";
+import {
+  getExperienceTitle,
+  getMonthOptions,
+  getRecordPeriod2,
+  getYearOptions,
+} from "@/lib/resume";
 import type { ResumeValues, WorkRecord } from "@/lib/types";
 import { cn } from "@/lib/utils";
-// import { map } from "lodash-es";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { Bullets } from "../bullets";
-import { convertDate, getComparableEndDate } from "@/lib/templates/helpers/common";
-import { DatePicker } from "@/components/shadcn/MyDatePicker";
+import { getComparableEndDate } from "@/lib/templates/helpers/common";
 import { SelectInput } from "@/components/shadcn/SelectInput";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTranslation } from "react-i18next";
 
 export function WorkStep() {
   const { control, setValue, watch } = useFormContext<ResumeValues>();
   const [open, setOpen] = useState("");
+  const { t } = useTranslation();
 
   const { fields, append, remove, swap } = useFieldArray({
     control,
@@ -119,14 +123,9 @@ export function WorkStep() {
   return (
     <div className="space-y-4">
       {fields.length === 0 ? (
-        <p className="small">
-          If you do not wish to enter any experience, continue to the next step.
-        </p>
+        <p className="small">{t("experience.no_wish")}</p>
       ) : (
-        <p className="small">
-          You may keep adding as many work experience entries and reorder as
-          needed
-        </p>
+        <p className="small">{t("experience.you_may_add")}</p>
       )}
 
       <SortableList
@@ -137,8 +136,6 @@ export function WorkStep() {
       >
         <Accordion value={open} type="single" className="space-y-1" collapsible>
           {fields.map((field, index) => {
-
-
             const toPresent = watch(`resume.work.${index}.toPresent`);
 
             return (
@@ -160,7 +157,8 @@ export function WorkStep() {
                   >
                     <div className="flex-grow text-left small space-y-2">
                       <div className="font-semibold hover:underline">
-                        {getExperienceTitle(field)}
+                        {getExperienceTitle(field) ||
+                          t("builder.not_specified")}
                       </div>
                       <div className="muted">{getRecordPeriod2(field)}</div>
                     </div>
@@ -171,55 +169,117 @@ export function WorkStep() {
                         control={control}
                         name={`resume.work.${index}.name`}
                         placeholder="e.x. ABC Company"
-                        label="Company/Employer"
+                        label={t("experience.company")}
                       />
                       <TextInput
                         control={control}
                         name={`resume.work.${index}.city`}
                         placeholder="e.x. Miami, FL"
-                        label="Location"
+                        label={t("experience.location")}
                       />
                       <TextInput
                         control={control}
                         name={`resume.work.${index}.position`}
                         placeholder="e.x. Accountant"
-                        label="Job title/Position"
+                        label={t("experience.job_title")}
                       />
                     </div>
                     <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
                       <div className="flex gap-2 flex-grow">
-                        <SelectInput label="Start (month/year)" className="w-32" control={control} name={`resume.work.${index}.startMonth`} options={getMonthOptions()} onChange={(val) => {
-                          sortFn(index, { ...fields[index], startMonth: val }, autoSort)
-                        }} />
-                        <SelectInput label="Start year" className="w-32" labelHidden control={control} name={`resume.work.${index}.startYear`} options={getYearOptions()} onChange={(val) => sortFn(index, { ...fields[index], startYear: val }, autoSort)} />
+                        <SelectInput
+                          label={t("builder.date_from")}
+                          className="w-32"
+                          control={control}
+                          name={`resume.work.${index}.startMonth`}
+                          options={getMonthOptions()}
+                          onChange={(val) => {
+                            sortFn(
+                              index,
+                              { ...fields[index], startMonth: val },
+                              autoSort
+                            );
+                          }}
+                        />
+                        <SelectInput
+                          label="Start year"
+                          className="w-32"
+                          labelHidden
+                          control={control}
+                          name={`resume.work.${index}.startYear`}
+                          options={getYearOptions()}
+                          onChange={(val) =>
+                            sortFn(
+                              index,
+                              { ...fields[index], startYear: val },
+                              autoSort
+                            )
+                          }
+                        />
                       </div>
-                      <span className="self-center font-bold">Until</span>
+                      <span className="self-center font-bold">
+                        {t("base.until")}
+                      </span>
                       <div className="flex gap-2 flex-grow justify-end">
-                        <SelectInput label="End month/year" disabled={toPresent} control={control} className="w-32" name={`resume.work.${index}.endMonth`} options={getMonthOptions()} onChange={(val) => sortFn(index, { ...fields[index], endMonth: val }, autoSort)} />
-                        <SelectInput disabled={toPresent} onChange={(val) => sortFn(index, { ...fields[index], endYear: val }, autoSort)} label={<span className="flex justify-end h-5 items-center gap-2" >
-
-                          <FormField
-                            control={control}
-                            name={`resume.work.${index}.toPresent`}
-                            render={({ field }) => (
-                              <FormItem className="flex items-center gap-2 space-y-0">
-                                <FormLabel className="font-normal">
-                                  To present
-                                </FormLabel>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={(val) => {
-                                      field.onChange(val);
-                                      sortFn(index, { ...fields[index], toPresent: !!val }, autoSort)
-                                    }}
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-
-                        </span>} className="w-32" control={control} name={`resume.work.${index}.endYear`} options={getYearOptions()} />
+                        <SelectInput
+                          label={t("builder.date_to")}
+                          disabled={toPresent}
+                          control={control}
+                          className="w-32"
+                          name={`resume.work.${index}.endMonth`}
+                          options={getMonthOptions()}
+                          onChange={(val) =>
+                            sortFn(
+                              index,
+                              { ...fields[index], endMonth: val },
+                              autoSort
+                            )
+                          }
+                        />
+                        <SelectInput
+                          disabled={toPresent}
+                          onChange={(val) =>
+                            sortFn(
+                              index,
+                              { ...fields[index], endYear: val },
+                              autoSort
+                            )
+                          }
+                          label={
+                            <span className="flex justify-end h-5 items-center gap-2">
+                              <FormField
+                                control={control}
+                                name={`resume.work.${index}.toPresent`}
+                                render={({ field }) => (
+                                  <FormItem className="flex items-center gap-2 space-y-0">
+                                    <FormLabel className="font-normal">
+                                      {t("builder.to_present")}
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={(val) => {
+                                          field.onChange(val);
+                                          sortFn(
+                                            index,
+                                            {
+                                              ...fields[index],
+                                              toPresent: !!val,
+                                            },
+                                            autoSort
+                                          );
+                                        }}
+                                      />
+                                    </FormControl>
+                                  </FormItem>
+                                )}
+                              />
+                            </span>
+                          }
+                          className="w-32"
+                          control={control}
+                          name={`resume.work.${index}.endYear`}
+                          options={getYearOptions()}
+                        />
                       </div>
                     </div>
                     <Separator />
@@ -231,7 +291,7 @@ export function WorkStep() {
                   type="button"
                   variant="ghost"
                   className="text-destructive"
-                  title="Delete entry"
+                  title={t("builder.delete_entry")}
                   size="sm"
                   onClick={() => remove(index)}
                 >
@@ -270,7 +330,7 @@ export function WorkStep() {
           }}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add work experience
+          {t("experience.add_new")}
         </Button>
         <FormField
           control={control}
@@ -278,7 +338,7 @@ export function WorkStep() {
           render={({ field }) => (
             <FormItem className="flex items-center justify-between gap-1 space-y-0">
               <FormLabel className={cn({ muted: fields.length < 2 })}>
-                Auto sort by date
+                {t("builder.auto_sort")}
               </FormLabel>
               <FormControl>
                 <Switch

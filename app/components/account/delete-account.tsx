@@ -25,6 +25,7 @@ import {
 } from "@/lib/account/validation";
 import { useRef } from "react";
 import { useNavigation, useSubmit } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 export function DeleteAccountForm() {
   const { state, formData } = useNavigation();
@@ -43,6 +44,8 @@ export function DeleteAccountForm() {
   const onSubmit: SubmitHandler<DeleteAccountValues> = (_data) => {
     submit(ref.current);
   };
+
+  const { t } = useTranslation();
 
   const isSubmitting =
     state === "submitting" &&
@@ -66,9 +69,11 @@ export function DeleteAccountForm() {
               )}
             />
             <CardHeader>
-              <CardTitle className="text-destructive">Delete account</CardTitle>
+              <CardTitle className="text-destructive">
+                {t("account.delete_account")}
+              </CardTitle>
               <CardDescription>
-                Delete forever any data you have provided to us.
+                {t("account.delete_account_subtitle")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -77,7 +82,7 @@ export function DeleteAccountForm() {
                 name="confirm"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Enter "Delete me"</FormLabel>
+                    <FormLabel>{t("account.delete_prompt")}</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Delete me" />
                     </FormControl>
@@ -88,7 +93,7 @@ export function DeleteAccountForm() {
             </CardContent>
             <CardFooter>
               <Button type="submit" variant="destructive">
-                {isSubmitting ? "Please wait" : "Delete"}
+                {isSubmitting ? t("base.please_wait") : t("base.update")}
               </Button>
             </CardFooter>
           </fieldset>

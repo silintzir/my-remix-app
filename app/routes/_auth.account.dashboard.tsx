@@ -17,6 +17,8 @@ import { ResumesList } from "@/components/resumes/list";
 import { authenticatedFetch, fetchMe } from "@/lib/strapi.server";
 import { getResumeValues } from "@/lib/import-resume.server";
 import { parseFile, s3UploadHandler } from "@/lib/upload-resume.server";
+import { useTranslation } from "react-i18next";
+import { useChangeLanguage } from "remix-i18next/react";
 
 export const config = {
   maxDuration: 120,
@@ -136,12 +138,14 @@ export default function AppDashboard() {
 
   const fn = get(me, "firstName", "") || "";
   const ln = get(me, "lastName", "") || "";
+  const { t } = useTranslation();
+  useChangeLanguage(me.language || "en-US");
 
   return (
     <>
       <h4 className="text-lg">
         <span className="text-base sm:text-lg flex flex-wrap items-center gap-2">
-          Happy to see you back
+          {t("base.welcome")}
           {(fn.length > 0 || ln.length > 0) && (
             <strong>{`${me.firstName || ""} ${me.lastName || ""}`}</strong>
           )}

@@ -17,6 +17,7 @@ import { Label } from "@radix-ui/react-label";
 import { useCallback, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { Lang, Step } from "@/lib/types";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -41,6 +42,7 @@ export function TextAlternatives({
   const results = get(fetcher.data, "results", []);
 
   const [picked, setPicked] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const enhance = useCallback(() => {
     setPicked(null);
@@ -57,7 +59,7 @@ export function TextAlternatives({
           className="text-blue-600 flex gap-1 items-center"
           type="button"
           onClick={enhance}
-          title="AI Enhance"
+          title={t("builder.ai_enhance")}
         >
           <Wand2 className="h-4 w-4" />
           {buttonLabel && <span>{buttonLabel}</span>}

@@ -15,26 +15,24 @@ import {
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
-
+import { useChangeLanguage } from "remix-i18next/react";
 import { Toaster } from "@/components/ui/toaster";
 import styles from "./tailwind.css";
-import { NavBar } from "./components/navbar";
-import { Logo } from "./components/website/logo";
-import ReturnToWebsite from "./components/navbar/return-website";
-import { detectLanguage } from "@/lib/i18n";
+import i18next from "./i18next.server";
+import { useTranslation } from "react-i18next";
 
 export const links: LinksFunction = () => {
   return [
     {
       rel: "preload",
-      href: "/locales/es.json",
+      href: "/locales/es-ES/translation.json",
       as: "fetch",
       type: "application/json",
       crossOrigin: "anonymous" as const,
     },
     {
       rel: "preload",
-      href: "/locales/en.json",
+      href: "/locales/en-US/translation.json",
       as: "fetch",
       type: "application/json",
       crossOrigin: "anonymous" as const,
@@ -47,9 +45,10 @@ export const links: LinksFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const language = detectLanguage(request);
+  let locale = await i18next.getLocale(request);
+
   return json({
-    language,
+    locale,
     ENV: {
       NODE_ENV: process.env.NODE_ENV,
       STRAPI_HOST: process.env.STRAPI_HOST,
@@ -59,10 +58,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 }
 
+export let handle = {
+  // In the handle export, we can add a i18n key with namespaces our route
+  // will need to load. This key can be a single string or an array of strings.
+  // TIP: In most cases, you should set this to your defaultNS from your i18n config
+  // or if you did not set one, set it to the i18next default namespace "translation"
+  i18n: "translation",
+};
+
 export default function App() {
   const data = useLoaderData<typeof loader>();
+  const { locale } = data;
+  let { i18n } = useTranslation();
+
+  // This hook will change the i18n instance language to the current locale
+  // detected by the loader, this way, when we do something to change the
+  // language, this locale will change and i18next will load the correct
+  // translation files
+  useChangeLanguage(locale);
+
   return (
-    <html lang="en">
+    <html lang={locale} dir={i18n.dir()}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

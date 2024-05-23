@@ -39,11 +39,14 @@ export async function action({ request }: ActionFunctionArgs) {
     _intent: Intent;
   };
 
+  console.log(body);
+
   const {
     data: { user },
   } = session;
 
   const validateProfile = mdf(updateProfileSchema)(async (values) => {
+    console.log(values);
     const response = await authenticatedFetch(
       request,
       `/api/users/${user?.id}`,
@@ -52,6 +55,7 @@ export async function action({ request }: ActionFunctionArgs) {
         body: JSON.stringify({
           firstName: values.firstName,
           lastName: values.lastName,
+          language: values.language,
         }),
       }
     );

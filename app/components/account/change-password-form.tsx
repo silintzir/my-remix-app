@@ -27,6 +27,7 @@ import { useRef } from "react";
 import { useNavigation, useSubmit } from "@remix-run/react";
 import { useMe } from "../hooks/useMe";
 import { capitalize } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 export function ChangePasswordForm() {
   const { state, formData } = useNavigation();
@@ -43,6 +44,7 @@ export function ChangePasswordForm() {
   const { control, handleSubmit } = methods;
   const ref = useRef<HTMLFormElement>(null);
   const me = useMe();
+  const { t } = useTranslation();
 
   const onSubmit: SubmitHandler<ChangePasswordValues> = (_data) => {
     submit(ref.current);
@@ -70,9 +72,9 @@ export function ChangePasswordForm() {
               )}
             />
             <CardHeader>
-              <CardTitle>Password settings</CardTitle>
+              <CardTitle>{t("account.password_settings")}</CardTitle>
               <CardDescription>
-                <span>Change your password</span>
+                <span>{t("account.password_settings_subtitle")}</span>
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -107,7 +109,7 @@ export function ChangePasswordForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t("account.password")}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -124,7 +126,7 @@ export function ChangePasswordForm() {
                 name="passwordRepeat"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Repeat password</FormLabel>
+                    <FormLabel>{t("account.repeat_password")}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -139,7 +141,7 @@ export function ChangePasswordForm() {
             </CardContent>
             <CardFooter>
               <Button type="submit">
-                {isSubmitting ? "Please wait" : "Update"}
+                {isSubmitting ? t("base.please_wait") : t("base.update")}
               </Button>
             </CardFooter>
           </fieldset>

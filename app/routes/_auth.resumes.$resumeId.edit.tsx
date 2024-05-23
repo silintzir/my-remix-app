@@ -55,6 +55,8 @@ import { DASHBOARD } from "@/lib/routes";
 import { Overlay } from "@/components/builder/overlay";
 import { StepHeader } from "@/components/builder/header";
 import { PreviewStep } from "@/components/builder/steps/preview";
+import { useChangeLanguage } from "remix-i18next/react";
+import { useTranslation } from "react-i18next";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Resume :: Edit" }];
@@ -87,7 +89,9 @@ const sample = sampleResume();
 
 export default function Builder() {
   const user = useMe();
+  useChangeLanguage(user.language || "en");
   const { state } = useNavigation();
+  const { t } = useTranslation();
 
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "";
@@ -110,8 +114,9 @@ export default function Builder() {
   });
   const { submit, state: fetcherState } = useFetcher({ key: "resume-values" });
 
-  const { state: translateState, data: translateData } = useFetcher({ key: "translate" });
-
+  const { state: translateState, data: translateData } = useFetcher({
+    key: "translate",
+  });
 
   const {
     setValue,
@@ -123,17 +128,17 @@ export default function Builder() {
 
   useEffect(() => {
     if (translateData) {
-      const steps = get(translateData, 'steps');
+      const steps = get(translateData, "steps");
       if (steps) {
-        setValue('meta.steps', steps as any, { shouldDirty: true })
+        setValue("meta.steps", steps as any, { shouldDirty: true });
       }
 
-      const resume = get(translateData, 'resume');
+      const resume = get(translateData, "resume");
       if (resume) {
-        setValue('resume', resume as any, { shouldDirty: true })
+        setValue("resume", resume as any, { shouldDirty: true });
       }
     }
-  }, [translateData, setValue])
+  }, [translateData, setValue]);
 
   function onSubmit(data: ResumeValues) {
     setSubmittedData(data);
@@ -174,12 +179,15 @@ export default function Builder() {
 
   const fontSizeAdjust = <FontSizeAdjust />;
 
-  const exportActions = <ExportActions resumeId={id}
-    isSample={sampleMode}
-    values={defaultValues}
-    fontSize={submittedData.meta.fontSize}
-    template={submittedData.meta.template || "chicago"}
-  />;
+  const exportActions = (
+    <ExportActions
+      resumeId={id}
+      isSample={sampleMode}
+      values={defaultValues}
+      fontSize={submittedData.meta.fontSize}
+      template={submittedData.meta.template || "chicago"}
+    />
+  );
 
   const pdfPaper = (
     <PdfPaper base64={base64} id={id} fullPage={view === "preview"} />
@@ -188,7 +196,10 @@ export default function Builder() {
   return (
     <>
       <Overlay visible={state === "loading"} />
-      <Overlay visible={translateState === "submitting"} text="Translating..." />
+      <Overlay
+        visible={translateState === "submitting"}
+        text="Translating..."
+      />
 
       <header className="block xl:hidden h-16 relative z-50 bg-white border-b shadow-lg">
         <div className="fixed top-0 left-0 right-0 h-inherit">
@@ -253,14 +264,16 @@ export default function Builder() {
                             <Link to={`?step=${previous}`}>
                               <ChevronLeft />
                               <span className="hidden xxs:block">
-                                {DEFAULT_SECTION_TITLES[previous]}
+                                {t(DEFAULT_SECTION_TITLES[previous])}
                               </span>
-                              <span className="block xxs:hidden">Prev</span>
+                              <span className="block xxs:hidden">
+                                {t("builder.previous")}
+                              </span>
                             </Link>
                           ) : (
                             <Link to={DASHBOARD}>
                               <Home />
-                              <span>Exit</span>
+                              <span>{t("builder.exit")}</span>
                             </Link>
                           )}
                         </Button>
@@ -273,15 +286,19 @@ export default function Builder() {
                           {next ? (
                             <Link to={`?step=${next}`}>
                               <span className="ml-0 mr-2 hidden xxs:block">
-                                {DEFAULT_SECTION_TITLES[next]}
+                                {t(DEFAULT_SECTION_TITLES[next])}
                               </span>
-                              <span className="block xxs:hidden">Next</span>
+                              <span className="block xxs:hidden">
+                                {t("builder.next")}
+                              </span>
                               <ChevronRight />
                             </Link>
                           ) : (
                             <Link to={DASHBOARD}>
                               <Home />
-                              <span className="hidden xxs:block">Exit</span>
+                              <span className="hidden xxs:block">
+                                {t("builder.exit")}
+                              </span>
                             </Link>
                           )}
                         </Button>
@@ -322,9 +339,7 @@ export default function Builder() {
                           <div className="flex items-center gap-2">
                             <OutputSettings id={id} />
                           </div>
-                          <div className="flex gap-1">
-                            {exportActions}
-                          </div>
+                          <div className="flex gap-1">{exportActions}</div>
                         </div>
 
                         {/* paper  */}

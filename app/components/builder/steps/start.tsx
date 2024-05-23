@@ -25,6 +25,7 @@ import { Drama, RotateCcw, Settings2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { SelectInput } from "@/components/shadcn/SelectInput";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   singlePage?: boolean;
@@ -35,6 +36,7 @@ export function StartStep({ singlePage = false }: Props) {
 
   const order = watch("meta.order") as Step[];
   const mode = watch("meta.mode");
+  const { t } = useTranslation();
 
   const onSortEnd = useCallback(
     ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
@@ -51,13 +53,10 @@ export function StartStep({ singlePage = false }: Props) {
     <div className="space-y-2">
       <Alert className="bg-blue-100">
         <Drama className="h-4 w-4" />
-        <AlertTitle>Recruiter mode</AlertTitle>
+        <AlertTitle>{t("start.recruiter_mode_title")}</AlertTitle>
         <AlertDescription>
           <div className="flex justify-between items-center">
-            <span>
-              You may mask the basics info and show the Marathon Staffing
-              company info instead.
-            </span>
+            <span>{t("start.recruiter_mode_desc")}</span>
             <FormField
               control={control}
               name="meta.maskBasics"
@@ -76,7 +75,7 @@ export function StartStep({ singlePage = false }: Props) {
         </AlertDescription>
       </Alert>
       <h4 className="font-semibold flex justify-between items-center">
-        <span>Template</span>
+        <span>{t("base.template")}</span>
       </h4>
       <div className="flex gap-2 items-center">
         <SelectInput
@@ -92,7 +91,7 @@ export function StartStep({ singlePage = false }: Props) {
       </div>
 
       <h4 className="font-semibold flex justify-between items-center">
-        <span>Resume sections</span>
+        <span>{t("start.sections")}</span>
         {mode === "custom" ? (
           <Button
             variant="link"
@@ -110,7 +109,7 @@ export function StartStep({ singlePage = false }: Props) {
             }}
           >
             <RotateCcw />
-            <span>Use defaults</span>
+            <span>{t("start.use_defaults")}</span>
           </Button>
         ) : (
           <Button
@@ -121,31 +120,22 @@ export function StartStep({ singlePage = false }: Props) {
             }}
           >
             <Settings2 />
-            <span>Configure sections</span>
+            <span>{t("start.configure_sections")}</span>
           </Button>
         )}
       </h4>
       {singlePage === false && (
-        <p className="muted">
-          Continue with the defaults or configure the sections in your resume.
-        </p>
+        <p className="muted">{t("start.configure_sections_desc")}</p>
       )}
 
       {mode === "custom" && (
         <div className="space-y-2 text-xs sm:text-sm">
           <ul>
-            {singlePage === false && (
-              <li>Use the text inputs to change the title of each section.</li>
-            )}
-            <li>Use the switches to activate or deactivate a section.</li>
-            <li>
-              Use the up/down arrow icons to drag and change the order the
-              sections display in your resume.
-            </li>
+            {singlePage === false && <li>{t("start.li1")}</li>}
+            <li>{t("start.li2")}</li>
+            <li>{t("start.li3")}</li>
           </ul>
-          {singlePage == false && (
-            <p>You may come back at any time to make changes.</p>
-          )}
+          {singlePage == false && <p>{t("start.come_back")}</p>}
           <br />
           <SortableList
             lockAxis="y"

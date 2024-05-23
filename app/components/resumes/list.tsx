@@ -10,16 +10,20 @@ import { SecondaryActions } from "../builder/secondary-actions";
 import usFlag from "@/images/us-flag.svg";
 import esFlag from "@/images/es-flag.svg";
 import { RenameResume } from "./rename";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   resumes: StrapiShortResume[];
 }
 
 export function ResumesList({ resumes }: Props) {
+  const { t } = useTranslation();
   return (
     <div className="max-w-3xl">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold text-xl sm:text-2xl">My resumes</h2>
+        <h2 className="font-semibold text-xl sm:text-2xl">
+          {t("dashboard.my_resumes")}
+        </h2>
         <ClientOnly>
           {() => <CreateResume startOpen={resumes.length === 0} />}
         </ClientOnly>
@@ -65,7 +69,7 @@ export function ResumesList({ resumes }: Props) {
                     </span>
                     <Separator orientation="vertical" />
                     <span>
-                      Last updated:{" "}
+                      {t("base.last_updated")}:{" "}
                       {formatDistance(new Date(updatedAt), new Date(), {
                         addSuffix: true,
                       })}
