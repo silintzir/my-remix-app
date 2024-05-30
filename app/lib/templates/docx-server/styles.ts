@@ -168,6 +168,7 @@ export const docxStyles = {
         run: {
           font: "Arial",
           size: 2.2 * fontSize,
+          bold: true,
         },
         paragraph: {
           alignment: AlignmentType.JUSTIFIED,

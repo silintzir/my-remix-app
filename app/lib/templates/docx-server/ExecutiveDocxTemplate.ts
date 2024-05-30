@@ -264,7 +264,7 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
     const p1 = map(records, (w) => ({
       ...w,
       period: getRecordPeriod2(w),
-      group: constr(", ", w.name, constr(" ", w.city, w.state)),
+      group: constr(", ", w.name, w.state),
     }));
     const p2 = groupBy(p1, "group");
 
@@ -300,7 +300,7 @@ export class ExecutiveDocxTemplate extends ChicagoDocxTemplate {
             children: [
               new TextRun({
                 text: position,
-                bold: true,
+                italics: true,
               }),
               new TextRun({
                 text: " ",

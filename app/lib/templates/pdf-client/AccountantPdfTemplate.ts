@@ -125,7 +125,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
     const p1 = map(records, (w) => ({
       ...w,
       period: getRecordPeriod2(w),
-      group: constr(", ", w.name, constr(" ", w.city, w.state)),
+      group: constr(", ", w.name, w.city),
     }));
     const p2 = groupBy(p1, "group");
 

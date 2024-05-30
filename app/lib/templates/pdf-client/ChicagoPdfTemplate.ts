@@ -316,7 +316,7 @@ export class ChicagoPdfTemplate {
     const p1 = map(records, (w) => ({
       ...w,
       period: getRecordPeriod2(w),
-      group: w.city,
+      group: constr(", ", w.name, w.city),
     }));
     const p2 = groupBy(p1, "group");
 

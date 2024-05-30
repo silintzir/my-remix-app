@@ -96,7 +96,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
     const p1 = map(records, (w) => ({
       ...w,
       period: getRecordPeriod2(w),
-      group: constr(", ", w.name, constr(" ", w.city, w.state)),
+      group: constr(", ", w.name, w.city),
     }));
     const p2 = groupBy(p1, "group");
 
@@ -110,12 +110,13 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
           constr(", ", p2[group][0].city, p2[group][0].state)
         ),
         alignment: "center",
+        bold: true,
       } satisfies Content);
 
       for (const { position, period, bullets } of p2[group]) {
         stacks.push({
           text: [
-            { text: position, bold: true },
+            { text: position, italics: true },
             { text: " " },
             {
               // text: `(${constr(
@@ -183,6 +184,7 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
           state + ` (${period})`
         ),
         alignment: "center",
+        bold: true,
       });
       if (bullets && bullets.length) {
         output.push({
