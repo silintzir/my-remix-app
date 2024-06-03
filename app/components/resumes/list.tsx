@@ -30,6 +30,7 @@ export function ResumesList({ resumes }: Props) {
       </div>
       <Separator className="my-4 bg-gray-300" />
       <div className="flex flex-col gap-2">
+        {resumes.length === 0 && <p>{t("dashboard.no_resumes")}</p>}
         {resumes.map((resume) => {
           const language = get(
             resume,
