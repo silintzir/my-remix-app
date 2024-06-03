@@ -25,7 +25,7 @@ export default function Account() {
         </div>
       </NavBar>
       <div className="h-[calc(100dvh-5rem)] bg-muted overflow-y-auto">
-        <div className="space-y-8 p-8">
+        <div className="mx-auto max-w-4xl space-y-8 p-8">
           <Outlet />
         </div>
       </div>
