@@ -255,6 +255,7 @@ export class ChicagoPdfTemplate {
             style: "heading3",
             alignment: "right",
           },
+          0,
           0
         )
       );
@@ -335,7 +336,8 @@ export class ChicagoPdfTemplate {
             style: "heading3",
             alignment: "right",
           },
-          2
+          0,
+          0
         )
       );
 

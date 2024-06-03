@@ -51,7 +51,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
           : DEFAULT_SECTION_TITLES.summary,
         style: "heading2",
       });
-      output.push({ text: content, style: "paragraph", marginBottom: 12 });
+      output.push({ text: content, style: "paragraph", marginBottom: 0 });
     }
 
     const records = nonEmptySkills(skills);
@@ -69,7 +69,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       }
       output.push({
         marginTop: 0,
-        marginBottom: 8,
+        marginBottom: 0,
         table: {
           widths: ["*"],
           body: [
@@ -103,7 +103,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
     if (noSummary && noSkills) {
       return [];
     }
-    output.push(getDoubleHLine(0.7, 0, 12));
+    output.push(getDoubleHLine(0.7, 8, 0));
     return output;
   };
   work: ContentProvider = () => {
@@ -145,6 +145,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
             ),
             { text: period },
             0,
+            0,
             "80%"
           )
         );
@@ -158,7 +159,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
 
       stacks.push({
         stack,
-        marginBottom: 8,
+        marginTop: 8,
       });
     }
 
@@ -166,8 +167,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.work,
         style: "heading3",
-        marginTop: 4,
-        marginBottom: 4,
+        marginTop: 12,
       },
       {
         stack: stacks,
@@ -210,6 +210,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
           {
             text: period,
           },
+          8,
           0,
           "80%"
         )
@@ -217,7 +218,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       if (bullets && bullets.length) {
         output.push({
           ul: bullets.map((b) => ({ text: b.content })),
-          margin: [12, 0, 0, 8],
+          margin: [12, 0, 0, 0],
         } satisfies Content);
       }
     }
@@ -226,8 +227,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.education,
         style: "heading3",
-        marginTop: 4,
-        marginBottom: 4,
+        marginTop: 12,
       },
       {
         stack: output,
@@ -256,8 +256,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.certificates,
         style: "heading3",
-        marginTop: 4,
-        marginBottom: 4,
+        marginTop: 12,
       },
       {
         stack: map(records, ({ name, issuer, date, url }) =>
@@ -271,6 +270,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
               text: getReadableDateFromPicker(date),
             },
             8,
+            0,
             "80%"
           )
         ),
@@ -298,8 +298,7 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.accomplishments,
         style: "heading3",
-        marginTop: 4,
-        marginBottom: 4,
+        marginTop: 12,
       },
       {
         marginTop: 0,
@@ -357,12 +356,11 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.interests,
         style: "heading3",
-        marginTop: 4,
-        marginBottom: 4,
+        marginTop: 12,
       },
       {
         marginTop: 6,
-        marginBottom: 12,
+        marginBottom: 0,
         table: {
           widths: ["*"],
           body: [

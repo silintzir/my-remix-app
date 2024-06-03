@@ -29,6 +29,7 @@ export function getHeaderWithLine(text: string): Content {
 export function get2ColsSpaceBetween(
   left: Content,
   right: Content,
+  marginTop = 0,
   marginBottom = 0,
   width = "67%"
 ) {
@@ -40,6 +41,7 @@ export function get2ColsSpaceBetween(
         { text: "", width: "3%" },
         { text: right, alignment: "right" },
       ],
+      marginTop,
       marginBottom,
     },
   ] satisfies Content;
