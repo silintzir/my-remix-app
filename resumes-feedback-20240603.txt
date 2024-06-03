@@ -1,5 +1,9 @@
--- Trashawn Carr
+-- Trashawn Carr: Ok
+-- Gregory Hunt: Ok. Driver's licence had a from-to that could not be imported because we support one date there
+-- Christina Knicely: Did not import some intro info as well as the bullets in the work experience
+-- Jocelyn Owens: skipped intro line (Authorized to work in the US), added skills under the work experience as bullets
+-- Ashley James: skipped summary, really bad import of work experience
+-- Christopher Smith: 
 
-Everything but "Ohio" for the education record.
 
 
