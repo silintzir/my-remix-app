@@ -42,39 +42,37 @@ export function ResumesList({ resumes }: Props) {
               key={resume.id}
               className="border-muted bg-white border-2 rounded-md p-4 flex justify-between items-center shadow-lg"
             >
-              <div className="flex justify-between w-full items-center">
-                <div className="space-y-2">
-                  <div className="flex gap-1 items-center">
-                    <Link
-                      className="link"
-                      to={`/resumes/${resume.id}/edit?step=preview`}
-                    >
-                      <h4 className="font-semibold text-lg flex gap-1">
-                        {get(resume, "attributes.document.meta.title", "")}
-                      </h4>
-                    </Link>
-                    <RenameResume
-                      id={resume.id}
-                      title={get(resume, "attributes.document.meta.title")}
+              <div className="flex justify-between w-full items-center gap-y-2 flex-wrap">
+                <div className="flex gap-1 items-center w-full">
+                  <Link
+                    className="link"
+                    to={`/resumes/${resume.id}/edit?step=preview`}
+                  >
+                    <h4 className="font-semibold text-lg flex gap-1">
+                      {get(resume, "attributes.document.meta.title", "")}
+                    </h4>
+                  </Link>
+                  <RenameResume
+                    id={resume.id}
+                    title={get(resume, "attributes.document.meta.title")}
+                  />
+                </div>
+                <div className="small muted flex gap-1">
+                  <span>
+                    <img
+                      src={language === "en" ? usFlag : esFlag}
+                      height="16"
+                      width="16"
+                      alt="Language"
                     />
-                  </div>
-                  <div className="small muted flex gap-1">
-                    <span>
-                      <img
-                        src={language === "en" ? usFlag : esFlag}
-                        height="16"
-                        width="16"
-                        alt="Language"
-                      />
-                    </span>
-                    <Separator orientation="vertical" />
-                    <span>
-                      {t("base.last_updated")}:{" "}
-                      {formatDistance(new Date(updatedAt), new Date(), {
-                        addSuffix: true,
-                      })}
-                    </span>
-                  </div>
+                  </span>
+                  <Separator orientation="vertical" />
+                  <span>
+                    {t("base.last_updated")}:{" "}
+                    {formatDistance(new Date(updatedAt), new Date(), {
+                      addSuffix: true,
+                    })}
+                  </span>
                 </div>
                 <div className="flex gap-1">
                   <OpenPreview resumeId={resume.id} size="sm" variant="ghost" />

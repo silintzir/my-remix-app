@@ -10,11 +10,12 @@ interface Props extends ButtonProps {
 export function OpenPreview({ resumeId, ...rest }: Props) {
   const { t } = useTranslation();
   return (
-    <Button asChild {...rest}>
-      <Link to={`/resumes/${resumeId}/edit?view=preview`}>
-        <Download />
-        <span>{t("base.preview_download")}</span>
-      </Link>
-    </Button>
+    <Link
+      to={`/resumes/${resumeId}/edit?view=preview`}
+      className="flex items-center text-sm"
+    >
+      <Download />
+      <span>{t("base.preview_download")}</span>
+    </Link>
   );
 }
