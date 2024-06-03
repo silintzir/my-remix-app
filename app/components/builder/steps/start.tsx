@@ -47,8 +47,6 @@ export function StartStep({ singlePage = false }: Props) {
     [order, setValue]
   );
 
-  const nonConfigurableSteps: Step[] = ["basics", "work"];
-
   return (
     <div className="space-y-2">
       <Alert className="bg-blue-100">
@@ -160,7 +158,6 @@ export function StartStep({ singlePage = false }: Props) {
                       <FormControl>
                         <Switch
                           checked={field.value}
-                          disabled={nonConfigurableSteps.includes(step)}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>

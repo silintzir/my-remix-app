@@ -40,7 +40,7 @@ export function ErrorBoundary() {
   return (
     <main>
       <NavBar>
-        <Logo />
+        <Logo to="/account/dashboard" />
         <ReturnToDashboard />
       </NavBar>
       <div className="text-center absolute top-20 py-8 h-[calc(100dvh-5rem)] bg-muted px-4 overflow-y-auto w-full">

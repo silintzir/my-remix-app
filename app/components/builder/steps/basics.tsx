@@ -70,6 +70,17 @@ export function BasicsStep() {
             ref={maps as any}
             defaultValue={address}
             name="resume.basics.location.address"
+            onChange={() => {
+              if (maps.current && (maps.current as any).value) {
+                setValue(
+                  "resume.basics.location.address",
+                  (maps.current as any).value,
+                  {
+                    shouldDirty: true,
+                  }
+                );
+              }
+            }}
             placeholder="e.x. State 100 Street, Boston 01978, MA"
             className="w-full"
           />
