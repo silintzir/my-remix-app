@@ -13,7 +13,7 @@ export default function Account() {
   return (
     <main>
       <NavBar>
-        <Logo />
+        <Logo to="/account/dashboard" />
         {state === "loading" && (
           <div className="font-semibold flex items-center muted">
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
