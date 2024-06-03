@@ -255,7 +255,7 @@ export function getResumeValues(data: any) {
       let endMonth = "-";
       let endYear = "-";
       let toPresent = false;
-      let toks = startDate.split(/[\/\-\s]+/);
+      let toks = startDate.split(/[/\-\s]+/);
       if (toks.length === 1) {
         startYear = toks[0];
       } else if (toks.length === 2) {
@@ -293,7 +293,7 @@ export function getResumeValues(data: any) {
         uuid: v4(),
         name: get(w, "name", "") || "",
         position: get(w, "position", "") || "",
-        city: constr(get(w, "city", "") || "", get(w, "state", "") || ""),
+        city: constr(", ", get(w, "city", ""), get(w, "state", "")),
         state: "",
         startDate,
         endDate: endDate || "",
@@ -362,7 +362,7 @@ export function getResumeValues(data: any) {
         studyType: get(w, "studyType", "") || "",
         area: get(w, "area", "") || "",
         status: get(w, "status", "no_mention") || "",
-        city: constr(get(w, "city", "") || "", get(w, "state", "") || ""),
+        city: constr(", ", get(w, "city", ""), get(w, "state", "")),
         state: "",
         startDate,
         endDate: endDate || "",

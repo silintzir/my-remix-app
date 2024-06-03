@@ -61,6 +61,8 @@ export async function action({ request }: ActionFunctionArgs) {
       }),
     });
 
+    console.log(response.data.resume);
+
     const toStore = getResumeValues(response.data.resume);
 
     toStore.meta.title = [
