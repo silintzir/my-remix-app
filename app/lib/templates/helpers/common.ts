@@ -22,6 +22,27 @@ export function constr(delimiter: string, ...strings: string[]): string {
   return strings.filter((str) => str.trim() !== "").join(delimiter);
 }
 
+type TextObject = { text: string } & { [key: string]: any };
+
+export function conobj(
+  delimiter: TextObject,
+  ...objects: TextObject[]
+): TextObject[] {
+  const filteredObjects = objects.filter((obj) => obj.text.trim() !== "");
+
+  if (filteredObjects.length === 0) {
+    return [];
+  }
+
+  const result: TextObject[] = [filteredObjects[0]];
+
+  for (let i = 1; i < filteredObjects.length; i++) {
+    result.push(delimiter, filteredObjects[i]);
+  }
+
+  return result;
+}
+
 export function skillDisplay({ name, level }: SkillRecord) {
   const lv =
     level.length > 0 && level !== "no_mention"

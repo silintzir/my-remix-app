@@ -1,6 +1,7 @@
 import type { Content } from "pdfmake/interfaces";
 import {
   TITLE,
+  conobj,
   constr,
   createTwoDimArray,
   nonEmptyAccomplishments,
@@ -137,19 +138,12 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       ]) {
         stack.push(
           get2ColsSpaceBetween(
-            [
-              { text: position, bold: true },
+            conobj(
               { text: ", " },
-              { text: constr(", ", name, city, state) },
-            ],
-            {
-              // text: constr(
-              //   " — ",
-              //   getReadableDateFromPicker(startDate),
-              //   getReadableDateFromPicker(endDate)
-              // ),
-              text: period,
-            },
+              { text: position, bold: true },
+              { text: constr(", ", name, city, state) }
+            ),
+            { text: period },
             0,
             "80%"
           )
@@ -205,14 +199,14 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
 
       output.push(
         get2ColsSpaceBetween(
-          [
+          conobj(
+            { text: ", " },
             {
               text: constr(", ", institution, studyType, area),
               bold: true,
             },
-            { text: ", " },
-            { text: constr(", ", city, state) },
-          ],
+            { text: constr(", ", city, state) }
+          ),
           {
             text: period,
           },
@@ -268,11 +262,11 @@ export class AccountantPdfTemplate extends ChicagoPdfTemplate {
       {
         stack: map(records, ({ name, issuer, date, url }) =>
           get2ColsSpaceBetween(
-            [
-              { text: name, bold: true },
+            conobj(
               { text: ", " },
-              { text: constr(", ", issuer, url) },
-            ],
+              { text: name, bold: true },
+              { text: constr(", ", issuer, url) }
+            ),
             {
               text: getReadableDateFromPicker(date),
             },

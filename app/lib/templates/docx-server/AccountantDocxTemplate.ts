@@ -1,5 +1,6 @@
 import {
   TITLE,
+  conobj,
   constr,
   createTwoDimArray,
   nonEmptyAccomplishments,
@@ -332,16 +333,11 @@ export class AccountantDocxTemplate extends ExecutiveDocxTemplate {
       ]) {
         paragraphs.push(
           this.get2ColsSpaceBetween(
-            [
-              new TextRun({
-                text: position,
-                bold: true,
-              }),
-              new TextRun({
-                text: ", ",
-              }),
-              new TextRun({ text: constr(", ", name, city, state) }),
-            ],
+            conobj(
+              { text: ", " },
+              { text: position, bold: true },
+              { text: constr(", ", name, city, state) }
+            ).map((i) => new TextRun(i)),
             [new TextRun({ text: period })],
             undefined,
             undefined,
@@ -385,17 +381,11 @@ export class AccountantDocxTemplate extends ExecutiveDocxTemplate {
       const period = getRecordPeriod2(r);
       paragraphs.push(
         this.get2ColsSpaceBetween(
-          [
-            new TextRun({
-              text: constr(", ", institution, studyType, area),
-              bold: true,
-            }),
-            new TextRun({
-              text: ", ",
-              bold: true,
-            }),
-            new TextRun({ text: constr(", ", city, state) }),
-          ],
+          conobj(
+            { text: ", " },
+            { text: constr(", ", institution, studyType, area), bold: true },
+            { text: constr(", ", city, state) }
+          ).map((i) => new TextRun(i)),
           [
             new TextRun({
               text: period,
@@ -433,17 +423,11 @@ export class AccountantDocxTemplate extends ExecutiveDocxTemplate {
       ),
       ...map(records, ({ name, date, issuer, url }) => {
         return this.get2ColsSpaceBetween(
-          [
-            new TextRun({
-              text: name,
-              bold: true,
-            }),
-            new TextRun({
-              text: ", ",
-              bold: true,
-            }),
-            new TextRun({ text: constr(", ", issuer, url) }),
-          ],
+          conobj(
+            { text: ", " },
+            { text: name, bold: true },
+            { text: constr(", ", issuer, url) }
+          ).map((i) => new TextRun(i)),
           [
             new TextRun({
               text: getReadableDateFromPicker(date),
