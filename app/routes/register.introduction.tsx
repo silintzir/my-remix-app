@@ -90,9 +90,6 @@ export default function Introduction() {
   return (
     <div className="space-y-4 max-w-xs mx-auto">
       <h1 className="font-semibold text-lg">Add your name</h1>
-      <p className="muted">
-        You made a great template selection! Now let’s add your name to it.
-      </p>
 
       <Form {...form}>
         <form

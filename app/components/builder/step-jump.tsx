@@ -31,7 +31,7 @@ export function StepJump({ values }: Props) {
         <DropdownMenuGroup>
           {steps.map((step, index) => (
             <DropdownMenuItem asChild key={step}>
-              <Link to={`?step=${step}`}>
+              <Link to={step === "finish" ? `?view=preview` : `?step=${step}`}>
                 {index + 1}.&nbsp;{t(DEFAULT_SECTION_TITLES[step])}
               </Link>
             </DropdownMenuItem>

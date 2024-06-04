@@ -212,7 +212,7 @@ export default function Builder() {
       <div
         className={cn(
           "bg-muted",
-          "overflow-y-auto h-[calc(100dvh-4rem)] w-full absolute top-16",
+          "overflow-y-hidden h-[calc(100dvh-4rem)] w-full absolute top-16",
           "xl:overflow-y-hidden xl:h-screen xl:top-[unset]"
         )}
       >
@@ -284,7 +284,13 @@ export default function Builder() {
                           className="w-full xs:max-w-fit xs:min-w-[140px]"
                         >
                           {next ? (
-                            <Link to={`?step=${next}`}>
+                            <Link
+                              to={
+                                next === "finish"
+                                  ? `?view=preview`
+                                  : `?step=${next}`
+                              }
+                            >
                               <span className="ml-0 mr-2 hidden xxs:block">
                                 {t(DEFAULT_SECTION_TITLES[next])}
                               </span>
