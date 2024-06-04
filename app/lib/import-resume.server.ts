@@ -422,7 +422,7 @@ export function getResumeValues(data: any) {
         ({
           uuid: v4(),
           name: get(s, "name", "") || "",
-          level: get(s, "level", "") || "",
+          level: get(s, "level", "no_mention") || "no_mention",
         } satisfies SkillRecord)
     )
   );
