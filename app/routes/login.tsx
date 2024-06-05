@@ -270,6 +270,10 @@ export default function Signin() {
                         placeholder="Password"
                       />
                     )}
+                    <p className="text-xs text-center">
+                      Did you forget your password? Try passwordless login to
+                      get back to your account.
+                    </p>
                     <div className="flex justify-between">
                       <Button
                         variant="secondary"
