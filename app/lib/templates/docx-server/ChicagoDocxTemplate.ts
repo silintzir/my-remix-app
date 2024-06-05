@@ -273,6 +273,7 @@ export class ChicagoDocxTemplate {
       this.sectionTitle(title.length ? title : DEFAULT_SECTION_TITLES.skills),
       new Paragraph({
         heading: HeadingLevel.HEADING_6,
+        indent: { left: 60 },
         text:
           constr(
             ", ",
@@ -361,6 +362,7 @@ export class ChicagoDocxTemplate {
       ),
       new Paragraph({
         heading: HeadingLevel.HEADING_6,
+        indent: { left: 60 },
         text: constr(", ", ...map(records, "name")),
       }),
     ];
@@ -392,6 +394,7 @@ export class ChicagoDocxTemplate {
       new Paragraph({
         heading: HeadingLevel.HEADING_6,
         text: content,
+        indent: { left: 60 },
         spacing: {
           before: 100,
           after: 0,
