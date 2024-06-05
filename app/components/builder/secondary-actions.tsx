@@ -6,7 +6,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Link, useFetcher, useNavigate } from "@remix-run/react";
+import { Link, useFetcher } from "@remix-run/react";
 import { Button, type ButtonProps } from "../ui/button";
 import { useTranslation } from "react-i18next";
 
@@ -40,12 +40,12 @@ export function SecondaryActions({ resumeId, ...rest }: Props) {
               <span>{t("dashboard.export_ms")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to={`/resumes/${resumeId}/json`} target="_blank">
-              <Download />
-              <span>{t("dashboard.export_json")}</span>
-            </Link>
-          </DropdownMenuItem>
+          {/* <DropdownMenuItem asChild> */}
+          {/*   <Link to={`/resumes/${resumeId}/json`} target="_blank"> */}
+          {/*     <Download /> */}
+          {/*     <span>{t("dashboard.export_json")}</span> */}
+          {/*   </Link> */}
+          {/* </DropdownMenuItem> */}
           <DropdownMenuItem
             className="text-destructive"
             onClick={() => {

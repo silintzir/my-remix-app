@@ -198,7 +198,7 @@ export default function Builder() {
   );
 
   useEffect(() => {
-    if (download) {
+    if (download === "1") {
       const def = getDefinition(defaultValues, {
         isSample: sampleMode,
         fontSize: submittedData.meta.fontSize,

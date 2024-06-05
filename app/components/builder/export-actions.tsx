@@ -59,15 +59,15 @@ export function ExportActions({
           <DropdownMenuItem asChild>
             <Link to={`/resumes/${resumeId}/docx`} target="_blank">
               <Download />
-              <span>Export to MS Word</span>
+              <span>{t("dashboard.export_ms")}</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to={`/resumes/${resumeId}/json`} target="_blank">
-              <Download />
-              <span>Export to JSON</span>
-            </Link>
-          </DropdownMenuItem>
+          {/* <DropdownMenuItem asChild> */}
+          {/*   <Link to={`/resumes/${resumeId}/json`} target="_blank"> */}
+          {/*     <Download /> */}
+          {/*     <span>Export to JSON</span> */}
+          {/*   </Link> */}
+          {/* </DropdownMenuItem> */}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
