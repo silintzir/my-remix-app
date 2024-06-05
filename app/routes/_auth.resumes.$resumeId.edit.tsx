@@ -57,6 +57,12 @@ import { StepHeader } from "@/components/builder/header";
 import { PreviewStep } from "@/components/builder/steps/preview";
 import { useChangeLanguage } from "remix-i18next/react";
 import { useTranslation } from "react-i18next";
+import getDefinition from "@/lib/templates/pdf.client";
+import filenamify from "filenamify";
+import pdfMake from "pdfmake/build/pdfmake.js";
+import pdfFonts from "pdfmake/build/vfs_fonts.js";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const meta: MetaFunction = () => {
   return [{ title: "Resume :: Edit" }];
@@ -95,6 +101,8 @@ export default function Builder() {
 
   const [searchParams] = useSearchParams();
   const view = searchParams.get("view") || "";
+  const download = searchParams.get("download") || "0";
+
   const step: Step = (searchParams.get("step") as Step) || "start";
 
   const data = useLoaderData<typeof loader>();
@@ -188,6 +196,19 @@ export default function Builder() {
       template={submittedData.meta.template || "chicago"}
     />
   );
+
+  useEffect(() => {
+    if (download) {
+      const def = getDefinition(defaultValues, {
+        isSample: sampleMode,
+        fontSize: submittedData.meta.fontSize,
+        template: submittedData.meta.template || "chicago",
+      });
+      pdfMake
+        .createPdf(def)
+        .download(filenamify(`${defaultValues.meta.title}.pdf`));
+    }
+  }, []);
 
   const pdfPaper = (
     <PdfPaper base64={base64} id={id} fullPage={view === "preview"} />

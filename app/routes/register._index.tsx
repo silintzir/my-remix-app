@@ -25,13 +25,14 @@ export default function SocialProfile() {
       <div className="flex gap-2 justify-center w-full flex-wrap">
         {/* <FacebookButton /> */}
         <GoogleButton />
+        <hr />
         <Button
-          variant="secondary"
-          className="min-w-[160px] relative"
+          variant="link"
+          className="min-w-[160px] relative flex items-center"
           onClick={() => navigate(`${REGISTER}/introduction`)}
         >
-          <Mail className="w-5 h-5 absolute left-[18px] top-1/2 mt-[-10px]" />
-          <span className="w-full">Email</span>
+          <Mail className="w-5 h-5" />
+          <span className="w-full">I want to use my email instead</span>
         </Button>
       </div>
     </div>

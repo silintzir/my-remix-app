@@ -73,7 +73,11 @@ export function SummaryStep() {
               context={{ ...getContext(), asObjective, objectiveTarget }}
               original={summary || ""}
               buttonLabel={
-                hasText ? t("builder.ai_enhance") : t("builder.ai_suggest")
+                (hasText ? (
+                  <strong>{t("builder.ai_enhance")}</strong>
+                ) : (
+                  <strong>{t("builder.ai_suggest")}</strong>
+                )) as any
               }
               update={(text: string) => {
                 setValue("resume.summary.content", text, {

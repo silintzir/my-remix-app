@@ -6,7 +6,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Link, useFetcher } from "@remix-run/react";
+import { Link, useFetcher, useNavigate } from "@remix-run/react";
 import { Button, type ButtonProps } from "../ui/button";
 import { useTranslation } from "react-i18next";
 
@@ -25,6 +25,15 @@ export function SecondaryActions({ resumeId, ...rest }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
         <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link
+              to={`/resumes/${resumeId}/edit?view=preview&download=1`}
+              target="_blank"
+            >
+              <Download className="w-4 h-4" />
+              <span>Export to PDF</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to={`/resumes/${resumeId}/docx`} target="_blank">
               <Download />

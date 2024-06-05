@@ -68,25 +68,6 @@ export function ExportActions({
               <span>Export to JSON</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-destructive"
-            onClick={() => {
-              if (
-                confirm(
-                  "Deleting a resume is an action that cannot be undone. Proceed anyway?"
-                )
-              ) {
-                fetcher.submit(
-                  {},
-                  { method: "DELETE", action: `/resumes/${resumeId}/delete` }
-                );
-              }
-              return false;
-            }}
-          >
-            <Trash className="h-4 w-4" />
-            <span className="ml-2">Delete resume</span>
-          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
