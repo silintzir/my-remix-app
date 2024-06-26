@@ -95,7 +95,7 @@ export function TextSuggestions({
                   // biome-ignore lint/suspicious/noArrayIndexKey: these are not going to be ever resorted
                   <li key={index}>
                     <Label
-                      className="flex justify-start items-start bg-muted p-2 rounded-md cursor-pointer gap-2"
+                      className="flex justify-start items-start bg-muted p-2 rounded-md cursor-pointer gap-2 select-none"
                       htmlFor={`suggestion-${index}`}
                     >
                       <Checkbox

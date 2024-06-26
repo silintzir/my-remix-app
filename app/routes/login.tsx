@@ -298,11 +298,11 @@ export default function Signin() {
             <div className="flex flex-col text-center items-center gap-8">
               <div className="space-y-2">
                 <img
-                  src="/images/social-thinking.svg"
+                  src="/images/signin.svg"
                   alt="Enter your email"
                   className="h-[160px]"
                 />
-                <h1 className="font-semibold text-lg">{t("greeting")}</h1>
+                <h1 className="font-semibold text-lg">Welcome!</h1>
                 <div className="muted">We are happy to see you back!</div>
               </div>
               <div className="flex gap-2 flex-col w-56">
@@ -312,7 +312,6 @@ export default function Signin() {
                   <Button
                     name="view"
                     value="email"
-                    variant="secondary"
                     className="min-w-[160px] relative w-full"
                   >
                     <Mail className="w-5 h-5 absolute left-[18px] top-1/2 mt-[-10px]" />

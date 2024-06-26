@@ -17,22 +17,22 @@ export default function SocialProfile() {
   const navigate = useNavigate();
   return (
     <div className="space-y-4 max-w-xs mx-auto">
-      <h1 className="font-semibold text-lg">Connect your social profile</h1>
+      <h1 className="font-semibold text-lg">Welcome</h1>
       <p className="muted">
-        Prefill your basic info with data from your social profile
+        Register with your gmail account or connect using your email.
       </p>
 
       <div className="flex gap-2 justify-center w-full flex-wrap">
         {/* <FacebookButton /> */}
         <GoogleButton />
-        <hr />
         <Button
-          variant="link"
           className="min-w-[160px] relative flex items-center"
           onClick={() => navigate(`${REGISTER}/introduction`)}
         >
-          <Mail className="w-5 h-5" />
-          <span className="w-full">I want to use my email instead</span>
+          <Mail className="w-5 h-5 ml-1" />
+          <span className="w-full" style={{ marginLeft: "-18px!important" }}>
+            Email
+          </span>
         </Button>
       </div>
     </div>
