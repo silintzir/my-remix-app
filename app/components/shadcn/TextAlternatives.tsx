@@ -56,7 +56,7 @@ export function TextAlternatives({
     <Sheet>
       <SheetTrigger asChild>
         <button
-          className="text-blue-600 flex gap-1 items-center"
+          className="text-orange-600 flex gap-1 items-center hover:text-orange-600"
           type="button"
           onClick={enhance}
           title={t("builder.ai_enhance")}
