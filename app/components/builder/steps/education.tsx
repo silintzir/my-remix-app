@@ -188,103 +188,94 @@ export function EducationStep() {
                         label={t("education.degree")}
                       />
                     </div>
-                    <div className="flex gap-2 w-full sm:flex-8 flex-wrap sm:flex-nowrap">
-                      <div className="flex gap-2 flex-grow">
-                        <SelectInput
-                          label={t("builder.date_from")}
-                          className="w-32"
-                          control={control}
-                          name={`resume.education.${index}.startMonth`}
-                          options={getMonthOptions()}
-                          onChange={(val) => {
-                            sortFn(
-                              index,
-                              { ...fields[index], startMonth: val },
-                              autoSort
-                            );
-                          }}
-                        />
-                        <SelectInput
-                          label="Start year"
-                          className="w-32"
-                          labelHidden
-                          control={control}
-                          name={`resume.education.${index}.startYear`}
-                          options={getYearOptions()}
-                          onChange={(val) =>
-                            sortFn(
-                              index,
-                              { ...fields[index], startYear: val },
-                              autoSort
-                            )
-                          }
-                        />
-                      </div>
-                      <span className="self-center font-bold">
-                        {t("base.until")}
-                      </span>
-                      <div className="flex gap-2 flex-grow justify-end">
-                        <SelectInput
-                          label={t("builder.date_to")}
-                          disabled={toPresent}
-                          control={control}
-                          className="w-32"
-                          name={`resume.education.${index}.endMonth`}
-                          options={getMonthOptions()}
-                          onChange={(val) =>
-                            sortFn(
-                              index,
-                              { ...fields[index], endMonth: val },
-                              autoSort
-                            )
-                          }
-                        />
-                        <SelectInput
-                          disabled={toPresent}
-                          onChange={(val) =>
-                            sortFn(
-                              index,
-                              { ...fields[index], endYear: val },
-                              autoSort
-                            )
-                          }
-                          label={
-                            <span className="flex justify-end h-5 items-center gap-2">
-                              <FormField
-                                control={control}
-                                name={`resume.education.${index}.toPresent`}
-                                render={({ field }) => (
-                                  <FormItem className="flex items-center gap-2 space-y-0">
-                                    <FormLabel className="font-normal">
-                                      {t("builder.to_present")}
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Checkbox
-                                        checked={field.value}
-                                        onCheckedChange={(val) => {
-                                          field.onChange(val);
-                                          sortFn(
-                                            index,
-                                            {
-                                              ...fields[index],
-                                              toPresent: !!val,
-                                            },
-                                            autoSort
-                                          );
-                                        }}
-                                      />
-                                    </FormControl>
-                                  </FormItem>
-                                )}
-                              />
-                            </span>
-                          }
-                          className="w-32"
-                          control={control}
-                          name={`resume.education.${index}.endYear`}
-                          options={getYearOptions()}
-                        />
-                      </div>
+                    <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+                      <SelectInput
+                        label="Start month"
+                        control={control}
+                        name={`resume.education.${index}.startMonth`}
+                        options={getMonthOptions()}
+                        onChange={(val) => {
+                          sortFn(
+                            index,
+                            { ...fields[index], startMonth: val },
+                            autoSort
+                          );
+                        }}
+                      />
+                      <SelectInput
+                        label="Start year"
+                        control={control}
+                        name={`resume.education.${index}.startYear`}
+                        options={getYearOptions()}
+                        onChange={(val) =>
+                          sortFn(
+                            index,
+                            { ...fields[index], startYear: val },
+                            autoSort
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="flex gap-2 flex-wrap sm:flex-nowrap justify-end">
+                      <SelectInput
+                        label="End month"
+                        disabled={toPresent}
+                        control={control}
+                        name={`resume.education.${index}.endMonth`}
+                        options={getMonthOptions()}
+                        onChange={(val) =>
+                          sortFn(
+                            index,
+                            { ...fields[index], endMonth: val },
+                            autoSort
+                          )
+                        }
+                      />
+                      <SelectInput
+                        disabled={toPresent}
+                        onChange={(val) =>
+                          sortFn(
+                            index,
+                            { ...fields[index], endYear: val },
+                            autoSort
+                          )
+                        }
+                        label={
+                          <span className="flex justify-between h-5 items-center gap-2">
+                            <span>End year</span>
+                            <FormField
+                              control={control}
+                              name={`resume.education.${index}.toPresent`}
+                              render={({ field }) => (
+                                <FormItem className="flex items-center gap-2 space-y-0">
+                                  <FormLabel className="font-normal">
+                                    {t("builder.to_present")}
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value}
+                                      onCheckedChange={(val) => {
+                                        field.onChange(val);
+                                        sortFn(
+                                          index,
+                                          {
+                                            ...fields[index],
+                                            toPresent: !!val,
+                                          },
+                                          autoSort
+                                        );
+                                      }}
+                                    />
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </span>
+                        }
+                        control={control}
+                        name={`resume.education.${index}.endYear`}
+                        options={getYearOptions()}
+                      />
                     </div>
                     <Separator />
                     {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
@@ -314,7 +305,7 @@ export function EducationStep() {
         </Accordion>
       </SortableList>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-2 flex-wrap">
         <Button
           variant="outline"
           className="text-blue-600 font-semibold"

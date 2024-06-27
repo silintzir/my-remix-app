@@ -60,7 +60,11 @@ export function SkillsStep() {
         >
           {fields.map((field, index) => {
             return (
-              <SortableItem key={field.uuid} index={index} className="flex">
+              <SortableItem
+                key={field.uuid}
+                index={index}
+                className="flex flex-wrap sm:flex-nowrap"
+              >
                 <SortableHandle />
                 <TextInput
                   className="w-full"
@@ -75,7 +79,6 @@ export function SkillsStep() {
                   }}
                 />
                 <SelectInput
-                  className="w-64"
                   control={control}
                   name={`resume.skills.${index}.level`}
                   options={getSkillLevelOptions(t)}
@@ -95,7 +98,7 @@ export function SkillsStep() {
           })}
         </SortableList>
       )}
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap sm:flex-nowrap">
         <Button
           variant="outline"
           className="text-blue-600 font-semibold"

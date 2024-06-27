@@ -92,7 +92,7 @@ export function InterestsStep() {
           })}
         </SortableList>
       )}
-      <div className="flex gap-1">
+      <div className="flex gap-2 flex-wrap">
         <Button
           variant="outline"
           className="text-blue-600 font-semibold"

@@ -185,7 +185,7 @@ export function CertificatesStep() {
         </Accordion>
       </SortableList>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center flex-wrap gap-2">
         <Button
           variant="outline"
           className="text-blue-600 font-semibold"
