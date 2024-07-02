@@ -21,6 +21,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
     const lang = get(posted, "lang", "en") as Lang;
     const bot = new NoMemory();
     const input = createPrompt(step, context, original, lang);
+
+    console.log(input);
     const response = await bot.send(input);
     const extracted = JSON.parse(extractJson(response));
     return json(extracted);
