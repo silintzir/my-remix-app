@@ -11,10 +11,10 @@ import {
   skillDisplay,
   splitArrayByLimit,
 } from "../helpers/common";
-import { map, groupBy } from "lodash-es";
+import { map } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
-import { ContentProvider } from "../pdf.client";
+import type { ContentProvider } from "../pdf.client";
 import { ChicagoPdfTemplate } from "./ChicagoPdfTemplate";
 import { getDoubleHLine } from "../helpers/pdf";
 import { getRecordPeriod2 } from "@/lib/resume";
@@ -92,57 +92,98 @@ export class ExecutivePdfTemplate extends ChicagoPdfTemplate {
       return [];
     }
 
-    // group by employer/location
-    const p1 = map(records, (w) => ({
-      ...w,
-      period: getRecordPeriod2(w),
-      group: constr(", ", w.name, w.city),
-    }));
-    const p2 = groupBy(p1, "group");
-
     const stacks = [];
-    for (const group in p2) {
+    let same = false;
+    for (let i = 0; i < records.length; i++) {
       const stack = [];
-      stacks.push({
-        text: constr(
-          ", ",
-          p2[group][0].name,
-          constr(", ", p2[group][0].city, p2[group][0].state)
-        ),
-        alignment: "center",
-        bold: true,
-      } satisfies Content);
-
-      for (const { position, period, bullets } of p2[group]) {
-        stacks.push({
-          text: [
-            { text: position, italics: true },
-            { text: " " },
-            {
-              // text: `(${constr(
-              //   " - ",
-              //   getReadableDateFromPicker(startDate),
-              //   getReadableDateFromPicker(endDate)
-              // )})`,
-              text: period,
-            },
-          ],
-          alignment: "center",
-        });
-        if (bullets && bullets.length) {
-          stack.push({
-            ul: bullets.map((b) => ({ text: b.content })),
-            margin: [8, 0, 0, 0],
-          } satisfies Content);
+      let cur = records[i];
+      let prev = records[i - 1];
+      if (i) {
+        if (cur.city === prev.city) {
+          same = true;
+        } else {
+          same = false;
         }
       }
-
+      if (!same) {
+        stacks.push({
+          text: constr(", ", cur.name, constr(", ", cur.city, cur.state)),
+          alignment: "center",
+          bold: true,
+        } satisfies Content);
+      }
       stacks.push({
-        stack,
-        marginBottom: 8,
+        text: [
+          { text: cur.position, italics: true },
+          { text: " " },
+          {
+            // text: `(${constr(
+            //   " - ",
+            //   getReadableDateFromPicker(startDate),
+            //   getReadableDateFromPicker(endDate)
+            // )})`,
+            text: getRecordPeriod2(cur),
+          },
+        ],
+        alignment: "center",
       });
+      if (cur.bullets && cur.bullets.length) {
+        stack.push({
+          ul: cur.bullets.map((b) => ({ text: b.content })),
+          margin: [8, 0, 0, 0],
+        } satisfies Content);
+      }
     }
 
+    // group by employer/location
+    // const p1 = map(records, (w) => ({
+    //   ...w,
+    //   period: getRecordPeriod2(w),
+    //   group: constr(", ", w.name, w.city),
+    // }));
+    // const p2 = groupBy(p1, "group");
+    // for (const group in p2) {
+    //   const stack = [];
+    //   stacks.push({
+    //     text: constr(
+    //       ", ",
+    //       p2[group][0].name,
+    //       constr(", ", p2[group][0].city, p2[group][0].state)
+    //     ),
+    //     alignment: "center",
+    //     bold: true,
+    //   } satisfies Content);
+    //
+    //   for (const { position, period, bullets } of p2[group]) {
+    //     stacks.push({
+    //       text: [
+    //         { text: position, italics: true },
+    //         { text: " " },
+    //         {
+    //           // text: `(${constr(
+    //           //   " - ",
+    //           //   getReadableDateFromPicker(startDate),
+    //           //   getReadableDateFromPicker(endDate)
+    //           // )})`,
+    //           text: period,
+    //         },
+    //       ],
+    //       alignment: "center",
+    //     });
+    //     if (bullets && bullets.length) {
+    //       stack.push({
+    //         ul: bullets.map((b) => ({ text: b.content })),
+    //         margin: [8, 0, 0, 0],
+    //       } satisfies Content);
+    //     }
+    //   }
+    //
+    //   stacks.push({
+    //     stack,
+    //     marginBottom: 8,
+    //   });
+    // }
+    //
     return [
       {
         text: title.length ? title : DEFAULT_SECTION_TITLES.work,

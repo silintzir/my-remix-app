@@ -19,7 +19,7 @@ import {
 import { map, groupBy } from "lodash-es";
 import { getReadableDateFromPicker } from "../../utils";
 import { DEFAULT_SECTION_TITLES } from "../../defaults";
-import { ContentProvider } from "../pdf.client";
+import type { ContentProvider } from "../pdf.client";
 import { ChicagoPdfTemplate } from "./ChicagoPdfTemplate";
 import { getRecordPeriod2 } from "@/lib/resume";
 

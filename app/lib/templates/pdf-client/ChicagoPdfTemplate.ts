@@ -313,53 +313,101 @@ export class ChicagoPdfTemplate {
       return [];
     }
 
-    // group by employer/location
-    const p1 = map(records, (w) => ({
-      ...w,
-      period: getRecordPeriod2(w),
-      group: constr(", ", w.name, w.city),
-    }));
-    const p2 = groupBy(p1, "group");
-
     const stacks = [];
-    for (const group in p2) {
+    let same = false;
+    for (let i = 0; i < records.length; i++) {
       const stack = [];
-      stack.push(
-        get2ColsSpaceBetween(
-          {
-            text: p2[group][0].name,
-            style: "heading3",
-            alignment: "left",
-          },
-          {
-            text: p2[group][0].city,
-            style: "heading3",
-            alignment: "right",
-          },
-          0,
-          0
-        )
-      );
+      let cur = records[i];
+      let prev = records[i - 1];
+      if (i) {
+        if (cur.city === prev.city) {
+          same = true;
+        } else {
+          same = false;
+        }
+      }
 
-      for (const { position, period, bullets } of p2[group]) {
+      if (!same) {
         stack.push(
           get2ColsSpaceBetween(
-            { text: position, style: "heading4", alignment: "left" },
-            { text: period }
+            {
+              text: cur.name,
+              style: "heading3",
+              alignment: "left",
+            },
+            {
+              text: cur.city,
+              style: "heading3",
+              alignment: "right",
+            },
+            0,
+            0
           )
         );
-        stack.push({
-          ul: map(bullets, (b) => b.content),
-          style: "paragraph",
-          marginLeft: 8,
-        } satisfies Content);
       }
+      stack.push(
+        get2ColsSpaceBetween(
+          { text: cur.position, style: "heading4", alignment: "left" },
+          { text: getRecordPeriod2(cur) }
+        )
+      );
+      stack.push({
+        ul: map(cur.bullets, (b) => b.content),
+        style: "paragraph",
+        marginLeft: 8,
+      } satisfies Content);
 
       stacks.push({
         stack,
         marginBottom: 8,
       });
     }
+
+    // group by employer/location
+    // const p1 = map(records, (w) => ({
+    //   ...w,
+    //   period: getRecordPeriod2(w),
+    //   group: constr(", ", w.name, w.city),
+    // }));
+    // const p2 = groupBy(p1, "group");
+    // for (const group in p2) {
+    //   const stack = [];
+    //   stack.push(
+    //     get2ColsSpaceBetween(
+    //       {
+    //         text: p2[group][0].name,
+    //         style: "heading3",
+    //         alignment: "left",
+    //       },
+    //       {
+    //         text: p2[group][0].city,
+    //         style: "heading3",
+    //         alignment: "right",
+    //       },
+    //       0,
+    //       0
+    //     )
+    //   );
+    //
+    //   for (const { position, period, bullets } of p2[group]) {
+    //     stack.push(
+    //       get2ColsSpaceBetween(
+    //         { text: position, style: "heading4", alignment: "left" },
+    //         { text: period }
+    //       )
+    //     );
+    //     stack.push({
+    //       ul: map(bullets, (b) => b.content),
+    //       style: "paragraph",
+    //       marginLeft: 8,
+    //     } satisfies Content);
+    //   }
+    //
+    //   stacks.push({
+    //     stack,
+    //     marginBottom: 8,
+    //   });
+    // }
 
     return [
       getHeaderWithLine(title.length ? title : DEFAULT_SECTION_TITLES.work),
