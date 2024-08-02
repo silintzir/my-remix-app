@@ -320,7 +320,7 @@ export class ChicagoPdfTemplate {
       let cur = records[i];
       let prev = records[i - 1];
       if (i) {
-        if (cur.city === prev.city) {
+        if (cur.city === prev.city && cur.name === prev.name) {
           same = true;
         } else {
           same = false;
