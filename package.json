@@ -134,8 +134,5 @@
     "postcss-import": "^16.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   }
 }

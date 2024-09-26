@@ -57,8 +57,8 @@ export function TextSuggestions({
     <Sheet>
       <SheetTrigger asChild>
         <Button
-          variant={endpoint === "skills" ? "outline" : "link"}
           className="text-orange-600 font-semibold"
+          variant="outline"
           type="button"
           size="sm"
           onClick={generate}

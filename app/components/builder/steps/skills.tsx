@@ -66,23 +66,26 @@ export function SkillsStep() {
                 className="flex flex-wrap sm:flex-nowrap"
               >
                 <SortableHandle />
-                <TextInput
-                  className="w-full"
-                  control={control}
-                  name={`resume.skills.${index}.name`}
-                  placeholder={t("skills.placeholder")}
-                  alternatives={{
-                    fetcher: enhancer,
-                    context: getContext({ step: "skills", uuid: field.uuid }),
-                    endpoint: "skills",
-                    lang,
-                  }}
-                />
-                <SelectInput
-                  control={control}
-                  name={`resume.skills.${index}.level`}
-                  options={getSkillLevelOptions(t)}
-                />
+                <div className="flex flex-wrap flex-grow">
+                  <TextInput
+                    className="flex-grow"
+                    control={control}
+                    name={`resume.skills.${index}.name`}
+                    placeholder={t("skills.placeholder")}
+                    alternatives={{
+                      fetcher: enhancer,
+                      context: getContext({ step: "skills", uuid: field.uuid }),
+                      endpoint: "skills",
+                      lang,
+                    }}
+                  />
+                  <SelectInput
+                    className="flex-grow"
+                    control={control}
+                    name={`resume.skills.${index}.level`}
+                    options={getSkillLevelOptions(t)}
+                  />
+                </div>
                 <Button
                   type="button"
                   variant="ghost"

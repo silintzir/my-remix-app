@@ -19,6 +19,10 @@ import { getResumeValues } from "@/lib/import-resume.server";
 import { parseFile, s3UploadHandler } from "@/lib/upload-resume.server";
 import { useTranslation } from "react-i18next";
 import { useChangeLanguage } from "remix-i18next/react";
+import { sourceCookie } from "@/lib/cookies.server";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const config = {
   maxDuration: 120,
@@ -29,9 +33,82 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const cookieHeader = request.headers.get("Cookie");
+  const source = await sourceCookie.parse(cookieHeader);
+
   const { toast, headers } = await getToast(request);
   const resumes = await getResumes(request);
-  return json({ toast, resumes }, { headers });
+  return json(
+    { toast, resumes, source },
+    {
+      headers: {
+        ...headers,
+      },
+    }
+  );
+}
+
+export default function AppDashboard() {
+  const { resumes, toast, source } = useLoaderData<typeof loader>();
+  const me = useMe();
+  useMyToast({ toast } as any);
+
+  const fn = get(me, "firstName", "") || "";
+  const ln = get(me, "lastName", "") || "";
+  const { t } = useTranslation();
+  useChangeLanguage(me.language || "en-US");
+
+  return (
+    <>
+      {source?.startsWith("hc") && (
+        <div className="max-w-3xl">
+          <Alert>
+            <Terminal className="h-4 w-4" />
+            <AlertTitle>Are you a Marathon Staffig team member?</AlertTitle>
+            <AlertDescription>
+              <div className="flex flex-col gap-2 justify-end">
+                <p>
+                  You may either download one of the resumes from the list below
+                  and import that to your Marathon account or create a new
+                  resume and then import that one.
+                </p>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-fit"
+                  onClick={() => {
+                    switch (source) {
+                      case "hc_oav3":
+                        window.location.assign(
+                          "http://localhost:8080/seekers/account/application/workHistory/resumerunner"
+                        );
+                        break;
+                      case "hc_resumes":
+                        window.location.assign(
+                          "http://localhost:8080/seekers/upload_resume.go?source=resumerunner"
+                        );
+                        break;
+                    }
+                  }}
+                >
+                  Back to Marathon Portal
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+      <h4 className="text-lg">
+        <span className="text-base sm:text-lg flex flex-wrap items-center gap-2">
+          {t("base.welcome")}
+          {(fn.length > 0 || ln.length > 0) && (
+            <strong>{`${me.firstName || ""} ${me.lastName || ""}`}</strong>
+          )}
+        </span>
+      </h4>
+      <ResumesList resumes={resumes as unknown as StrapiShortResume[]} />
+    </>
+  );
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -60,8 +137,6 @@ export async function action({ request }: ActionFunctionArgs) {
         parallel: false,
       }),
     });
-
-    console.log(response.data.resume);
 
     const toStore = getResumeValues(response.data.resume);
 
@@ -131,29 +206,4 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   return redirect(`/resumes/${id}/edit`);
-}
-
-export default function AppDashboard() {
-  const { resumes, toast } = useLoaderData<typeof loader>();
-  const me = useMe();
-  useMyToast({ toast } as any);
-
-  const fn = get(me, "firstName", "") || "";
-  const ln = get(me, "lastName", "") || "";
-  const { t } = useTranslation();
-  useChangeLanguage(me.language || "en-US");
-
-  return (
-    <>
-      <h4 className="text-lg">
-        <span className="text-base sm:text-lg flex flex-wrap items-center gap-2">
-          {t("base.welcome")}
-          {(fn.length > 0 || ln.length > 0) && (
-            <strong>{`${me.firstName || ""} ${me.lastName || ""}`}</strong>
-          )}
-        </span>
-      </h4>
-      <ResumesList resumes={resumes as unknown as StrapiShortResume[]} />
-    </>
-  );
 }

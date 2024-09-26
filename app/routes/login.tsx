@@ -50,6 +50,7 @@ import {
   destroySession,
 } from "@/sessions";
 import { DASHBOARD, REGISTER } from "@/lib/routes";
+import { sourceCookie } from "@/lib/cookies.server";
 
 const loginSchema = z.object({
   email: requiredString().email(),
@@ -69,6 +70,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const sp = new URL(request.url).searchParams;
   const email = sp.get("email");
   const view = sp.get("view");
+  const source = sp.get("source");
+
   if (view === "success" && !email) {
     return redirect("");
   }
@@ -77,6 +80,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       "Set-Cookie": await destroySession(
         await getSession(request.headers.get("Cookie"))
       ),
+      ...(source?.startsWith("hc")
+        ? {
+            "Set-Cookie": await sourceCookie.serialize("hc"),
+          }
+        : {}),
     },
   });
 }

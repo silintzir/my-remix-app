@@ -12,12 +12,12 @@ import { ReturnToDashboard } from "@/components/navbar/return-website";
 export const handle = "auth";
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const sp = new URL(request.url).searchParams;
   const session = await getSession(request.headers.get("Cookie"));
-
   const { user } = session.data;
 
   if (!user) {
-    throw redirect(LOGIN);
+    throw redirect(`${LOGIN}?${sp.toString()}`);
   }
 
   return json(

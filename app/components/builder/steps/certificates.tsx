@@ -101,10 +101,9 @@ export function CertificatesStep() {
           {fields.map((field, index) => {
             return (
               <SortableItem
-                index={Number(field.uuid)}
+                index={index}
                 key={field.uuid}
-                value={field.uuid}
-                className="flex"
+                className="flex w-ful items-center gap-2"
               >
                 {autoSort !== true && fields.length > 1 && <SortableHandle />}
                 <AccordionItem
@@ -137,13 +136,13 @@ export function CertificatesStep() {
                         control={control}
                         name={`resume.certificates.${index}.name`}
                         placeholder="e.x. AWS Cloud Practitioner Level 1"
-                        label={t("certificate.name")}
+                        label="Title"
                       />
                       <TextInput
                         control={control}
                         name={`resume.certificates.${index}.issuer`}
                         placeholder="e.x. Amazon Web Services"
-                        label={t("certificate.issuing_authority")}
+                        label="Issuing authority"
                       />
                     </div>
                     <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
@@ -151,7 +150,7 @@ export function CertificatesStep() {
                         <DatePicker
                           control={control}
                           name={`resume.certificates.${index}.date`}
-                          label={t("certificate.date")}
+                          label="Date"
                           onChange={(expr) => {
                             sortFn(index, expr, autoSort);
                           }}
@@ -160,7 +159,7 @@ export function CertificatesStep() {
                           control={control}
                           name={`resume.certificates.${index}.url`}
                           placeholder="e.x. https://aws.com"
-                          label={t("certificate.url")}
+                          label="URL"
                         />
                       </div>
                     </div>

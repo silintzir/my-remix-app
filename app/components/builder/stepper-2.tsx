@@ -23,13 +23,13 @@ export function Stepper({ title, current, steps }: Props) {
     <nav className="flex items-center" aria-label="Progress">
       <h3 className="text-lg font-semibold my-2 flex justify-between">
         <span>{title}</span>
-        <span className="muted ml-2">
+        <span className="muted ml-2 hidden sm:block">
           ({current + 1} of {steps.length})
         </span>
       </h3>
       <Progress
         value={progress}
-        className="flex-grow block w-auto sm:hidden bg-gray-300 ml-6"
+        className="flex-grow w-auto hidden xs:block sm:hidden bg-gray-300 ml-6"
       />
       <ol className="ml-8 items-center space-x-5 hidden sm:flex">
         {steps.map((step, index) => {

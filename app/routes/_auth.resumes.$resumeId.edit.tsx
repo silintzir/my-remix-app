@@ -247,7 +247,7 @@ export default function Builder() {
             <div className="flex justify-center w-full xl:w-1/2 xl:max-w-[960px] mx-auto my-0 xl:mx-0 h-[calc(100dvh-4rem)] xl:h-screen overflow-y-auto">
               {/* Editor - Left Side */}
               <div className="w-full max-w-full flex-1">
-                <div className="max-w-[860px] h-full m-auto">
+                <div className="max-w-[860px] h-full mx-auto">
                   <div className="px-4 md:px-12 py-4">
                     <StepHeader
                       step={step}
