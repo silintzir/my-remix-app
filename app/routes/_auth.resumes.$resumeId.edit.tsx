@@ -23,7 +23,14 @@ import {
   useFetcher,
 } from "@remix-run/react";
 import { Form as SForm } from "@/components/ui/form";
-import { ChevronLeft, ChevronRight, Home } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CircleEllipsis,
+  Home,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { resumeSchema } from "@/lib/resume";
 import { useEffect, useRef, useState } from "react";
@@ -61,6 +68,13 @@ import getDefinition from "@/lib/templates/pdf.client";
 import filenamify from "filenamify";
 import pdfMake from "pdfmake/build/pdfmake.js";
 import pdfFonts from "pdfmake/build/vfs_fonts.js";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -94,6 +108,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 const sample = sampleResume();
 
 export default function Builder() {
+  const [zoom, setZoom] = useState(100);
   const user = useMe();
   useChangeLanguage(user.language || "en");
   const { state } = useNavigation();
@@ -211,7 +226,12 @@ export default function Builder() {
   }, []);
 
   const pdfPaper = (
-    <PdfPaper base64={base64} id={id} fullPage={view === "preview"} />
+    <PdfPaper
+      zoom={zoom}
+      base64={base64}
+      id={id}
+      fullPage={view === "preview"}
+    />
   );
 
   return (
@@ -390,8 +410,23 @@ export default function Builder() {
                       <BackToEditor />
                     </div>
 
-                    <div className="kaOuvr relative flex items-center">
+                    <div className="relative flex items-center">
                       {fontSizeAdjust}
+                    </div>
+
+                    <div className="ml-8 relative flex items-center">
+                      <Button
+                        variant="ghost"
+                        onClick={() => setZoom(Math.max(50, zoom - 25))}
+                      >
+                        <ZoomOut className="mr-2 h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() => setZoom(Math.min(300, zoom + 25))}
+                      >
+                        <ZoomIn className="mr-2 h-4 w-4" />
+                      </Button>
                     </div>
 
                     <div className="flex items-center justify-end flex-1 gap-1">

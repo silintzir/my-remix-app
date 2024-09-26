@@ -3,16 +3,18 @@ import type * as PDFJS from "pdfjs-dist";
 import { useTemplateStore } from "@/lib/templates/store";
 // import html2canvas from "html2canvas";
 import { useFetcher } from "@remix-run/react";
+import { Slider } from "@radix-ui/react-slider";
 
 type Props = {
   base64: string;
   fullPage?: boolean;
   id: number;
+  zoom?: number;
 };
 
 const US_LETTER_RATIO = 1.2941;
 
-export function PdfPaper({ base64, fullPage = false }: Props) {
+export function PdfPaper({ base64, fullPage = false, zoom = 100 }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   // const screenshotSaved = useRef(false);
 
@@ -135,5 +137,9 @@ export function PdfPaper({ base64, fullPage = false }: Props) {
   //   }
   // }, [state, proceed, id, base64]);
 
-  return <canvas ref={ref} className="mx-auto rounded-md shadow-xl" />;
+  return (
+    <div style={{ zoom: `${zoom}%` }}>
+      <canvas ref={ref} className="mx-auto rounded-md shadow-xl" />
+    </div>
+  );
 }
