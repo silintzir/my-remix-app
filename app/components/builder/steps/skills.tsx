@@ -63,7 +63,7 @@ export function SkillsStep() {
               <SortableItem
                 key={field.uuid}
                 index={index}
-                className="flex flex-wrap sm:flex-nowrap"
+                className="flex sm:flex-nowrap"
               >
                 <SortableHandle />
                 <div className="flex flex-wrap flex-grow">

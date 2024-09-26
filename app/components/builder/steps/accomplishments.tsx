@@ -63,6 +63,7 @@ export function AccomplishmentsStep() {
               <SortableItem key={field.uuid} index={index} className="flex">
                 <SortableHandle />
                 <TextInput
+                  autoResize
                   className="w-full"
                   control={control}
                   name={`resume.accomplishments.${index}.name`}

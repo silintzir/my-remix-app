@@ -133,12 +133,14 @@ export function CertificatesStep() {
                   <AccordionContent className="space-y-4 mt-2 px-1">
                     <div className="flex gap-2 sm:flex-8 flex-wrap sm:flex-nowrap">
                       <TextInput
+                        autoResize
                         control={control}
                         name={`resume.certificates.${index}.name`}
                         placeholder="e.x. AWS Cloud Practitioner Level 1"
                         label="Title"
                       />
                       <TextInput
+                        autoResize
                         control={control}
                         name={`resume.certificates.${index}.issuer`}
                         placeholder="e.x. Amazon Web Services"

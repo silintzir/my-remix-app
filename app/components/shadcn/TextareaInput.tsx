@@ -12,6 +12,7 @@ import { TextAlternatives } from "./TextAlternatives";
 import type { FetcherWithComponents } from "@remix-run/react";
 import { Textarea } from "@/components/ui/textarea";
 import type { Step } from "@/lib/types";
+import { AutosizeTextarea } from "./AutosizeTextarea";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -48,9 +49,9 @@ export function TextareaInput<T extends FieldValues>({
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             <div className="relative">
-              <Textarea
+              <AutosizeTextarea
                 placeholder={placeholder}
-                rows={rows}
+                maxHeight={200}
                 {...field}
                 className={cn({ "pr-12": !!alternatives })}
               />

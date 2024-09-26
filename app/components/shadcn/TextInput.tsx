@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { TextAlternatives } from "./TextAlternatives";
 import type { FetcherWithComponents } from "@remix-run/react";
 import type { Lang, Step } from "@/lib/types";
+import { AutosizeTextarea } from "./AutosizeTextarea";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;
@@ -23,6 +24,7 @@ type Props<T extends FieldValues> = {
   className?: string;
   type?: string;
   inputMask?: string;
+  autoResize?: boolean;
   alternatives?: {
     fetcher: FetcherWithComponents<{ results: string[] }>;
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -40,6 +42,7 @@ export function TextInput<T extends FieldValues>({
   type = "text",
   alternatives,
   inputMask,
+  autoResize = false,
 }: Props<T>) {
   return (
     <FormField
@@ -59,12 +62,24 @@ export function TextInput<T extends FieldValues>({
                   className=""
                 />
               ) : (
-                <Input
-                  type={type}
-                  placeholder={placeholder}
-                  {...field}
-                  className={cn({ "pr-12": !!alternatives })}
-                />
+                <>
+                  {autoResize ? (
+                    <AutosizeTextarea
+                      maxHeight={100}
+                      minHeight={32}
+                      placeholder={placeholder}
+                      {...field}
+                      className={cn({ "pr-12 h-8": !!alternatives })}
+                    />
+                  ) : (
+                    <Input
+                      type={type}
+                      placeholder={placeholder}
+                      {...field}
+                      className={cn({ "pr-12": !!alternatives })}
+                    />
+                  )}
+                </>
               )}
               {alternatives && (
                 <div className="absolute right-4 top-2.5 opacity-60 hover:opacity-100 text-blue-600">

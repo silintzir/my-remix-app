@@ -114,6 +114,7 @@ export function Bullets({ step, index, context }: Props) {
             <Item key={index2} index={index2}>
               <SortableHandle />
               <TextInput
+                autoResize
                 control={control}
                 name={`resume.${step}.${index}.bullets.${index2}.content`}
                 alternatives={{
