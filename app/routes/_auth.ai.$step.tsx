@@ -18,17 +18,17 @@ export async function action({ request, params }: ActionFunctionArgs) {
   try {
     const context = JSON.parse(get(posted, "context", "{}"));
     const original = get(posted, "original");
+
     const lang = get(posted, "lang", "en") as Lang;
     const bot = new NoMemory();
     const input = createPrompt(step, context, original, lang);
 
-    console.log(input);
     const response = await bot.send(input);
     const extracted = JSON.parse(extractJson(response));
     return json(extracted);
   } catch (e) {
     console.error(
-      chalk.red(`Failed to get AI suggestions/enhancements for ${step}`)
+      chalk.red(`Failed to get AI suggestions/enhancements for ${step}`),
     );
     return json({
       results: randomResponse(step, "multi"),

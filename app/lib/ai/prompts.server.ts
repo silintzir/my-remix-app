@@ -12,13 +12,13 @@ function inputFormatPrompt() {
 
 function enhancePrompt(terms: string) {
   return terms && terms.trim().length > 0
-    ? `These suggestions must be necessarily relative to the following text in quotes: "${terms}". `
+    ? `Suggest 5 bullets of 5-8 words each that could be used as rephrasings of the text in quotes: "${terms}". `
     : "";
 }
 
 function deliverablePrompt(lang: Lang) {
   return `Your response must be formatted as a JSON object with a single root property named "results" which must be an array of strings in ${getLanguage(
-    lang
+    lang,
   )}  that correspond to your suggestions.`;
 }
 
@@ -38,15 +38,23 @@ export function createPrompt(
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   context: any,
   enhance = "",
-  lang: Lang = "en"
+  lang: Lang = "en",
 ) {
   const toks = [];
   toks.push(introPrompt(lang));
   toks.push(inputDescription(step));
   toks.push(inputFormatPrompt());
   toks.push(`${JSON.stringify(context)}. `);
-  toks.push(outputExpectation(step, context, enhance));
-  toks.push(enhancePrompt(enhance));
+  if (step === "work") {
+    if (enhance?.length) {
+      toks.push(enhancePrompt(enhance));
+    } else {
+      toks.push(outputExpectation(step, context, enhance));
+    }
+  } else {
+    toks.push(outputExpectation(step, context, enhance));
+    toks.push(enhancePrompt(enhance));
+  }
   toks.push(deliverablePrompt(lang));
   toks.push();
   return toks.join("");
@@ -67,27 +75,27 @@ function outputExpectation(step: Step, context: any, enhance: string) {
   switch (step) {
     case "education":
       return `Suggest 5 bullets of ${countWordsOr(
-        enhance
+        enhance,
       )} words each, avoiding any numbers or percentages, that describe some courses/projects that I could add to this education entry in my resume to make it look more professional. `;
     case "work":
       return `Suggest 5 sentences of ${countWordsOr(
-        enhance
+        enhance,
       )} words each, avoiding any numbers or percentages, that describe some achievements/highlights that I could add to this work experience entry in my resume to make it look more professional. `;
     case "skills":
       return `Suggest 10 skills of at most ${countWordsOr(
         enhance,
         "3",
-        3
+        3,
       )} words each, avoiding any numbers or percentages, that I could add in the skills section of my my resume to make it look more professional. `;
     case "accomplishments":
       return `Suggest 10 sentences of ${countWordsOr(
-        enhance
+        enhance,
       )} words each, avoiding any numbers or percentages, that I could add as accomplishments/highlights in my resume to make it look more professional. `;
     case "interests":
       return `Suggest 10 interests/hobbies of at most ${countWordsOr(
         enhance,
         "3",
-        3
+        3,
       )} words each, that I could add in the interests/hobbies section of my my resume to make me look more attractive and interesting as a person. `;
     case "summary":
       if (context.asObjective) {
